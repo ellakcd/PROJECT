@@ -1,0 +1,5 @@
+1|On a scale of 1-5, how much time each week are you hoping to spend with your roommate(s)?
+2|Which of these sounds like the best way to spend a weekend?
+3|Which of these sounds like the best way to spend a night?
+4|Which is your favorite kind of food?
+5|Which is your favorite genre?

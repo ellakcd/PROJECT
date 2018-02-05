@@ -1,0 +1,28 @@
+MVP: 
+user accounts
+input friends
+user can create listings
+
+2.0: 
+filter listings
+ask personality qs
+
+3.0: 
+FB
+roommates
+chat
+map
+esign
+rent
+
+
+
+
+DO I take user_id out of listing
+areas list
+photos
+keep to USA
+password protection
+
+
+Lat Long
