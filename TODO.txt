@@ -6,6 +6,7 @@ user can create listings
 2.0: 
 filter listings
 ask personality qs
+post to FB
 
 3.0: 
 FB
@@ -26,3 +27,15 @@ password protection
 
 
 Lat Long
+
+IF LOGGED IN and try to register, redirect them to their profile page
+ON profile page, let them edit 
+ON home page let them search 
+RENTERs can search for RENTEES
+and RENTEEs can search for houses
+
+IF a roommate doesn't want to register, just link to their FB
+
+Get list of neighborhoods in each city / state
+
+HOW to upload photo

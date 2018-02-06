@@ -3,6 +3,35 @@
 {% block content %}
 	Welcome to Roommatch 
 
-	Create Your Profile! 
+<h1><a href="/register">Create Your Profile!</a></h1>
 	
+<div>
+Search for your new HOME: 
+<form action="/house_search" method="GET">
+Do you want (a) roommate(s)?:<br>
+	<input type="radio" name="live_alone" value="yes"> Heck Yes! <br>
+	<input type="radio" name="live_alone" value="no"> Nope <br>
+	<input type="radio" name="live_alone" value="maybe"> I'm happy either way <br>
+How long are you looking for?:<br>
+	<input type="radio" name="duration" value="1"> About a month <br>
+	<input type="radio" name="duration" value="2"> 2 months <br>
+	<input type="radio" name="duration" value="3"> 3 months <br>
+	<input type="radio" name="duration" value="4"> 4-6 months <br>
+	<input type="radio" name="duration" value="5"> 6 months to a year <br>
+	<input type="radio" name="duration" value="6"> More than a year <br>
+What's the most you want to spend per month?:<br>
+	<input type="number" name="price_cap"><br>
+What's your earliest start date?:<br>
+	<input type="date" name="start_date"><br>
+What neighborhood do you want to live in?:<br>
+	<input type="text" name="neighborhood"><br>
+	<input type="submit" value="Reveal!">
+</form>
+</div>
+
+<div>
+Search for your new ROOMMATE: 
+</div>
+
+
 {% endblock %}

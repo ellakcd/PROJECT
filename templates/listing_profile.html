@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{{ listing.address }}{% endblock %}
+{% block content %}
+
+
+{% for photo in listing.photos %}
+	<img src=photo><br>
+	Neighborhood: {{ listing.neighborhood }}<br>
+	Monthly Price: {{ listing.price }}<br>
+	{{ listing.description }}
+	Bedrooms: {{ listing.bedrooms }}<br>
+	Bathrooms: {{ listing.bathrooms }}<br>
+	Laundry: {{ listing.laundry }}<br>
+	Pets: {{ listing.pets }} <br>
+{% endfor %}
+
+Roommates: 
+<br>
+<ul>
+	{% for user in listing.users %}
+	<li>
+		<a href="/users/{{ user.user_id }}">
+				<img src="{{ user.photo }}"><br>
+				{{ user.user_name }}
+		</a>
+	</li>
+	{% endfor %}
+</ul>
+
+	
+
+{% endblock %}
+
+
+
+
+
+neighborhood = db.Column(db.String(100), nullable=False)
+	address = db.Column(db.String(100), nullable=False)
+	price = db.Column(db.Integer, nullable=False)
+	avail_as_of = db.Column((db.DateTime), nullable=False)
+	length_of_rental = db.Column(db.Integer, nullable=False)
+	bedrooms = db.Column(db.Integer, nullable=False)
+	bathrooms = db.Column(db.Integer, nullable=False)
+	laundry = db.Column(db.Boolean, nullable=False)
+	pets = db.Column(db.Integer, nullable=False)
+	description = db.Column(db.String(200), nullable=True, default="Come see for yourself!")
+

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}{{user.user_name}}{% endblock %}
+{% block content %}
+
+<h1> {{ user.user_name }} </h1>
+
+<img src=user.photo>
+
+<p> {{ user.bio }} </p>
+<br> {{ user.city }}
+
+<ul>
+	{% for listing in user.listings %}
+		<li>
+			<a href="/listings/{{ listing.listing_id }}">
+				<img src="{{ listing.photos[0] }}"><br>
+				{{ listing.city }}
+			</a>
+		</li>
+	{% endfor %}
+</ul>
+
+
+	
+
+{% endblock %}
+
+
+
+
+
+

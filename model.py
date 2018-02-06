@@ -2,7 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-
+db = SQLAlchemy()
 
 """Model definitions"""
 
@@ -10,15 +10,17 @@ from flask_sqlalchemy import SQLAlchemy
 class User(db.Model):
 	"""Users of rental site"""
 
-	__tablename__ = "user"
+	__tablename__ = "users"
 
 	user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+	user_name = db.Column(db.String(100), nullable=False)
 	name = db.Column(db.String(100), nullable=False)
 	email = db.Column(db.String(100), nullable=False)
 	password = db.Column(db.String(15), nullable=False)
 	phone = db.Column(db.Integer, nullable=False)
-	bio = db.Column(db.String(100), nullable=True)
-	photo = db.Column(db.String(100), nullable=True)
+	bio = db.Column(db.String(100), nullable=True, default="I keep it mysterious...")
+	photo = db.Column(db.String(100), nullable=True, default="/default.jpg")
+	city = db.Column(db.String(100), nullable=True, default="I move around a lot")
 
 	listings = db.relationship("Listing", 
 								secondary="user_listings", 
@@ -34,46 +36,10 @@ class User(db.Model):
 		return "<User name={} user_id={}>".format(self.name, self.user_id)
 
 
-# class Req(db.Model): 
-# 	"""User's Requirements"""
-
-# 	__tablename__ = "req"
-
-# 	req_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-# 	user_id = db.Column(db.Integer, db.ForeignKey(user.user_id), nullable=False)
-# 	city = db.Column(db.String(100), nullable=False)
-# 	max_price = db.Column(db.Integer, nullable=True)
-# 	start_date = db.Column((db.DateTime), nullable=False)
-# 	length_of_rental = db.Column(db.Integer, nullable=False)
-
-# 	user = db.relationship("User", backref="reqs")
-
-# 	def __repr__(self):
-# 		"""Provide helpful representation when printed"""
-
-# 		return "<Req req id={} max price={}>".format(self.req_id, self.max_price)
-
-# class Area(db.Model):
-# 	"""Areas"""
-
-# 	__tablename__ = "area"
-
-# 	area_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-# 	user_id = db.Column(db.Integer, db.ForeignKey(user.user_id), nullable=False)
-# 	area = db.Column(db.String(100), nullable=False)
-	
-# 	user = db.relationship("User", backref="areas")
-
-# 	def __repr__(self):
-# 		"""Provide helpful representation when printed"""
-
-# 		return "<Area ={}>".format(self.area)
-
-
 class Listing(db.Model):
 	"""Listings on rental site"""
 
-	__tablename__ = "listing"
+	__tablename__ = "listings"
 
 	listing_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	# lister_id = db.Column(db.Integer, db.ForeignKey(user.user_id), nullable=False)
@@ -87,7 +53,7 @@ class Listing(db.Model):
 	bathrooms = db.Column(db.Integer, nullable=False)
 	laundry = db.Column(db.Boolean, nullable=False)
 	pets = db.Column(db.Integer, nullable=False)
-	description = db.Column(db.String(200), nullable=True)
+	description = db.Column(db.String(200), nullable=True, default="Come see for yourself!")
 
 	users = db.relationship("User",
 							secondary="user_listings", 
@@ -102,11 +68,11 @@ class Listing(db.Model):
 class UserListing(db.Model):
 	"""Users and listings on rental site"""
 
-	__tablename__ = "user-listing"
+	__tablename__ = "user-listings"
 
 	user_listing_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey(user.user_id), nullable=False)
-	listing_id = db.Column(db.Integer, db.ForeignKey(listing.listing_id), nullable=False)
+	user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+	listing_id = db.Column(db.Integer, db.ForeignKey("listings.listing_id"), nullable=False)
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
@@ -117,11 +83,11 @@ class UserListing(db.Model):
 class Picture(db.Model):
 	"""Pics of listings"""
 
-	__tablename__ = "picture"
+	__tablename__ = "pictures"
 
 	picture_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	listing_id = db.Column(db.Integer, db.ForeignKey(listing.listing_id), nullable=False)
-	photo = db.Column()
+	listing_id = db.Column(db.Integer, db.ForeignKey("listings.listing_id"), nullable=False)
+	photo = db.Column(db.String(200), nullable=False)
 
 	listing = db.relationship("Listing", backref="photos")
 
@@ -134,24 +100,24 @@ class Picture(db.Model):
 class Friendship(db.Model):
 	"""Friendship between users"""
 
-	__tablename__ = "friendship"
+	__tablename__ = "friendships"
 
 	friendship_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	friend_1_id = db.Column(db.Integer, db.ForeignKey(user.user_id), nullable=False)
-	friend_2_id = db.Column(db.Integer, db.ForeignKey(user.user_id), nullable=False)
+	friend_1_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+	friend_2_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
 
 	user = db.relationship("User", backref="friendships")
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
 
-		return "<Friendship id={} friend 1={} friend 2={}>".format(self.friendship_id, self.user.name, self.user.name)
+		return "<Friendship id={}>".format(self.friendship_id)
 
 
 class Question(db.Model):
 	"""Compatibility Question"""
 
-	__tablename__ = "question"
+	__tablename__ = "questions"
 
 	question_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	question = db.Column(db.String(200), nullable=False)
@@ -166,10 +132,10 @@ class Question(db.Model):
 class Answer(db.Model):
 	"""Answer to multiple choice question"""
 
-	__tablename__ = "answer"
+	__tablename__ = "answers"
 
 	answer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	question_id = db.Column(db.Integer, db.ForeignKey(question.question_id), nullable=False)
+	question_id = db.Column(db.Integer, db.ForeignKey("questions.question_id"), nullable=False)
 	answer = db.Column(db.String(200), nullable=False)
 
 	question = db.relationship("Question", backref="answers")
@@ -187,11 +153,11 @@ class Answer(db.Model):
 class UserAnswer(db.Model):
 	"""User's answer to multiple choice question"""
 
-	__tablename__ = "user_answer"
+	__tablename__ = "user_answers"
 
 	user_answer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey(user.user_id, nullable=False))
-	answer_id = db.Column(db.Integer, db.ForeignKey(answer.answer_id, nullable=False))
+	user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+	answer_id = db.Column(db.Integer, db.ForeignKey("answers.answer_id"), nullable=False)
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
@@ -207,8 +173,8 @@ def connect_to_db(app):
 
 	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///roommatch'
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.app = app
-    db.init_app(app)
+	db.app = app
+	db.init_app(app)
 
 
 if __name__ == "__main__":

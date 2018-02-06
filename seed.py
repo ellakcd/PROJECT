@@ -2,7 +2,7 @@
 
 import datetime
 from sqlalchemy import func
-from model import User, Listing, Req, Friendship, Picture, Question, Answer, User_answer
+from model import User, Listing, UserListing, Friendship, Picture, Question, Answer, UserAnswer
 
 from model import connect_to_db, db 
 from server import app
@@ -20,15 +20,17 @@ def load_users():
 	with open("seed_data/users.txt") as users:
 		for user in users:
 			user = user.rstrip()
-			user_id, name, email, password, phone, bio, photo = users.split("|")
+			user_id, user_name, name, email, password, phone, bio, photo, city = users.split("|")
 
 			user = User(user_id=user_id,
+				user_name=user_name,
 				name=name,
 				email=email,
 				password=password, 
 				phone=phone, 
 				bio=bio, 
-				photo=photo
+				photo=photo, 
+				city=city
 				)
 			#add data
 			db.session.add(user)
@@ -39,14 +41,25 @@ def load_users():
 def load_listings():
 	"""Load listings from seed data into database"""
 
-	Print "Listings"
+	print "Listings"
 
 	Listing.query.delete()
 
 	with open("seed_data/listings.txt") as listings: 
 		for listing in listings: 
-			listing = listing.rstrip()
-			listing_id, neighborhood, address, price, avail_as_of, length_of_rental, bedrooms, bathrooms, laundry, pets, description = listing.split("|")
+			listing = listing.rstrip().split("|")
+
+			listing_id = listing[0]
+			neighborhood = listing[1]
+			address = listing[2]
+			price = listing[3]
+			avail_as_of = datetime.datetime.strptime(listing[4], "%d-%b-%Y")
+			length_of_rental = listing[5]
+			bedrooms = listing[6]
+			bathrooms = listing[7]
+			laundry = listing[8]
+			pets = listing[9]
+			description = listing[10]
 
 			listing = Listing(listing_id=listing_id, 
 				neighborhood=neighborhood,
@@ -68,7 +81,7 @@ def load_listings():
 def load_user_listings():
 	"""Load user-listings from seed data into database"""
 
-	Print "User Listings"
+	print "User Listings"
 
 	UserListing.query.delete()
 
@@ -151,12 +164,29 @@ def load_friendships():
 
 
 def load_pictures():
+	"""Load pictures from seed data into database"""
 
+	print "Pictures"
+
+	Picture.query.delete()
+
+	with open("seed_data/pictures.txt") as pictures: 
+		for picture in pictures: 
+			picture = picture.rstrip()
+			picture_id, listing_id, photo = question.split("|")
+
+			picture = Picture(picture_id=picture_id, 
+				listing_id=listing_id, 
+				photo=photo)
+
+			db.session.add(picture)
+
+	db.session.commit()
 
 def load_questions():
 	"""Load questions from seed data into database"""
 
-	Print "Questions"
+	print "Questions"
 
 	Question.query.delete()
 
@@ -176,7 +206,7 @@ def load_questions():
 def load_answers():
 	"""Load answers from seed data into database"""
 
-	Print "Answers"
+	print "Answers"
 
 	Answer.query.delete()
 
@@ -197,7 +227,7 @@ def load_answers():
 def load_user_answers():
 	"""Load user-answers from seed data into database"""
 
-	Print "User Answers"
+	print "User Answers"
 
 	UserAnswer.query.delete()
 
@@ -213,5 +243,21 @@ def load_user_answers():
 			db.session.add(user_answer)
 
 	db.session.commit()
+
+
+
+if __name__ == "__main__":
+	connect_to_db(app)
+
+	db.create_all()
+
+	load_users()
+	load_listings()
+	load_user_listings()
+	load_friendships()
+	# load_pictures()
+	load_questions()
+	load_answers()
+	load_user_answers()
 
 
