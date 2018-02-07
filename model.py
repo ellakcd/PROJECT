@@ -17,18 +17,24 @@ class User(db.Model):
 	name = db.Column(db.String(100), nullable=False)
 	email = db.Column(db.String(100), nullable=False)
 	password = db.Column(db.String(15), nullable=False)
-	phone = db.Column(db.Integer, nullable=False)
+	phone = db.Column(db.String(15), nullable=False)
 	bio = db.Column(db.String(100), nullable=True, default="I keep it mysterious...")
-	photo = db.Column(db.String(100), nullable=True, default="/default.jpg")
-	city = db.Column(db.String(100), nullable=True, default="I move around a lot")
+	photo = db.Column(db.String(100), nullable=True, default="../static/images/default.jpg")
+	state = db.Column(db.String(100), nullable=True, default="I move around a lot")
+	looking_for_apt = db.Column(db.Boolean, nullable=False, default=1)
 
 	listings = db.relationship("Listing", 
 								secondary="user_listings", 
 								backref="users")
 
-	answers = db.relationship("Answers", 
+	answers = db.relationship("Answer", 
 								secondary="user_answers", 
 								backref="users")
+
+	friends = db.relationship("User", 
+								secondary="friendships",
+								primaryjoin="User.user_id==Friendship.friend_1_id", 
+								secondaryjoin="User.user_id==Friendship.friend_2_id")
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
@@ -51,13 +57,10 @@ class Listing(db.Model):
 	length_of_rental = db.Column(db.Integer, nullable=False)
 	bedrooms = db.Column(db.Integer, nullable=False)
 	bathrooms = db.Column(db.Integer, nullable=False)
-	laundry = db.Column(db.Boolean, nullable=False)
-	pets = db.Column(db.Integer, nullable=False)
+	laundry = db.Column(db.Boolean, nullable=False, default="False")
+	pets = db.Column(db.Integer, nullable=False, default="False")
 	description = db.Column(db.String(200), nullable=True, default="Come see for yourself!")
 
-	users = db.relationship("User",
-							secondary="user_listings", 
-							backref="users")
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
@@ -68,7 +71,7 @@ class Listing(db.Model):
 class UserListing(db.Model):
 	"""Users and listings on rental site"""
 
-	__tablename__ = "user-listings"
+	__tablename__ = "user_listings"
 
 	user_listing_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
@@ -94,7 +97,7 @@ class Picture(db.Model):
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
 
-		return "<Picture id={} listing={}>".format(self.picture_id, self.listing_id)
+		return "<Picture id={} listing={} photo={}>".format(self.picture_id, self.listing_id, self.photo)
 
 
 class Friendship(db.Model):
@@ -106,7 +109,6 @@ class Friendship(db.Model):
 	friend_1_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
 	friend_2_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
 
-	user = db.relationship("User", backref="friendships")
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
@@ -140,9 +142,6 @@ class Answer(db.Model):
 
 	question = db.relationship("Question", backref="answers")
 
-	users = db.relationship("Answer", 
-							secondary="user_answers", 
-							backref="answers")
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
@@ -163,6 +162,8 @@ class UserAnswer(db.Model):
 		"""Provide helpful representation when printed"""
 
 		return "<User Answer {}>".format(self.user_answer_id)
+
+
 
 
 

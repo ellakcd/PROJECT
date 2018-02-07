@@ -1,8 +1,43 @@
 {% extends 'base.html' %}
-{% block title %}Homepage{% endblock %}
+{% block title %}Create Your Profile{% endblock %}
 {% block content %}
-	Welcome to Roommatch 
 
-	
+
+<div>
+Tell us a little about yourself: 
+<form action="/make_user_profile" method="POST">
+User Name (how others will see you listed):<br>
+	<input type="text" name="user_name" required><br>
+Full Name:<br>
+	<input type="text" name="full_name" required><br>
+Phone Number:<br>
+	<input type="text" name="phone" required><br>
+State: 
+	<select name="state" required>
+	{% for state in STATES %}
+  		<option value="{{ state }}">{{ state }}</option>
+	{% endfor %}
+	</select><br>
+Are you currently looking for an apartment?<br>
+	<input type="radio" name="looking" value="true" checked> Yes! <br>
+	<input type="radio" name="looking" value="false"> Nope. <br>
+Quick Bio:<br>
+	<textarea maxlength="50" name="bio">
+	</textarea><br>
+Profile Photo:<br>
+	<input type="file" name="photo"><br>
+Email: <br>
+	<input type="email" name="email" required><br>
+Password: <br>
+	<input type="password" name="password" required><br>
+Friends:<br>
+	{% for user in users %}
+	<input type="checkbox" name="friends" value="{user.user_id}"> {{user.user_name}}<br>
+	{% endfor %}
+	<br>
+	<input type="submit" value="Create Profile!">	
+</form>
+</div>
+
 
 {% endblock %}

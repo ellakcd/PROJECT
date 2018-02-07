@@ -6,6 +6,8 @@ from model import User, Listing, UserListing, Friendship, Picture, Question, Ans
 
 from model import connect_to_db, db 
 from server import app
+from sqlalchemy.inspection import inspect
+
 
 
 def load_users():
@@ -13,14 +15,21 @@ def load_users():
 
 	print "Users"
 
-	#Delete all rows in table so can strart from scratch if need to repopulate
-	User.query.delete()
-
 	#create data
 	with open("seed_data/users.txt") as users:
-		for user in users:
-			user = user.rstrip()
-			user_id, user_name, name, email, password, phone, bio, photo, city = users.split("|")
+		for row in users:
+			user = row.rstrip().split("|")
+
+			user_id = user[0]
+			user_name = user[1]
+			name = user[2]
+			email = user[3]
+			password = user[4]
+			phone = user[5]
+			bio = user[6]
+			photo = user[7]
+			state = user[8]
+			looking_for_apt = user[9]
 
 			user = User(user_id=user_id,
 				user_name=user_name,
@@ -30,7 +39,8 @@ def load_users():
 				phone=phone, 
 				bio=bio, 
 				photo=photo, 
-				city=city
+				state=state, 
+				looking_for_apt=looking_for_apt
 				)
 			#add data
 			db.session.add(user)
@@ -43,11 +53,9 @@ def load_listings():
 
 	print "Listings"
 
-	Listing.query.delete()
-
 	with open("seed_data/listings.txt") as listings: 
-		for listing in listings: 
-			listing = listing.rstrip().split("|")
+		for row in listings: 
+			listing = row.rstrip().split("|")
 
 			listing_id = listing[0]
 			neighborhood = listing[1]
@@ -83,8 +91,6 @@ def load_user_listings():
 
 	print "User Listings"
 
-	UserListing.query.delete()
-
 	with open("seed_data/user_listings.txt") as user_listings: 
 		for user_listing in user_listings: 
 			user_listing = user_listing.rstrip()
@@ -100,48 +106,6 @@ def load_user_listings():
 
 
 
-# def load_reqs():
-# 	"""Load user requirements from seed data into database"""
-
-# 	Req.query.delete()
-
-# 	with open("seed_data/reqs.txt") as reqs: 
-# 		for req in reqs: 
-# 			req = req.rstrip()
-# 			req_id, user_id, city, max_price, start_date, length_of_rental = req.split("|")
-
-# 			req = Req(req_id=req_id, 
-# 				user_id=user_id, 
-# 				city=city, 
-# 				max_price=max_price, 
-# 				start_date=start_date, 
-# 				length_of_rental=length_of_rental)
-
-# 			db.session.add(req)
-
-# 	db.session.commit()
-
-
-# def load_areas():
-# 		"""Load areas from seed data into database"""
-
-# 	Area.query.delete()
-
-# 	with open("seed_data/area.txt") as areas: 
-# 		for area in areas: 
-# 			area = area.rstrip()
-# 			area_id, user_id, area = area.split("|")
-
-# 			area = Area(area_id=area_id, 
-# 				user_id=user_id, 
-# 				area=area)
-
-# 			db.session.add(area)
-
-# 	db.session.commit()
-
-
-
 def load_friendships():
 	"""Load friendships from seed data into database"""
 
@@ -149,7 +113,7 @@ def load_friendships():
 
 	Friendship.query.delete()
 
-	with open("seed_data/friendship.txt") as friendships: 
+	with open("seed_data/friendships.txt") as friendships: 
 		for friendship in friendships: 
 			friendship = friendship.rstrip()
 			friendship_id, friend_1_id, friend_2_id = friendship.split("|")
@@ -168,12 +132,10 @@ def load_pictures():
 
 	print "Pictures"
 
-	Picture.query.delete()
-
 	with open("seed_data/pictures.txt") as pictures: 
 		for picture in pictures: 
 			picture = picture.rstrip()
-			picture_id, listing_id, photo = question.split("|")
+			picture_id, listing_id, photo = picture.split("|")
 
 			picture = Picture(picture_id=picture_id, 
 				listing_id=listing_id, 
@@ -188,12 +150,10 @@ def load_questions():
 
 	print "Questions"
 
-	Question.query.delete()
-
-	with open("seed_data/question.txt") as questions: 
-		for question in questions: 
-			question = question.rstrip()
-			question_id, question = question.split("|")
+	with open("seed_data/questions.txt") as questions: 
+		for q in questions: 
+			q = q.rstrip()
+			question_id, question = q.split("|")
 
 			question = Question(question_id=question_id, 
 				question=question)
@@ -208,12 +168,10 @@ def load_answers():
 
 	print "Answers"
 
-	Answer.query.delete()
-
 	with open("seed_data/answers.txt") as answers: 
-		for answer in answers: 
-			answer = answer.rstrip()
-			answer_id, question_id, answer = answer.split("|")
+		for ans in answers: 
+			ans = ans.rstrip()
+			answer_id, question_id, answer = ans.split("|")
 
 			answer = Answer(answer_id=answer_id, 
 				question_id=question_id, 
@@ -229,9 +187,7 @@ def load_user_answers():
 
 	print "User Answers"
 
-	UserAnswer.query.delete()
-
-	with open("seed_data/user_answer.txt") as user_answers: 
+	with open("seed_data/user_answers.txt") as user_answers: 
 		for user_answer in user_answers: 
 			user_answer = user_answer.rstrip()
 			user_answer_id, user_id, answer_id = user_answer.split("|")
@@ -246,18 +202,99 @@ def load_user_answers():
 
 
 
+"""
+A non-class-specific way to update postgresql's autoincrementing primary key
+sequences, useful for running after data including primary key values has been
+seeded.
+
+Similar to set_val_user_id() from Ratings, but works on all classes in
+model.py.
+
+Author: Katie Byers
+
+"""
+
+
+def update_pkey_seqs():
+    """Set primary key for each table to start at one higher than the current
+    highest key. Helps when data has been manually seeded."""
+
+    # get a dictionary of {classname: class} for all classes in model.py
+    model_classes = db.Model._decl_class_registry
+
+    # loop over the classes
+    for class_name in model_classes:
+
+        # the dictionary will include a helper class we don't care about, so
+        # skip it
+        if class_name == "_sa_module_registry":
+            continue
+
+        print
+        print "-" * 40
+        print "Working on class", class_name
+
+        # get the class itself out of the dictionary
+        cls = model_classes[class_name]
+
+        # get the name of the table associated with the class and its primary
+        # key
+        table_name = cls.__tablename__
+        pkey_column = inspect(cls).primary_key[0]
+        primary_key = pkey_column.name
+        print "Table name:", table_name
+        print "Primary key:", primary_key
+
+        # check to see if the primary key is an integer (which are
+        # autoincrementing by default)
+        # if it isn't, skip to the next class
+        if (not isinstance(pkey_column.type, db.Integer) or
+            pkey_column.autoincrement is not True):
+            print "Not an autoincrementing integer key - skipping."
+            continue
+
+        # now we know we're dealing with an autoincrementing key, so get the
+        # highest id value currently in the table
+        result = db.session.query(func.max(getattr(cls, primary_key))).first()
+
+        # if the table is empty, result will be none; only proceed if it's not
+        # (we have to index at 0 since the result comes back as a tuple)
+        if result[0]:
+            # cast the result to an int
+            max_id = int(result[0])
+            print "highest id:", max_id
+
+            # set the next value to be max + 1
+            query = ("SELECT setval('" + table_name + "_" + primary_key +
+                     "_seq', :new_id)")
+            db.session.execute(query, {'new_id': max_id + 1})
+            db.session.commit()
+            print "Primary key sequence updated."
+        else:
+            print "No records found. No update made."
+
+    # we're done!
+    print
+    print "-" * 40
+    print
+    print "Primary key sequences updated!"
+    print
+
+
+
 if __name__ == "__main__":
 	connect_to_db(app)
 
 	db.create_all()
 
+
 	load_users()
 	load_listings()
-	load_user_listings()
 	load_friendships()
-	# load_pictures()
+	load_pictures()
 	load_questions()
 	load_answers()
+	load_user_listings()
 	load_user_answers()
 
 

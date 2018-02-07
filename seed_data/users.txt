@@ -1,11 +1,10 @@
-1|HP|Harry Potter|harry@hogwarts.edu|password1|1111111111|wizard|../images/Harry.jpg
-2|HG|Hermoine Granger|hermoine@hogwarts.edu|password2|2222222222|witch|../images/Hermoine.jpg
-3|RW|Ron Weasley|ron@hogwarts.edu|password3|3333333333||
-4|GW|Ginny Weasley|ginny@hogwarts.edu|password4|4444444444||
-5|DM|Draco Malfoy|draco@hogwarts.edu|password5|5555555555||
-6|RG|Rory Gilmore|rory@chilton.edu|password6|6666666666||
-7|LG|Lorelei Gilmore|lor@dragonfly.com|password7|7777777777||
-8|PG|Paris Geller|paris@yale.edu|password8|8888888888||
-9|TM|Ted Mosby|ted@columbia.edu|password9|999999999||NYC
-10|BS|Barney Stinson|barney@gnb.com|password10|1011011010||NYC
-
+1|HP|Harry Potter|harry@hogwarts.edu|password1|1111111111|wizard|../static/images/Harry.jpg|NY|1
+2|HG|Hermoine Granger|hermoine@hogwarts.edu|password2|2222222222|witch|../static/images/Hermoine.jpg|CA|0
+3|RW|Ron Weasley|ron@hogwarts.edu|password3|3333333333||static/images/../Ron.jpg|NY|1
+4|GW|Ginny Weasley|ginny@hogwarts.edu|password4|4444444444||../static/images/Ginny.jpg|CA|0
+5|DM|Draco Malfoy|draco@hogwarts.edu|password5|5555555555||../static/images/Draco.jpg|NY|1
+6|RG|Rory Gilmore|rory@chilton.edu|password6|6666666666||../static/images/Rory.jpg|NY|1
+7|LG|Lorelei Gilmore|lor@dragonfly.com|password7|7777777777||../static/images/Lorelei.png|NY|1
+8|PG|Paris Geller|paris@yale.edu|password8|8888888888||||1
+9|TM|Ted Mosby|ted@columbia.edu|password9|999999999|||NY|1
+10|BS|Barney Stinson|barney@gnb.com|password10|1011011010|||NY|1

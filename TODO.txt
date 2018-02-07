@@ -19,23 +19,26 @@ rent
 
 
 
-DO I take user_id out of listing
-areas list
-photos
-keep to USA
-password protection
-
+TODO: 
+Create listing
+Unlist house and option to relist w different dates -- Hide or show in DB
+edit profile page - when logged in and on own profile, can click on a section and edit it - JQERY
+Way to add friends
+If logged in a try to register, redirect to profile page
+how to upload photos
+Default Date is today
+Add yourself to listing by listing ID and add a user to your listing by user ID
+Check if address is already in DB - ask if want to add to that listing
+Get listing IDs when create
+Dictionary to be sure input isn't scary
+Handle bad user input / no user input
 
 Lat Long
+Ajax list of neighborhoods by state
+Map of houses by state with price and mutuals as pop up
+Map of each house
 
-IF LOGGED IN and try to register, redirect them to their profile page
-ON profile page, let them edit 
-ON home page let them search 
-RENTERs can search for RENTEES
-and RENTEEs can search for houses
+
+password protection - bcrypt package
 
 IF a roommate doesn't want to register, just link to their FB
-
-Get list of neighborhoods in each city / state
-
-HOW to upload photo

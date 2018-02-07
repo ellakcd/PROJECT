@@ -3,13 +3,15 @@
 {% block content %}
 	Welcome to Roommatch 
 
-<h1><a href="/register">Create Your Profile!</a></h1>
-	
+{% if session.get("current_user") %}
+<form action="/logout">
+<input type="submit" value="Come Back Soon!">
+
 <div>
 Search for your new HOME: 
 <form action="/house_search" method="GET">
 Do you want (a) roommate(s)?:<br>
-	<input type="radio" name="live_alone" value="yes"> Heck Yes! <br>
+	<input type="radio" name="live_alone" value="yes" checked> Heck Yes! <br>
 	<input type="radio" name="live_alone" value="no"> Nope <br>
 	<input type="radio" name="live_alone" value="maybe"> I'm happy either way <br>
 How long are you looking for?:<br>
@@ -25,12 +27,31 @@ What's your earliest start date?:<br>
 	<input type="date" name="start_date"><br>
 What neighborhood do you want to live in?:<br>
 	<input type="text" name="neighborhood"><br>
-	<input type="submit" value="Reveal!">
+	<input type="submit" value="Reveal Matches!">
 </form>
 </div>
 
+{% else %}
+<p>Log In!<br>
+    <form action="/login" method="POST">
+        Email: <input type="text" name="email" required><br>
+        Password: <input type="text" name="password" required><br>
+        <input type="submit" value="Welcome Home!">
+    </form>
+
+<h1><a href="/register">Create Your Profile!</a></h1>
+	
+{% endif %}
+
 <div>
-Search for your new ROOMMATE: 
+<!-- Search for your new ROOMMATE: 
+<form action="/roommate_search" method="GET">
+Do you want someone short term or long term?:<br>
+	<input type="radio" name="short_term" value="yes"> Short! <br>
+	<input type="radio" name="short_term" value="no"> Long! <br>
+	<input type="radio" name="short_term" value="maybe"> Doesn't Matter! <br>
+Do you want to hang with your roommate a lot? 
+ -->
 </div>
 
 

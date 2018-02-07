@@ -2,31 +2,40 @@
 {% block title %}{{user.user_name}}{% endblock %}
 {% block content %}
 
-<h1> {{ user.user_name }} </h1>
 
-<img src=user.photo>
+{% if session.get("current_user") == user.user_id %} 
+	Only you can see this: 
+	<div id="photo"> <img src="{{ user.photo }}"> </div>
+	<div id="user_name"> {{ user.user_name }} </div>
+	<div id="email"> {{ user.email }} </div>
+	<div id="bio"> {{ user.bio }} </div>
+	<div id="state"> {{ user.state }} </div>
+	<div id="looking"> {{ user.looking_for_apartment }} </div>
+{% else %}
 
-<p> {{ user.bio }} </p>
-<br> {{ user.city }}
+	<h1> {{ user.user_name }} </h1>
+	<img src="{{ user.photo }}">
+	<p> {{ user.bio }} </p>
+	{{ user.state }}
+
+{% endif %}
 
 <ul>
 	{% for listing in user.listings %}
 		<li>
 			<a href="/listings/{{ listing.listing_id }}">
-				<img src="{{ listing.photos[0] }}"><br>
-				{{ listing.city }}
+				{{ listing.neighborhood }}
+				{% for photo in listing.photos %}
+						<img src="{{ photo.photo }}"><br>
+				{% endfor %}
 			</a>
 		</li>
 	{% endfor %}
 </ul>
 
-
+{% if session.get("current_user") == user.user_id %} 
+	<a href="/add_listing"> Add A Listing </a>
+{% endif %}
 	
 
 {% endblock %}
-
-
-
-
-
-

@@ -1,22 +1,10 @@
-	neighborhood=neighborhood,
-				address=address, 
-				price=price, 
-				avail_as_of=avail_as_of, 
-				length_of_rental=length_of_rental, 
-				bedrooms=bedrooms, 
-				bathrooms=bathrooms, 
-				laundry=laundry, 
-				pets=pets, 
-				description=description)
-
-
-1|Grammercy|201 East 17th St 15A NYC NY 10003|1500|01-Mar-2018|3|1|1|False|False|
-2|Soho|12 Ludlow St 2B NYC NY 100002|2500|01-Apr-2018|6|2|2|True|False|
-3|Noho|12 Houston St 3B NYC NY 10021|3500|01-Jun-2018|6|3|2|True|False|
-4|Mission|1235 23rd St 1 SF CA 94110|1500|01-Jun-2018|4|2|1|False|True|
-5|Castro|25 Noe St 3 SF CA 94114|2000|2|1|True|True|
-6|Castro|155 Castro St 3 SF CA 94114|2000|2|1|True|True|
-7|Cambridge|26 Reservoir St Cambridge MA 02138|5|4|True|False|
-8|Murray Hill|2 Tudor City Pl 7KN NYC NY 10015|2000|2|1|False|False|
-9|Murray Hill|2 Tudor City Pl 10EN NYC NY 10015|1500|2|1|False|False|
-10|Mission|200 18th St 1 SF CA 94110|1500|01-Jun-2018|4|2|1|False|True|
+1|Grammercy|201 East 17th St 15A NYC NY 10003|1500|01-Mar-2018|6|3|1|1|0|
+2|Soho|12 Ludlow St 2B NYC NY 100002|2500|01-Apr-2018|6|3|2|0|1|
+3|Noho|12 Houston St 3B NYC NY 10021|3500|01-Jun-2018|6|3|2|1|0|
+4|Mission|1235 23rd St 1 SF CA 94110|1500|01-Jun-2018|4|2|1|0|1|
+5|Castro|25 Noe St 3 SF CA 94114|2000|01-Jun-2018|2|1|1|1|0|
+6|Castro|155 Castro St 3 SF CA 94114|2000|01-Jun-2018|2|1|1|1|0|
+7|Cambridge|26 Reservoir St Cambridge MA 02138|3000|01-Jun-2018|5|4|1|0|1|
+8|Murray Hill|2 Tudor City Pl 7KN NYC NY 10015|2000|01-Jun-2018|2|1|0|0|1|
+9|Murray Hill|2 Tudor City Pl 10EN NYC NY 10015|1500|01-Jun-2018|2|1|1|0|0|
+10|Mission|200 18th St 1 SF CA 94110|1500|01-Jun-2018|4|2|1|0|1|
