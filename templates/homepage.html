@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}Homepage{% endblock %}
 {% block content %}
-	Welcome to Roommatch 
+	<h1>Welcome to Roommatch</h1> <br>
+
+<a href="/listings_by_state"> View All Listings </a><br>
+<a href="/users_by_state"> View All Users </a><br>
+<a href="/listings_by_friends"> View All Listings By Friends </a><br><br>
 
 {% if session.get("current_user") %}
 <form action="/logout">
-<input type="submit" value="Come Back Soon!">
+<input type="submit" value="Log Out!"><br><br>
+
+<a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br><br>
 
 <div>
 Search for your new HOME: 

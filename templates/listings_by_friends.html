@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Listings By Friends{% endblock %}
+{% block content %}
+
+{% for friend in friends %}
+	{% for listing in friend.listings %}
+		<a href="/listings/{{ listing.listing_id }}">{{ listing.address }}</a> <br>
+		<a href="/users/{{ friend.user_id }}">{{ friend.user_id }}<br>
+		<img src="{{ friend.photo }}" class="small_photo">
+		</a> <br>  
+	{% endfor %}
+{% endfor %}
+
+{% for second in seconds %}
+	{% for listing in second.listings %}
+		<a href="/listings/{{ listing.listing_id }}">{{ listing.address }}</a> <br> 
+		<a href="/users/{{ second }}">{{ second }}<br>
+			</a> <br> 
+		{% for friend in seconds[second] %}
+			<a href="/users/{{ friend.user_id }}">{{ friend.user_id }}<br>
+			<img src="{{ friend.photo }}" class="small_photo">
+			</a> <br> 
+		{% endfor %}
+	{% endfor %}
+{% endfor %}
+
+{% endblock %}

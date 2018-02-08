@@ -18,27 +18,61 @@ rent
 
 
 
+fix pictures for houses
 
-TODO: 
-Create listing
-Unlist house and option to relist w different dates -- Hide or show in DB
-edit profile page - when logged in and on own profile, can click on a section and edit it - JQERY
-Way to add friends
+
+
+WEEKEND: 
+make more fake data
+
+USER PAGES: 
+
+LISTINGS BY STATE: 
+add friends
+
+CHANGES TO MODEL: 
+favorite listings
+
+USER REGISTRATION: 
+When register - add self to current listings
 If logged in a try to register, redirect to profile page
 how to upload photos
+
+LISTING PAGES: 
+Unlist house and option to relist w different dates 
+Add self
+Add others
+
+FRIENDS: 
+add functions to model.py as user methods
+figure out mutuals issue
+
+TODO: 
+give each listing one main photo in listing
+in state listing list, highlite user's state
+Users and listings by state
+Show mutual friends for both
+Create listing - add roommates to it
+
+
+
+edit profile page - when logged in and on own profile, can click on a section and edit it - JQERY
+
 Default Date is today
 Add yourself to listing by listing ID and add a user to your listing by user ID
-Check if address is already in DB - ask if want to add to that listing
-Get listing IDs when create
+
 Dictionary to be sure input isn't scary
 Handle bad user input / no user input
+
+Save a list of favorite houses and users
 
 Lat Long
 Ajax list of neighborhoods by state
 Map of houses by state with price and mutuals as pop up
 Map of each house
 
-
 password protection - bcrypt package
 
 IF a roommate doesn't want to register, just link to their FB
+
+TESTS

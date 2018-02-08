@@ -12,16 +12,15 @@ class User(db.Model):
 
 	__tablename__ = "users"
 
-	user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	user_name = db.Column(db.String(100), nullable=False)
+	user_id = db.Column(db.String(20), unique=True, primary_key=True)
 	name = db.Column(db.String(100), nullable=False)
 	email = db.Column(db.String(100), nullable=False)
 	password = db.Column(db.String(15), nullable=False)
 	phone = db.Column(db.String(15), nullable=False)
 	bio = db.Column(db.String(100), nullable=True, default="I keep it mysterious...")
-	photo = db.Column(db.String(100), nullable=True, default="../static/images/default.jpg")
+	photo = db.Column(db.String(100), nullable=True, default="static/images/default.jpg")
 	state = db.Column(db.String(100), nullable=True, default="I move around a lot")
-	looking_for_apt = db.Column(db.Boolean, nullable=False, default=1)
+	looking_for_apt = db.Column(db.Boolean, nullable=False, default=True)
 
 	listings = db.relationship("Listing", 
 								secondary="user_listings", 
@@ -47,9 +46,10 @@ class Listing(db.Model):
 
 	__tablename__ = "listings"
 
-	listing_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+	listing_id = db.Column(db.String(20), unique=True, primary_key=True)
 	# lister_id = db.Column(db.Integer, db.ForeignKey(user.user_id), nullable=False)
 	# CHANGE TO LAT LONG?
+	main_photo = db.Column(db.String(100), nullable=True, default="static/images/default.jpg")
 	neighborhood = db.Column(db.String(100), nullable=False)
 	address = db.Column(db.String(100), nullable=False)
 	price = db.Column(db.Integer, nullable=False)
@@ -57,9 +57,10 @@ class Listing(db.Model):
 	length_of_rental = db.Column(db.Integer, nullable=False)
 	bedrooms = db.Column(db.Integer, nullable=False)
 	bathrooms = db.Column(db.Integer, nullable=False)
-	laundry = db.Column(db.Boolean, nullable=False, default="False")
-	pets = db.Column(db.Integer, nullable=False, default="False")
+	laundry = db.Column(db.Boolean, nullable=False, default=False)
+	pets = db.Column(db.Integer, nullable=False, default=False)
 	description = db.Column(db.String(200), nullable=True, default="Come see for yourself!")
+	active = db.Column(db.Boolean, nullable=False, default=False)
 
 
 	def __repr__(self):
@@ -74,8 +75,8 @@ class UserListing(db.Model):
 	__tablename__ = "user_listings"
 
 	user_listing_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
-	listing_id = db.Column(db.Integer, db.ForeignKey("listings.listing_id"), nullable=False)
+	user_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
+	listing_id = db.Column(db.String(20), db.ForeignKey("listings.listing_id"), nullable=False)
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
@@ -89,7 +90,7 @@ class Picture(db.Model):
 	__tablename__ = "pictures"
 
 	picture_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	listing_id = db.Column(db.Integer, db.ForeignKey("listings.listing_id"), nullable=False)
+	listing_id = db.Column(db.String(20), db.ForeignKey("listings.listing_id"), nullable=False)
 	photo = db.Column(db.String(200), nullable=False)
 
 	listing = db.relationship("Listing", backref="photos")
@@ -106,8 +107,8 @@ class Friendship(db.Model):
 	__tablename__ = "friendships"
 
 	friendship_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	friend_1_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
-	friend_2_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+	friend_1_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
+	friend_2_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
 
 
 	def __repr__(self):
@@ -155,7 +156,7 @@ class UserAnswer(db.Model):
 	__tablename__ = "user_answers"
 
 	user_answer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+	user_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
 	answer_id = db.Column(db.Integer, db.ForeignKey("answers.answer_id"), nullable=False)
 
 	def __repr__(self):

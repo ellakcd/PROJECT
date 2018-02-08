@@ -1,0 +1,24 @@
+body {
+	background-color: blue;
+}
+
+.big_photo {
+	height: 300px;
+	width: 300px;
+}
+
+.small_photo {
+	height: 100px;
+	width: 100px;
+	display: inline-block;
+}
+
+.tiny_photo {
+	height: 50px;
+	width: 50px;
+}
+
+img {
+	height: 100px;
+	width: 100px;
+}

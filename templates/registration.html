@@ -32,7 +32,7 @@ Password: <br>
 	<input type="password" name="password" required><br>
 Friends:<br>
 	{% for user in users %}
-	<input type="checkbox" name="friends" value="{user.user_id}"> {{user.user_name}}<br>
+	<input type="checkbox" name="friends" value="{{ user.user_id }}"> {{user.user_id}}<br>
 	{% endfor %}
 	<br>
 	<input type="submit" value="Create Profile!">	

@@ -20,28 +20,22 @@ def load_users():
 		for row in users:
 			user = row.rstrip().split("|")
 
-			user_id = user[0]
-			user_name = user[1]
-			name = user[2]
-			email = user[3]
-			password = user[4]
-			phone = user[5]
-			bio = user[6]
-			photo = user[7]
-			state = user[8]
-			looking_for_apt = user[9]
+			kwargs = dict(
+			user_id = user[0],
+			name = user[1],
+			email = user[2],
+			password = user[3],
+			phone = user[4],
+			bio = user[5],
+			photo = user[6],
+			state = user[7],
+			looking_for_apt = user[8])
 
-			user = User(user_id=user_id,
-				user_name=user_name,
-				name=name,
-				email=email,
-				password=password, 
-				phone=phone, 
-				bio=bio, 
-				photo=photo, 
-				state=state, 
-				looking_for_apt=looking_for_apt
-				)
+			for key in kwargs.keys(): 
+				if kwargs[key] == "":
+					del kwargs[key]
+
+			user = User(**kwargs)
 			#add data
 			db.session.add(user)
 	#commit
@@ -57,29 +51,25 @@ def load_listings():
 		for row in listings: 
 			listing = row.rstrip().split("|")
 
-			listing_id = listing[0]
-			neighborhood = listing[1]
-			address = listing[2]
-			price = listing[3]
-			avail_as_of = datetime.datetime.strptime(listing[4], "%d-%b-%Y")
-			length_of_rental = listing[5]
-			bedrooms = listing[6]
-			bathrooms = listing[7]
-			laundry = listing[8]
-			pets = listing[9]
-			description = listing[10]
+			kwargs = dict(listing_id = listing[0],
+			neighborhood = listing[1],
+			address = listing[2],
+			price = listing[3],
+			avail_as_of = datetime.datetime.strptime(listing[4], "%d-%b-%Y"),
+			length_of_rental = listing[5],
+			bedrooms = listing[6],
+			bathrooms = listing[7],
+			laundry = listing[8],
+			pets = listing[9],
+			description = listing[10],
+			main_photo = listing[11],
+			active = listing[12])
 
-			listing = Listing(listing_id=listing_id, 
-				neighborhood=neighborhood,
-				address=address, 
-				price=price, 
-				avail_as_of=avail_as_of, 
-				length_of_rental=length_of_rental, 
-				bedrooms=bedrooms, 
-				bathrooms=bathrooms, 
-				laundry=laundry, 
-				pets=pets, 
-				description=description)
+			for key in kwargs.keys(): 
+				if kwargs[key] == "":
+					del kwargs[key]
+
+			listing = Listing(**kwargs)
 
 			db.session.add(listing)
 
@@ -111,7 +101,6 @@ def load_friendships():
 
 	print "Friendships"
 
-	Friendship.query.delete()
 
 	with open("seed_data/friendships.txt") as friendships: 
 		for friendship in friendships: 
@@ -296,5 +285,6 @@ if __name__ == "__main__":
 	load_answers()
 	load_user_listings()
 	load_user_answers()
+	update_pkey_seqs()
 
 

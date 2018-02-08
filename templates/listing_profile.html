@@ -1,18 +1,61 @@
 {% extends 'base.html' %}
-{% block title %}{{ listing.address }}{% endblock %}
+{% block title %}{{ listing.listing_id }}{% endblock %}
 {% block content %}
+
+{% if session.get("current_user") %}
+	<form action="/add_self_as_roommate" method="POST">
+	<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+	<input type="submit" value="Add Yourself As A Roommate">
+{% endif %}
+<br><br>
+
+{% if lister %}
+	Add A Roommate to This Listing: <br> 
+	<form action="/add_roommate" method="POST">
+	User Name: <br>
+	<select name="roomie" required>
+	{% for user in users %}
+  		<option value="{{ user.user_id }}">{{ user.user_id }}</option>
+	{% endfor %}
+	<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+	<input type="submit" value="Add Roommate">
+{% endif %}
+<br><br><br>
+
+
+
+{% if friends %}
+	You have friends living here!
+	{% for friend in friends %}
+		{{ friend.user_id }}<br>
+		<a href="/users/{{ friend.user_id }}">
+				<img src="{{ friend.photo }}" class="small_photo"><br>
+		</a><br>
+	{% endfor %}
+{% endif %}
+
+{% if mutuals %}
+	There are people living here who are friends of: <br>
+	{% for mutual in mutuals %}
+		{{ mutual.user_id }}<br>
+		<a href="/users/{{ mutual.user_id }}">
+				<img src="{{ mutual.photo }}" class="tiny_photo"><br>
+		</a><br>
+	{% endfor %}
+{% endif %}
 
 
 {% for photo in listing.photos %}
-	<img src="{{ photo }}"><br>
-	Neighborhood: {{ listing.neighborhood }}<br>
-	Monthly Price: {{ listing.price }}<br>
-	{{ listing.description }}
-	Bedrooms: {{ listing.bedrooms }}<br>
-	Bathrooms: {{ listing.bathrooms }}<br>
-	Laundry: {{ listing.laundry }}<br>
-	Pets: {{ listing.pets }} <br>
+	<img src="{{ photo.photo }}" class="big_photo"><br>
 {% endfor %}
+Neighborhood: {{ listing.neighborhood }}<br>
+Monthly Price: {{ listing.price }}<br>
+{{ listing.description }}<br>
+Bedrooms: {{ listing.bedrooms }}<br>
+Bathrooms: {{ listing.bathrooms }}<br>
+Laundry: {{ listing.laundry }}<br>
+Pets: {{ listing.pets }} <br><br><br>
+
 
 Roommates: 
 <br>
@@ -20,8 +63,8 @@ Roommates:
 	{% for user in listing.users %}
 	<li>
 		<a href="/users/{{ user.user_id }}">
-				<img src="{{ user.photo }}"><br>
-				{{ user.user_name }}
+				<img src="{{ user.photo }}" class="small_photo"><br>
+				{{ user.user_id }}
 		</a>
 	</li>
 	{% endfor %}
