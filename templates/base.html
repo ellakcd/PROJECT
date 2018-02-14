@@ -2,7 +2,11 @@
 <!doctype html>
 <html>
 <head>
+ <!--  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet"> -->
   <link rel="stylesheet" href="../static/css/stylesheet.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/
+    3.3.7/js/bootstrap.js"></script>
   <title>{% block title %} title goes here {% endblock %}</title>
 </head>
 {% with messages = get_flashed_messages() %}
@@ -16,6 +20,43 @@
 {% endwith %}
 <body>
   {% block content %} put your content here {% endblock %}
+
+
+<div id="test">
+</div>
+<script> 
+
+function showInfo(results) {
+  console.dir(results)
+  $("#test").append("<br>price:<br>" + results["price"]);
+  $("#test").append("<br>start date:<br>" + results["start date"]);
+  $("#test").append("<br> friends:")
+  let friends = results["friends"]
+  for (let i=0; i < friends.length; i++){
+    let friend = friends[i]
+    $("#test").append("<br>" + friend[0] + "<br>");
+    $("#test").append($('<img>',{id:'friend-pic', class: "tiny_photo", src:friend[1]}))
+   }
+}
+
+function getInfo(evt) {
+  let listing_id = $(this).data("listingId");
+  let formInputs = {
+    "listing_id": listing_id
+  };
+
+  $.get("/listing-info.json", formInputs, showInfo);
+}
+
+function clear(evt) {
+  $("#test").empty();
+}
+
+$(".listing").on("mouseenter", getInfo);
+$(".listing").on("mouseleave", clear);
+
+
+</script>
 </body>
 </html>
 

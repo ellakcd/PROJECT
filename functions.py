@@ -1,3 +1,10 @@
+from collections import defaultdict
+from flask import request
+from model import User, Listing, UserListing, Friendship, Picture, Question, Answer, UserAnswer
+from model import connect_to_db, db 
+
+UPLOAD_FOLDER = "static/uploaded_images/"
+
 def are_friends(user1, user2):
 	"""returns true if two users are friends"""
 
@@ -29,7 +36,7 @@ def mutual_friends(user1, user2):
 		if friend in friends2:
 			mutuals.append(friend)
 
-	return mutuals
+	return set(mutuals)
 
 
 def mutual_friends_in_listing(user1, listing):
@@ -38,10 +45,9 @@ def mutual_friends_in_listing(user1, listing):
 	mutuals = []
 
 	for user2 in listing.users: 
-		print user1
 		mutuals += mutual_friends(user1, user2)
 
-	return mutuals
+	return set(mutuals)
 
 def get_all_friends(user):
 	"""returns list of friends"""
@@ -52,13 +58,105 @@ def get_all_friends(user):
 def get_all_second_degree_friends(user):
 	"""returns second degree friends and the connections"""
 
-	friends_and_mutuals = {}
+	friends_and_mutuals = defaultdict(list)
+	first_degrees = set(get_all_friends(user))
 	# if user.friends: 
 	for friend in user.friends: 
 		second_degrees = friend.friends
 		for second_degree in second_degrees: 
-			# if user != second_degree and second_degree not in get_all_friends(user):
-			friends_and_mutuals[second_degree.user_id] += friend
+			if user.user_id != second_degree.user_id and second_degree not in first_degrees:
+				friends_and_mutuals[second_degree].append(friend)
 
 	return friends_and_mutuals
+
+
+def get_all_listings_by_friends_of_any_degree(user):
+	"""returns all listings by any degree of friends"""
+
+	listings = []
+	friends = get_all_second_degree_friends(user)
+	for key in friends: 
+		listings += key.listings
+
+	return listings
+
+
+
+def get_current_user(): 
+	"""if there is a current user in session, query for that user"""
+
+	if "current_user" in session: 
+		return User.query.get(session["current_user"])
+
+
+def get_common_answers(user1, user2):
+	"""takes two users and returns a lit of their common question answers"""
+
+	answers1 = user1.answers
+	answers2 = user2.answers
+
+	common_answers = []
+	answers = []
+
+	for answer in answers1: 
+		if answer in answers2: 
+			common_answers.append(answer)
+
+	for answer in common_answers:
+		answers.append("{}:  {}".format(answer.question.question, answer.answer))
+	return answers
+
+
+
+
+def add_UserListing(user_id, listing_id):
+	"""add a user to a listing"""
+
+	db.session.add(UserListing(user_id=user_id,
+                               listing_id=listing_id))
+
+	db.session.commit()
+
+
+def delete_UserListing(user_id, listing_id):
+	"""delete user from a listing"""
+
+	UserListing.query.filter_by(user_id=user_id, listing_id=listing_id).delete()
+
+	db.session.commit()
+
+
+
+def save_photo(photo_name):
+	"""gets photo from form, saves to db, returns filepath"""
+
+	photo_name = request.files["{}".format(photo_name)]
+	photo_name_path = UPLOAD_FOLDER + photo_name.filename
+	photo_name.save(photo_name_path)
+
+	return "../{}".format(photo_name_path)
+
+
+def favorites(user): 
+		"""returns all listings that a user has favorited"""
+
+		faves = []
+		for listing in user.listings: 
+			if listing.user_listings.favorite: 
+				faves.append(listing)
+		return faves
+
+
+def primary_lister(listing): 
+		"""returns the primary lister on a listing"""
+
+		primary = ""
+		for user in listing.users: 
+			if user.user_listings.primary_lister: 
+				primary = user
+		return primary
+
+
+
+
 

@@ -13,8 +13,8 @@
 
 {% for second in seconds %}
 	{% for listing in second.listings %}
-		<a href="/listings/{{ listing.listing_id }}">{{ listing.address }}</a> <br> 
-		<a href="/users/{{ second }}">{{ second }}<br>
+		<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">{{ listing.address }}</a> <br> 
+		<a href="/users/{{ second }}">{{ second.user_id }}<br>
 			</a> <br> 
 		{% for friend in seconds[second] %}
 			<a href="/users/{{ friend.user_id }}">{{ friend.user_id }}<br>

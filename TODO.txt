@@ -1,3 +1,91 @@
+
+<br><br>
+Favorites: <br>
+	{% for listing in favorites %}
+			<a href="/listings/{{ listing.listing.listing_id }}">
+				<img src="{{ listing.listing.main_photo }}">
+			</a>
+	{% endfor %}
+
+
+
+
+
+// FB.getLoginStatus(function(response) {
+//   if (response.status === 'connected') {
+//     var accessToken = response.authResponse.accessToken;
+//     statusChangeCallback(response);
+//     console.log(response);
+//   } 
+// } );
+
+
+//  FB.api('/me', function(response) {
+//     console.log(JSON.stringify(response));
+// });
+
+
+  function logIn(evt) {
+    $.post
+  }
+
+  $("#fb-login-button").on("click", logIn);
+
+
+CHAT: 
+contact button on each user page if logged in
+when click button, text window
+when submit, shows on your screen and saves to db
+when other user opens app, get mailbox w message
+when click, see your message and text area
+when they submit, shows up on screen and saves to db
+
+
+MAPS: 
+geocoding for all addresses
+each listing's page has their dot on a map
+map of all listings in your state with hover window of cost, neighborhood, start date, mutual friends
+
+
+FACEBOOK: 
+log in w facebook 
+user id from that - no need for password, email, phone
+then make profile
+get friends list - put into DB
+
+
+
+
+Features: 
+User can log in and log out
+User can register
+User list a house
+User can add and remove favorites
+Listing can add and remove roommates
+Primary lister can assign a different primary lister
+User can view properties in their state listed by people they have friends in common with
+User can hover over a person to see mutual friends and common answers
+User can hover over a property to see price and avail date
+User can click on another user and chat with them
+User can click on a link to someone's venmo
+User can post a listing to facebook
+User can view listings on a map
+
+Tell people to log in to see stuff
+
+
+Wed: 
+if their answer is I move around a lot, show them everywhere
+don't show own listings
+PROBLEM: userlisting table
+Pictures / favoriting and primary
+/ favoriting and primary logic
+neighborhoods within correct state
+Thurs: Testing
+Fri: React
+Mon: FB
+Wed: Map
+
 MVP: 
 user accounts
 input friends
@@ -9,70 +97,86 @@ ask personality qs
 post to FB
 
 3.0: 
+Primary Lister
 FB
 roommates
-chat
+chat - contact button on user and listings pages
 map
 esign
 rent
 
 
 
-fix pictures for houses
+CONCERNS: 
+Adding Favorites table and primary lister (column in USERLISTING table)
+editing profile and listing page(only if primary lister)
+password encryption
+FB chat and pay
+
+Qs: 
+favoriting logic / primary
 
 
 
-WEEKEND: 
-make more fake data
+Search for listing
+search for users
+contact links on user pages
+
+
+
+Only control listing avail if primary lister
+Only show active listings in searches and lists
+Unless you are lister - then see listing w option to relist for set dates
+Only show users if looking in searches
+User can toggle looking or not
+Function that returns a list of common answers
+Alogirthm to sort all results in order of goodness of match
+Add venmo addresses
+Fix friends function
+On profile add yourself to an active listing
+Personality Qs
+add favorites table 
+can favorite or unfavorite a listing - only see option to do the other
+view all favorites
+
 
 USER PAGES: 
 
-LISTINGS BY STATE: 
-add friends
-
 CHANGES TO MODEL: 
 favorite listings
-
-USER REGISTRATION: 
-When register - add self to current listings
-If logged in a try to register, redirect to profile page
-how to upload photos
-
-LISTING PAGES: 
-Unlist house and option to relist w different dates 
-Add self
-Add others
+venmo
+primary lister
 
 FRIENDS: 
 add functions to model.py as user methods
-figure out mutuals issue
 
 TODO: 
-give each listing one main photo in listing
 in state listing list, highlite user's state
-Users and listings by state
 Show mutual friends for both
-Create listing - add roommates to it
+
+
+WEEKEND: 
+make more fake data / comments / facebooks / password encryption
+
+
+
 
 
 
 edit profile page - when logged in and on own profile, can click on a section and edit it - JQERY
-
+Handle bad user input / no user input
 Default Date is today
-Add yourself to listing by listing ID and add a user to your listing by user ID
 
 Dictionary to be sure input isn't scary
-Handle bad user input / no user input
+
 
 Save a list of favorite houses and users
 
 Lat Long
-Ajax list of neighborhoods by state
 Map of houses by state with price and mutuals as pop up
 Map of each house
 
 password protection - bcrypt package
 
-IF a roommate doesn't want to register, just link to their FB
 
 TESTS

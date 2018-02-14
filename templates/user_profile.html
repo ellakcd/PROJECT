@@ -17,23 +17,24 @@
 	<img src="{{ user.photo }}" class="big_photo">
 	<p> BIO: {{ user.bio }} </p>
 	STATE: {{ user.state }}<br>
-	LOOKING FOR APT?: {{ user.looking_for_apt }}
-
+	LOOKING FOR APT?: {{ user.looking_for_apt }}<br><br><br>
+	{% if answers %}
+	You both said: <br>
+			{% for answer in answers %}
+			{{ answer }}<br>
+			{% endfor %}
+	{% endif %}
 {% endif %}
 
-<ul>
+<br><br>
+Listings: <br> 
 	{% for listing in user.listings %}
-		<li>
 			<a href="/listings/{{ listing.listing_id }}">
-				{{ listing.neighborhood }}<br>
-				{% if photos %}
-				<img src="{{ photos.get(listing.listing_id) }}" class="small_photo"><br><br><br>
-				{% endif %}
+					<img src="{{ listing.main_photo }}">
 			</a>
-		</li>
 	{% endfor %}
-</ul>
 
+<br> 
 {% if session.get("current_user") == user.user_id %} 
 	<a href="/add_listing"> Add A Listing </a>
 {% endif %}

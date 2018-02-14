@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Potential Homes{% endblock %}
+{% block content %}
+
+{% for listing in listings %}
+{{ listing.listing_id }}: <br> 
+	{% if listing in listings_by_friends %}
+		<a href="/listings/{{ listing.listing_id }}" class="listing" class="by_friend" data-listing-id="{{ listing.listing_id }}">{{ listing.address }} <br> 
+		<img src="{{ listing.main_photo }}"></a>
+	{% else %}
+		<a href="/listings/{{ listing.listing_id }}" class="listing" class="not_by_friend" data-listing-id="{{ listing.listing_id }}">{{ listing.address }} <br> 
+		<img src="{{ listing.main_photo }}"><br></a>
+	{% endif %}<br>
+{% endfor %}
+
+{% endblock %}

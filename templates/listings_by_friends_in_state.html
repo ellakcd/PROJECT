@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}{{ state }}{% endblock %}
+{% block content %}
+
+
+
+
+{% if neighborhoods %}
+{{ state }}: <br>
+{% for neighborhood in neighborhoods %}
+	{% for listing in listings %}
+		{% if listing.neighborhood == neighborhood %}
+			<h1> {{ neighborhood }} </h1>
+			<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
+			<img src="{{ listing.main_photo }}"><br>
+			{{ listing.address }}
+ 			</a><br>  
+		{% endif %}
+	{% endfor %}
+{% endfor %}
+{% else %}
+Sorry!  None of your friends have listings in {{ state }}
+{% endif %}
+{% endblock %}

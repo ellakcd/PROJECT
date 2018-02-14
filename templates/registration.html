@@ -5,7 +5,7 @@
 
 <div>
 Tell us a little about yourself: 
-<form action="/make_user_profile" method="POST">
+<form action="/make_user_profile" method="POST" enctype="multipart/form-data">
 User Name (how others will see you listed):<br>
 	<input type="text" name="user_name" required><br>
 Full Name:<br>
@@ -19,8 +19,8 @@ State:
 	{% endfor %}
 	</select><br>
 Are you currently looking for an apartment?<br>
-	<input type="radio" name="looking" value="true" checked> Yes! <br>
-	<input type="radio" name="looking" value="false"> Nope. <br>
+	<input type="radio" name="looking" value="True" checked> Yes! <br>
+	<input type="radio" name="looking" value="False"> Nope. <br>
 Quick Bio:<br>
 	<textarea maxlength="50" name="bio">
 	</textarea><br>
@@ -30,11 +30,23 @@ Email: <br>
 	<input type="email" name="email" required><br>
 Password: <br>
 	<input type="password" name="password" required><br>
+Short Answer Qs: <br> 
+	{% for question in questions %}
+	{{ question.question }} <br> 
+		{% for answer in question.answers %}
+			<input type="radio" name="{{ question.question_id }}" value="{{ answer.answer_id }}" required> {{ answer.answer }} <br>
+		{% endfor %}<br>
+	{% endfor %}
 Friends:<br>
 	{% for user in users %}
-	<input type="checkbox" name="friends" value="{{ user.user_id }}"> {{user.user_id}}<br>
+	<input type="checkbox" name="friends" value="{{ user.user_id }}"> {{user.user_id}}
 	{% endfor %}
-	<br>
+	<br><br>
+Add Yourself to Listings: <br>
+	{% for listing in listings %}
+	<input type="checkbox" name="listings" value="{{ listing.listing_id }}"> {{ listing.listing_id }}
+	{% endfor %}
+	<br><br>
 	<input type="submit" value="Create Profile!">	
 </form>
 </div>

@@ -35,6 +35,10 @@ class User(db.Model):
 								primaryjoin="User.user_id==Friendship.friend_1_id", 
 								secondaryjoin="User.user_id==Friendship.friend_2_id")
 
+	user_listings = db.relationship("UserListing",
+									backref="users")
+
+
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
 
@@ -58,9 +62,12 @@ class Listing(db.Model):
 	bedrooms = db.Column(db.Integer, nullable=False)
 	bathrooms = db.Column(db.Integer, nullable=False)
 	laundry = db.Column(db.Boolean, nullable=False, default=False)
-	pets = db.Column(db.Integer, nullable=False, default=False)
+	pets = db.Column(db.Boolean, nullable=False, default=False)
 	description = db.Column(db.String(200), nullable=True, default="Come see for yourself!")
-	active = db.Column(db.Boolean, nullable=False, default=False)
+	active = db.Column(db.Boolean, nullable=False, default=True)
+
+	user_listings = db.relationship("UserListing",
+									backref="listings")
 
 
 	def __repr__(self):
@@ -77,11 +84,30 @@ class UserListing(db.Model):
 	user_listing_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	user_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
 	listing_id = db.Column(db.String(20), db.ForeignKey("listings.listing_id"), nullable=False)
+	favorite = db.Column(db.Boolean, nullable=False, default=False)
+	primary_lister = db.Column(db.Boolean, nullable=False, default=False)
+
+
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
 
 		return "<User Listing id={}>".format(self.user_listing_id)
+
+
+# class Favorite(db.Model):
+# 	"""User favorites"""
+
+# 	__tablename__ = "favorites"
+
+# 	favorite_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+# 	user_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
+# 	listing_id = db.Column(db.String(20), db.ForeignKey("listings.listing_id"), nullable=False)
+
+# 	def __repr__(self):
+# 		"""Provide helpful representation when printed"""
+
+# 		return "<Favorite user = {} listing = {}>".format(self.user_id, self.listing_id)
 
 
 class Picture(db.Model):

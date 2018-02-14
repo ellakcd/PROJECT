@@ -1,0 +1,8 @@
+HOMEPAGE: 
+login / logout
+register --> REGISTRATION PAGE
+view listings by friends in your state, grouped by neighborhood
+IF none
+
+
+Show one house 

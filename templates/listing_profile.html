@@ -2,23 +2,64 @@
 {% block title %}{{ listing.listing_id }}{% endblock %}
 {% block content %}
 
-{% if session.get("current_user") %}
+{% if session.get("current_user") and not lister %}
 	<form action="/add_self_as_roommate" method="POST">
-	<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-	<input type="submit" value="Add Yourself As A Roommate">
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Add Yourself As A Roommate"><br><br>
+	</form>
+		<form action="/add_favorite" method="POST">
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Favorite This Listing"><br><br>
+	</form>
+	
 {% endif %}
-<br><br>
+
 
 {% if lister %}
+	{% if listing.active %}
+	<form action="/deactivate_listing" method="POST">
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Take This Listing off the Market"><br><br>
+	</form>
+	{% endif %}
+
+	{% if not listing.active %}
+	<form action="/reactivate_listing" method="POST">
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		When is it avail?:<br>
+		<input type="date" name="avail"><br>
+		<input type="submit" value="Put This Listing Back on the Market"><br><br>
+	</form>
+	{% endif %}
+
+	<form action="/remove_self_as_roommate" method="POST">
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Remove Yourself As A Roommate"><br><br>
+	</form>
+
 	Add A Roommate to This Listing: <br> 
 	<form action="/add_roommate" method="POST">
-	User Name: <br>
-	<select name="roomie" required>
-	{% for user in users %}
-  		<option value="{{ user.user_id }}">{{ user.user_id }}</option>
-	{% endfor %}
-	<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-	<input type="submit" value="Add Roommate">
+		User Name: <br>
+		<select name="roomie" required>
+		{% for user in users %}
+  			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
+		{% endfor %}
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Add Roommate">
+		</select>
+	</form>
+
+	Remove a Roommate from This Listing: <br> 
+	<form action="/remove_roommate" method="POST">
+		User Name: <br>
+		<select name="roomie" required>
+		{% for user in listing.users %}
+  			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
+		{% endfor %}
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Remove Roommate">
+		</select>
+	</form>
 {% endif %}
 <br><br><br>
 
@@ -44,6 +85,7 @@
 	{% endfor %}
 {% endif %}
 
+<img src="{{ listing.main_photo }}" class="big_photo"><br>
 
 {% for photo in listing.photos %}
 	<img src="{{ photo.photo }}" class="big_photo"><br>

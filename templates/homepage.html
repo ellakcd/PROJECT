@@ -1,21 +1,77 @@
 {% extends 'base.html' %}
 {% block title %}Homepage{% endblock %}
 {% block content %}
+<div id="fb-root"></div>
+<script>
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=554256274953457&autoLogAppEvents=1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '{554256274953457}',
+      cookie     : true,
+      xfbml      : true,
+      version    : '{v2.8}'
+    });
+      
+    FB.AppEvents.logPageView();   
+    FB.api('/me', function(response) {
+	console.log(JSON.stringify(response));
+	});
+  };
+
+function showMe(){
+	FB.api('/me', function(response) {
+		$.post("/login", JSON.stringify(response), function(){
+			console.log("logged in")
+		});
+	});
+}
+
+$("fb-login-button").on("click", showMe);
+
+function showFriends() { 
+	let friends = FB.api('/me/friends')
+	console.log(friends);
+}
+  
+</script>
+
 	<h1>Welcome to Roommatch</h1> <br>
+
+<div class="container-fluid">
+        <fb:login-button scope="public_profile,email" onlogin="showMe();">
+        </fb:login-button>
+        <div id="status">
+</div>
 
 <a href="/listings_by_state"> View All Listings </a><br>
 <a href="/users_by_state"> View All Users </a><br>
+<a href="/listings_by_friends_in_state"> View All Listings By Friends in Your State </a><br>
 <a href="/listings_by_friends"> View All Listings By Friends </a><br><br>
 
 {% if session.get("current_user") %}
 <form action="/logout">
 <input type="submit" value="Log Out!"><br><br>
+</form>
 
 <a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br><br>
 
+
 <div>
-Search for your new HOME: 
+Search for your new HOME:<br>
 <form action="/house_search" method="GET">
+What neighborhood do you want to live in?:<br>
+	<select name="neighborhood" required>
+	{% for neighborhood in neighborhoods %}
+  		<option value="{{ neighborhood }}">{{ neighborhood }}</option>
+	{% endfor %}
+	</select><br>
 Do you want (a) roommate(s)?:<br>
 	<input type="radio" name="live_alone" value="yes" checked> Heck Yes! <br>
 	<input type="radio" name="live_alone" value="no"> Nope <br>
@@ -31,10 +87,17 @@ What's the most you want to spend per month?:<br>
 	<input type="number" name="price_cap"><br>
 What's your earliest start date?:<br>
 	<input type="date" name="start_date"><br>
-What neighborhood do you want to live in?:<br>
-	<input type="text" name="neighborhood"><br>
+
 	<input type="submit" value="Reveal Matches!">
 </form>
+<br>
+
+<div>
+View some ROOMMATE options to move into your place: 
+<form action="/roommate_search" method="GET">
+<input type="submit" value="Find Roommates!">
+</form>
+</div>
 </div>
 
 {% else %}
@@ -49,16 +112,7 @@ What neighborhood do you want to live in?:<br>
 	
 {% endif %}
 
-<div>
-<!-- Search for your new ROOMMATE: 
-<form action="/roommate_search" method="GET">
-Do you want someone short term or long term?:<br>
-	<input type="radio" name="short_term" value="yes"> Short! <br>
-	<input type="radio" name="short_term" value="no"> Long! <br>
-	<input type="radio" name="short_term" value="maybe"> Doesn't Matter! <br>
-Do you want to hang with your roommate a lot? 
- -->
-</div>
+
 
 
 {% endblock %}
