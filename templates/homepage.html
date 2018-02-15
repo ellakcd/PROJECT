@@ -50,54 +50,60 @@ function showFriends() {
         <div id="status">
 </div>
 
-<a href="/listings_by_state"> View All Listings </a><br>
-<a href="/users_by_state"> View All Users </a><br>
-<a href="/listings_by_friends_in_state"> View All Listings By Friends in Your State </a><br>
-<a href="/listings_by_friends"> View All Listings By Friends </a><br><br>
 
+<div id="logout">
 {% if session.get("current_user") %}
 <form action="/logout">
 <input type="submit" value="Log Out!"><br><br>
 </form>
+</div>
 
-<a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br><br>
+<a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br>
+<a href="/listings_by_friends_in_state"> View All Listings By Friends in Your State </a><br>
+<a href="/user_friends_in_state"> View All Users with Mutual Friends in Your State </a><br><br><br>
+<form action="/update_state" method="POST">
+State: 
+	<select name="state" required>
+	{% for state in STATES %}
+  		<option value="{{ state }}">{{ state }}</option>
+	{% endfor %}
+	</select><br>
+<input type="submit" value="Update State">
+</form>
 
-
-<div>
+<div id="housing-search">
 Search for your new HOME:<br>
 <form action="/house_search" method="GET">
 What neighborhood do you want to live in?:<br>
-	<select name="neighborhood" required>
 	{% for neighborhood in neighborhoods %}
-  		<option value="{{ neighborhood }}">{{ neighborhood }}</option>
+	<input type="checkbox" name="neighborhoods" value="{{ neighborhood }}"> {{ neighborhood }}
 	{% endfor %}
-	</select><br>
 Do you want (a) roommate(s)?:<br>
-	<input type="radio" name="live_alone" value="yes" checked> Heck Yes! <br>
-	<input type="radio" name="live_alone" value="no"> Nope <br>
+	<input type="radio" name="live_alone" value="no" checked> Heck Yes! <br>
+	<input type="radio" name="live_alone" value="yes"> Nope <br>
 	<input type="radio" name="live_alone" value="maybe"> I'm happy either way <br>
 How long are you looking for?:<br>
-	<input type="radio" name="duration" value="1"> About a month <br>
+	<input type="radio" name="duration" value="1" checked> About a month <br>
 	<input type="radio" name="duration" value="2"> 2 months <br>
 	<input type="radio" name="duration" value="3"> 3 months <br>
 	<input type="radio" name="duration" value="4"> 4-6 months <br>
 	<input type="radio" name="duration" value="5"> 6 months to a year <br>
 	<input type="radio" name="duration" value="6"> More than a year <br>
 What's the most you want to spend per month?:<br>
-	<input type="number" name="price_cap"><br>
+	<input type="number" name="price_cap" required><br>
 What's your earliest start date?:<br>
-	<input type="date" name="start_date"><br>
+	<input type="date" name="start_date" required><br>
 
 	<input type="submit" value="Reveal Matches!">
 </form>
 <br>
+</div>
 
-<div>
+<div id="roommate-search">
 View some ROOMMATE options to move into your place: 
 <form action="/roommate_search" method="GET">
 <input type="submit" value="Find Roommates!">
 </form>
-</div>
 </div>
 
 {% else %}
@@ -108,11 +114,11 @@ View some ROOMMATE options to move into your place:
         <input type="submit" value="Welcome Home!">
     </form>
 
+<a href="/listings_by_state"> View All Listings </a><br>
+<a href="/users_by_state"> View All Users </a><br>
+
 <h1><a href="/register">Create Your Profile!</a></h1>
 	
 {% endif %}
-
-
-
 
 {% endblock %}

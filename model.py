@@ -35,8 +35,8 @@ class User(db.Model):
 								primaryjoin="User.user_id==Friendship.friend_1_id", 
 								secondaryjoin="User.user_id==Friendship.friend_2_id")
 
-	user_listings = db.relationship("UserListing",
-									backref="users")
+	favorites = db.relationship("Listing", 
+								secondary="favorites")
 
 
 	def __repr__(self):
@@ -51,8 +51,7 @@ class Listing(db.Model):
 	__tablename__ = "listings"
 
 	listing_id = db.Column(db.String(20), unique=True, primary_key=True)
-	# lister_id = db.Column(db.Integer, db.ForeignKey(user.user_id), nullable=False)
-	# CHANGE TO LAT LONG?
+	primary_lister = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
 	main_photo = db.Column(db.String(100), nullable=True, default="static/images/default.jpg")
 	neighborhood = db.Column(db.String(100), nullable=False)
 	address = db.Column(db.String(100), nullable=False)
@@ -84,9 +83,6 @@ class UserListing(db.Model):
 	user_listing_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	user_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
 	listing_id = db.Column(db.String(20), db.ForeignKey("listings.listing_id"), nullable=False)
-	favorite = db.Column(db.Boolean, nullable=False, default=False)
-	primary_lister = db.Column(db.Boolean, nullable=False, default=False)
-
 
 
 	def __repr__(self):
@@ -95,19 +91,20 @@ class UserListing(db.Model):
 		return "<User Listing id={}>".format(self.user_listing_id)
 
 
-# class Favorite(db.Model):
-# 	"""User favorites"""
+class Favorite(db.Model):
+	"""Users and favorite listings on rental site"""
 
-# 	__tablename__ = "favorites"
+	__tablename__ = "favorites"
 
-# 	favorite_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-# 	user_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
-# 	listing_id = db.Column(db.String(20), db.ForeignKey("listings.listing_id"), nullable=False)
+	favorite_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+	user_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
+	listing_id = db.Column(db.String(20), db.ForeignKey("listings.listing_id"), nullable=False)
+	
 
-# 	def __repr__(self):
-# 		"""Provide helpful representation when printed"""
+	def __repr__(self):
+		"""Provide helpful representation when printed"""
 
-# 		return "<Favorite user = {} listing = {}>".format(self.user_id, self.listing_id)
+		return "<Favorite id={}>".format(self.favorite_id)
 
 
 class Picture(db.Model):

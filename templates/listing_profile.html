@@ -7,15 +7,15 @@
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
 		<input type="submit" value="Add Yourself As A Roommate"><br><br>
 	</form>
+	{% if not favorite %}
 		<form action="/add_favorite" method="POST">
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
 		<input type="submit" value="Favorite This Listing"><br><br>
 	</form>
-	
+	{% endif %}
 {% endif %}
 
-
-{% if lister %}
+{% if session.get("current_user") == listing.primary_lister %}
 	{% if listing.active %}
 	<form action="/deactivate_listing" method="POST">
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
@@ -31,7 +31,9 @@
 		<input type="submit" value="Put This Listing Back on the Market"><br><br>
 	</form>
 	{% endif %}
+{% endif %}
 
+{% if lister %}
 	<form action="/remove_self_as_roommate" method="POST">
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
 		<input type="submit" value="Remove Yourself As A Roommate"><br><br>
@@ -62,8 +64,6 @@
 	</form>
 {% endif %}
 <br><br><br>
-
-
 
 {% if friends %}
 	You have friends living here!
@@ -101,18 +101,15 @@ Pets: {{ listing.pets }} <br><br><br>
 
 Roommates: 
 <br>
-<ul>
 	{% for user in listing.users %}
-	<li>
-		<a href="/users/{{ user.user_id }}">
+		<a href="/users/{{ user.user_id }}" class="user" data-user-id="{{ user.user_id }}"><br>
 				<img src="{{ user.photo }}" class="small_photo"><br>
 				{{ user.user_id }}
+				{% if user.user_id == listing.primary_lister %}
+				<br>(Primary Lister)
+				{% endif %}
 		</a>
-	</li>
 	{% endfor %}
-</ul>
-
-	
 
 {% endblock %}
 

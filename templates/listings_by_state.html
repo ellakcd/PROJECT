@@ -5,7 +5,7 @@
 {% for state in listings_by_state %}
 {{ state }}: <br> 
 	{% for listing in listings_by_state[state] %}
-		<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
+		<a href="/listings/{{ listing.listing_id }}">
 		<img src="{{ listing.main_photo }}"><br>{{ listing.address }}</a> <br> 
 	{% endfor %}
 {% endfor %}

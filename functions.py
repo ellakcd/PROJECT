@@ -1,9 +1,29 @@
 from collections import defaultdict
-from flask import request
-from model import User, Listing, UserListing, Friendship, Picture, Question, Answer, UserAnswer
+from flask import request, session
+from model import User, Listing, UserListing, Favorite, Friendship, Picture, Question, Answer, UserAnswer
 from model import connect_to_db, db 
 
 UPLOAD_FOLDER = "static/uploaded_images/"
+
+
+def get_current_user(): 
+	"""if there is a current user in session, query for that user"""
+
+	if "current_user" in session: 
+		return User.query.get(session["current_user"])
+
+	else: 
+		flash("Please log in!")
+		return redirect("/")
+
+
+def get_neighborhoods():
+	"""query for all neighborhoods in db"""
+
+	neighborhoods = db.session.query(Listing.neighborhood).group_by(Listing.neighborhood).all()
+	neighborhoods = [neighborhood[0] for neighborhood in neighborhoods]
+	return neighborhoods
+
 
 def are_friends(user1, user2):
 	"""returns true if two users are friends"""
@@ -70,6 +90,20 @@ def get_all_second_degree_friends(user):
 	return friends_and_mutuals
 
 
+def get_all_friends_of_any_degree(user):
+	"""returns friends of any degree"""
+
+	friends = set()
+	for friend in user.friends: 
+		friends.add(friend)
+	for friend in user.friends: 
+		if user.user_id != friend.user_id:
+				friends.add(friend)
+
+	return friends
+
+
+
 def get_all_listings_by_friends_of_any_degree(user):
 	"""returns all listings by any degree of friends"""
 
@@ -80,13 +114,6 @@ def get_all_listings_by_friends_of_any_degree(user):
 
 	return listings
 
-
-
-def get_current_user(): 
-	"""if there is a current user in session, query for that user"""
-
-	if "current_user" in session: 
-		return User.query.get(session["current_user"])
 
 
 def get_common_answers(user1, user2):
@@ -108,7 +135,6 @@ def get_common_answers(user1, user2):
 
 
 
-
 def add_UserListing(user_id, listing_id):
 	"""add a user to a listing"""
 
@@ -126,6 +152,34 @@ def delete_UserListing(user_id, listing_id):
 	db.session.commit()
 
 
+def add_favorite(user_id, listing_id):
+	"""add a favorite"""
+
+	db.session.add(Favorite(user_id=user_id,
+                               listing_id=listing_id))
+
+	db.session.commit()
+
+
+def delete_favorite(user_id, listing_id):
+	"""delete favorite"""
+
+	Favorite.query.filter_by(user_id=user_id, listing_id=listing_id).delete()
+
+	db.session.commit()
+
+
+def add_friendship(friend_1_id, friend_2_id):
+	"""add a friendship between two users"""
+
+	db.session.add(Friendship(friend_1_id=friend_1_id,
+                               friend_2_id=friend_2_id))
+
+	db.session.add(Friendship(friend_1_id=friend_2_id,
+                               friend_2_id=friend_1_id))
+
+	db.session.commit()
+
 
 def save_photo(photo_name):
 	"""gets photo from form, saves to db, returns filepath"""
@@ -137,24 +191,9 @@ def save_photo(photo_name):
 	return "../{}".format(photo_name_path)
 
 
-def favorites(user): 
-		"""returns all listings that a user has favorited"""
-
-		faves = []
-		for listing in user.listings: 
-			if listing.user_listings.favorite: 
-				faves.append(listing)
-		return faves
 
 
-def primary_lister(listing): 
-		"""returns the primary lister on a listing"""
 
-		primary = ""
-		for user in listing.users: 
-			if user.user_listings.primary_lister: 
-				primary = user
-		return primary
 
 
 

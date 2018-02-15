@@ -2,7 +2,7 @@
 
 import datetime
 from sqlalchemy import func
-from model import User, Listing, UserListing, Friendship, Picture, Question, Answer, UserAnswer
+from model import User, Listing, UserListing, Favorite, Friendship, Picture, Question, Answer, UserAnswer
 
 from model import connect_to_db, db 
 from server import app
@@ -36,6 +36,7 @@ def load_users():
 					del kwargs[key]
 
 			user = User(**kwargs)
+			
 			#add data
 			db.session.add(user)
 	#commit
@@ -63,7 +64,8 @@ def load_listings():
 			pets = listing[9],
 			description = listing[10],
 			main_photo = listing[11],
-			active = listing[12])
+			active = listing[12], 
+			primary_lister = listing[13])
 
 			for key in kwargs.keys(): 
 				if kwargs[key] == "":
@@ -94,6 +96,24 @@ def load_user_listings():
 
 	db.session.commit()
 
+
+def load_favorites():
+	"""Load favorites from seed data into database"""
+
+	print "Favorites"
+
+	with open("seed_data/favorites.txt") as favorites: 
+		for favorite in favorites: 
+			favorite = favorite.rstrip()
+			favorite_id, user_id, listing_id = favorite.split("|")
+
+			favorite = Favorite(favorite_id=favorite_id, 
+				user_id=user_id, 
+				listing_id=listing_id)
+
+			db.session.add(favorite)
+
+	db.session.commit()
 
 
 def load_friendships():
@@ -285,6 +305,7 @@ if __name__ == "__main__":
 	load_answers()
 	load_user_listings()
 	load_user_answers()
+	load_favorites()
 	update_pkey_seqs()
 
 

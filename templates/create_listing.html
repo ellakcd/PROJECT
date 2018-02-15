@@ -57,6 +57,9 @@ Pets Allowed?: <br>
 Description: <br>
 	<textarea maxlength="50" name="description">
 	</textarea><br>
+Will you be living there?: <br> 
+	<input type="radio" name="living_there" value="True"> Yep! 
+	<input type="radio" name="living_there" value="False"> Nope. <br>
 Roommates:<br>
 	{% for user in users %}
 	<input type="checkbox" name="roommates" value="{{ user.user_id }}"> {{user.user_id}}

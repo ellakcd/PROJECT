@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ state }}{% endblock %}
+{% block content %}
+
+{% if users %}
+{{ state }}: <br>
+	{% for user in users %}
+			<a href="/users/{{ user.user_id }}" class="user" data-user-id="{{ user.user_id }}">
+			<img src="{{ user.photo }}"><br>
+			{{ user.user_id }}
+ 			</a><br>  
+	{% endfor %}
+{% else %}
+Sorry!  None of your friends have friends in {{ state }}
+{% endif %}
+{% endblock %}

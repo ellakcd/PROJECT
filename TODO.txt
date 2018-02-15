@@ -52,6 +52,7 @@ log in w facebook
 user id from that - no need for password, email, phone
 then make profile
 get friends list - put into DB
+can post to FB
 
 
 
@@ -66,25 +67,36 @@ Primary lister can assign a different primary lister
 User can view properties in their state listed by people they have friends in common with
 User can hover over a person to see mutual friends and common answers
 User can hover over a property to see price and avail date
+
 User can click on another user and chat with them
 User can click on a link to someone's venmo
 User can post a listing to facebook
 User can view listings on a map
 
-Tell people to log in to see stuff
-
 
 Wed: 
-if their answer is I move around a lot, show them everywhere
-don't show own listings
-PROBLEM: userlisting table
-Pictures / favoriting and primary
-/ favoriting and primary logic
-neighborhoods within correct state
-Thurs: Testing
+display listing even if just primary lister and don't live there
+
+filter for state then display neighborhood
+only display active listings and users
+
+don't show own listings in search 
+don't show self in users
+
+list of users friends in state - start dates?
+
+finish search 
+search for users
+
+logged in function
+defaults
+
+
+Thurs: Testing / password encrypt? 
 Fri: React
 Mon: FB
 Wed: Map
+Thurs: Refactor and get rid of extra stuff
 
 MVP: 
 user accounts
@@ -107,59 +119,36 @@ rent
 
 
 
-CONCERNS: 
-Adding Favorites table and primary lister (column in USERLISTING table)
+
 editing profile and listing page(only if primary lister)
 password encryption
 FB chat and pay
 
-Qs: 
-favoriting logic / primary
+If primary lister: 
+can take it off and on market
+can edit listing
+can add roommates
+can make someone else primary / take yourself off
 
 
 
-Search for listing
-search for users
-contact links on user pages
-
-
-
-Only control listing avail if primary lister
 Only show active listings in searches and lists
 Unless you are lister - then see listing w option to relist for set dates
 Only show users if looking in searches
 User can toggle looking or not
-Function that returns a list of common answers
-Alogirthm to sort all results in order of goodness of match
-Add venmo addresses
-Fix friends function
 On profile add yourself to an active listing
-Personality Qs
-add favorites table 
 can favorite or unfavorite a listing - only see option to do the other
 view all favorites
 
 
 USER PAGES: 
 
-CHANGES TO MODEL: 
-favorite listings
-venmo
-primary lister
 
 FRIENDS: 
 add functions to model.py as user methods
 
 TODO: 
 in state listing list, highlite user's state
-Show mutual friends for both
-
-
-WEEKEND: 
-make more fake data / comments / facebooks / password encryption
-
-
-
 
 
 
@@ -168,7 +157,6 @@ Handle bad user input / no user input
 Default Date is today
 
 Dictionary to be sure input isn't scary
-
 
 Save a list of favorite houses and users
 

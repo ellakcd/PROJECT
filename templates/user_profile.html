@@ -2,6 +2,13 @@
 {% block title %}{{user.user_id}}{% endblock %}
 {% block content %}
 
+{% if session.get("current_user") and not my_page and not are_friends %}
+	</form>
+		<form action="/add_as_friend" method="POST">
+		<input type="hidden" name="user_id" value="{{ user.user_id }}">
+		<input type="submit" value="Add This User as a Friend"><br><br>
+	</form>
+{% endif %}
 
 {% if session.get("current_user") == user.user_id %} 
 	Only you can see this: 
@@ -11,6 +18,15 @@
 	<div id="bio"> BIO: {{ user.bio }} </div>
 	<div id="state"> STATE: {{ user.state }} </div>
 	<div id="looking"> LOOKING FOR APT?: {{ user.looking_for_apt }} </div>
+
+	<div id="my-favorites">
+	Favorites: <br> 
+	{% for listing in user.favorites %}
+			<a href="/listings/{{ listing.listing_id }}">
+					<img src="{{ listing.main_photo }}">
+			</a>
+	{% endfor %}
+	</div>
 {% else %}
 
 	<h1> USER_NAME: {{ user.user_id }} </h1>
@@ -26,15 +42,16 @@
 	{% endif %}
 {% endif %}
 
-<br><br>
+
+<div id="my-listings">
 Listings: <br> 
 	{% for listing in user.listings %}
 			<a href="/listings/{{ listing.listing_id }}">
 					<img src="{{ listing.main_photo }}">
 			</a>
 	{% endfor %}
+</div>
 
-<br> 
 {% if session.get("current_user") == user.user_id %} 
 	<a href="/add_listing"> Add A Listing </a>
 {% endif %}

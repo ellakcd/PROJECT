@@ -28,13 +28,14 @@ img {
     height:800px;
 }
 
-#test {
+#popup {
     position: absolute;
     top: 100px;
     right: 300px;
     width: 200px;
     height: 400px;
     opacity: .7;
+    background-color: purple;
 }
 
 a {

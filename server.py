@@ -22,25 +22,25 @@ UPLOAD_FOLDER = "static/uploaded_images/"
 @app.route("/")
 def index():
     """Homepage"""
-    neighborhoods = db.session.query(Listing.neighborhood).group_by(Listing.neighborhood).all()
-    neighborhoods = [neighborhood[0] for neighborhood in neighborhoods]
 
-    return render_template("homepage.html", neighborhoods=neighborhoods)
+    neighborhoods = functions.get_neighborhoods()
 
-@app.route("/test_react")
-def test_react(): 
-    """test react"""
-    return render_template("/react.html")
+    return render_template("homepage.html", neighborhoods=neighborhoods, STATES=STATES)
 
-@app.route("/test_maps")
-def test_maps(): 
-    """test maps"""
+# @app.route("/test_react")
+# def test_react(): 
+#     """test react"""
+#     return render_template("/react.html")
 
-    address = "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
-    geocode = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key=AIzaSyALsH-wBDg1jGymSzRN4cIL8rTVQo87PwM".format(address)
-    print geocode
+# @app.route("/test_maps")
+# def test_maps(): 
+#     """test maps"""
 
-    return render_template("/maps.html", address=address, geocode=geocode)
+#     address = "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
+#     geocode = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key=AIzaSyALsH-wBDg1jGymSzRN4cIL8rTVQo87PwM".format(address)
+#     print geocode
+
+#     return render_template("/maps.html", address=address, geocode=geocode)
 
 
 
@@ -135,10 +135,11 @@ def make_listing_profile():
 
     laundry = True if request.form.get("laundry") == "True" else False
     pets = True if request.form.get("pets") == "True" else False
+    living_there = True if request.form.get("living_there") == "True" else False
     listing_id = request.form.get("listing_name")
+    user_id = session["current_user"]
 
     main_photo = functions.save_photo("main_photo")
-
     photos = []
     photos.append(functions.save_photo("photo_1"))
     photos.append(functions.save_photo("photo_2"))
@@ -157,7 +158,8 @@ def make_listing_profile():
         bathrooms=request.form.get("bathrooms"),
         laundry=laundry,
         pets=pets,
-        description=request.form.get("description")
+        description=request.form.get("description"), 
+        primary_lister = user_id
     )
     
     if Listing.query.get(listing_id):
@@ -170,16 +172,11 @@ def make_listing_profile():
         db.session.add(Listing(**kwargs))
         db.session.commit()
 
-        db.session.add(UserListing(user_id=session["current_user"], 
-                                    listing_id=listing_id, 
-                                    primary_lister=True))
+        if living_there: 
+            functions.add_UserListing(user_id, listing_id)
 
-        db.session.commit()
-
-        for roommmate in roommates: 
+        for roommate in roommates: 
             functions.add_UserListing(roommate, listing_id)
-
-        db.session.commit()
 
         for photo in photos: 
             db.session.add(Picture(listing_id=listing_id, 
@@ -195,16 +192,21 @@ def user_profile(user_id):
     """query for user info to display"""
 
     user = User.query.get(user_id)
-    try: 
+    listings = user.listings
+    answers = []
+    favorites = []
+    my_page = False
+    are_friends = False
+    if session.get("current_user"):
         me = User.query.get(session["current_user"])
-        listings = user.listings
+        are_friends = functions.are_friends(me, user)
         answers = functions.get_common_answers(me, user)
-        # favorites = user.favorites()
+        favorites = me.favorites
+        if me.user_id == user.user_id: 
+            my_page = True
 
-        return render_template("user_profile.html", user=user, answers=answers)
-    except: 
-        flash("Don't forget to log in!")
-        return redirect("/")
+    return render_template("user_profile.html", user=user, answers=answers, my_page=my_page, are_friends=are_friends)
+
 
 
 @app.route("/listings/<listing_id>")
@@ -214,18 +216,33 @@ def listing_profile(listing_id):
     users = User.query.all()
     listing = Listing.query.get(listing_id)
     lister = False
+    favorite = False
     friends = []
     mutuals = []
     if session.get("current_user"):
         user = User.query.get(session["current_user"])
-        print session["current_user"]
+        if listing in user.favorites:
+            favorite = True
         if user in listing.users: 
             lister = True
         else: 
             friends = functions.friends_in_listing(user, listing)
             mutuals = functions.mutual_friends_in_listing(user, listing)
 
-    return render_template("listing_profile.html", listing=listing, users=users, lister=lister, friends=friends, mutuals=mutuals)
+    return render_template("listing_profile.html", listing=listing, users=users, lister=lister, friends=friends, mutuals=mutuals, favorite=favorite)
+
+
+@app.route("/add_as_friend", methods=["POST"])
+def add_as_friend(): 
+    """add as user as a friend"""
+
+    user_id = request.form.get("user_id")
+    me = session["current_user"]
+
+    functions.add_friendship(user_id, me)
+
+    return redirect("/users/{}".format(user_id))
+
 
 
 @app.route("/add_favorite", methods=["POST"])
@@ -235,11 +252,7 @@ def add_favorite():
     listing_id = request.form.get("listing_id")
     user_id = session["current_user"]
 
-    db.session.add(UserListing(user_id=session["current_user"], 
-                                    listing_id=listing_id, 
-                                    favorite=True))
-
-    db.session.commit()
+    functions.add_favorite(user_id, listing_id)
 
     return redirect("/listings/{}".format(listing_id))
 
@@ -251,9 +264,7 @@ def remove_favorite():
     listing_id = request.form.get("listing_id")
     user_id = session["current_user"]
 
-    UserListing.query.filter_by(user_id=user_id, listing_id=listing_id, favorite=True).delete()
-
-    db.session.commit()
+    functions.delete_favorite(user_id, listing_id)
 
     return redirect("/listings/{}".format(listing_id))
 
@@ -338,6 +349,7 @@ def listings_by_state():
 
     listings_by_state = {}
 
+
     for state in STATES: 
         listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
         listings_by_state[state] = listings
@@ -358,20 +370,6 @@ def users_by_state():
     return render_template("/users_by_state.html", STATES=STATES, users_by_state=users_by_state)
 
 
-@app.route("/listings_by_friends")
-def listings_by_friends():
-    """display all listings by your friends"""
-
-    if "current_user" in session: 
-        user = User.query.get(session["current_user"])
-        friends = functions.get_all_friends(user)
-        seconds = functions.get_all_second_degree_friends(user)
-
-        return render_template("/listings_by_friends.html",  friends=friends, seconds=seconds)
-    else: 
-        flash("Don't forget to log in!")
-        return redirect("/")
-
 
 @app.route("/listings_by_friends_in_state")
 def listings_by_friends_in_state():
@@ -379,7 +377,11 @@ def listings_by_friends_in_state():
 
     if "current_user" in session: 
         user = User.query.get(session["current_user"])
-        listings = functions.get_all_listings_by_friends_of_any_degree(user)
+        all_listings = functions.get_all_listings_by_friends_of_any_degree(user)
+        listings = []
+        for listing in all_listings:
+            if listing not in user.listings: 
+                listings.append(listing) 
         state = user.state
         neighborhoods = set()
         for listing in listings: 
@@ -392,6 +394,37 @@ def listings_by_friends_in_state():
         return redirect("/")
 
 
+@app.route("/user_friends_in_state")
+def user_friends_in_state():
+    """display all users friends with your friends in your state"""
+
+    if "current_user" in session: 
+        user = User.query.get(session["current_user"])
+        friends = functions.get_all_friends_of_any_degree(user)
+
+        state = user.state
+
+        users = [friend for friend in friends if friend.state == state]
+    
+        return render_template("/users_w_friends_in_state.html", state=state, users=users)
+    else: 
+        flash("Don't forget to log in!")
+        return redirect("/")
+
+
+
+@app.route("/update_state", methods=["POST"])
+def update_state():
+    """update user's state"""
+
+    state = request.form.get("state")
+    user = functions.get_current_user()
+    user.state = state
+    db.session.commit()
+
+    return redirect("/")
+
+
 @app.route("/house_search")
 def find_houses():
     """query for houses that fit the description"""
@@ -400,18 +433,33 @@ def find_houses():
     duration = request.args.get("duration")
     price_cap = int(request.args.get("price_cap"))
     start_date = request.args.get("start_date")
-    neighborhood = request.args.get("neighborhood")
+    neighborhoods = request.args.getlist("neighborhoods")
     user = User.query.get(session["current_user"])
     listings_by_friends = functions.get_all_listings_by_friends_of_any_degree(user)
 
     listings = []
-    right_location = Listing.query.filter(Listing.neighborhood == neighborhood).all()
-    for listing in right_location: 
-        print start_date
-        print str(listing.avail_as_of)
-       
+    right_neighborhoods = []
+    if neighborhoods: 
+        for neighborhood in neighborhoods:
+            right_neighborhoods += Listing.query.filter(Listing.neighborhood == neighborhood).all()
+    else: 
+        right_neighborhoods += Listing.query.all()
+    for listing in right_neighborhoods: 
         if listing.price <= price_cap and str(listing.avail_as_of) >= start_date: 
             listings.append(listing)
+    for listing in listings: 
+        if listing in user.listings or listing.primary_lister == user.user_id: 
+            listings.remove(listing)
+    if live_alone is "yes": 
+        for listing in listings: 
+            print "test"
+            print listing.users
+            if listing.users:
+                listings.remove(listing)
+    elif live_alone is "no":
+        for listing in listings: 
+            if not listing.users:
+                listings.remove(listing)
   
     return render_template("/house_search_results.html", listings=listings, listings_by_friends=listings_by_friends)
 
@@ -430,11 +478,11 @@ def find_roommates():
     return render_template("/roommate_search_results.html")
 
 
-@app.route("/mutuals")
-def mutuals(user): 
-    """takes a user_name and returns a list of mutual friends with current user"""
+# @app.route("/mutuals")
+# def mutuals(user): 
+#     """takes a user_name and returns a list of mutual friends with current user"""
 
-    return functions.mutual_friends(session["current_user"], user)
+#     return functions.mutual_friends(session["current_user"], user)
     
 
 @app.route("/login", methods=['POST'])
@@ -489,6 +537,24 @@ def listing_info():
     info = {
         "price" : listing.price, 
         "start date": listing.avail_as_of, 
+        "friends" : friends}
+
+    return jsonify(info)
+
+
+@app.route("/user-info.json")
+def user_info(): 
+    """returns user info as JSON"""
+
+    user_id = request.args.get("user_id")
+    user2 = User.query.get(user_id)
+    user = User.query.get(session["current_user"])
+    friends = functions.mutual_friends(user, user2)
+    friends = [(friend.name, friend.photo) for friend in friends]
+    answers = functions.get_common_answers(user, user2)
+
+    info = {
+        "answers" : answers, 
         "friends" : friends}
 
     return jsonify(info)
