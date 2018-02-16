@@ -23,24 +23,23 @@ UPLOAD_FOLDER = "static/uploaded_images/"
 def index():
     """Homepage"""
 
-    neighborhoods = functions.get_neighborhoods()
+    neighborhoods = set()
+    state = ""
+    if "current_user" in session: 
+        state = User.query.get(session["current_user"]).state
 
-    return render_template("homepage.html", neighborhoods=neighborhoods, STATES=STATES)
+    if state: 
+        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+        for listing in listings: 
+            neighborhoods.add(listing.neighborhood)
+
+
+    return render_template("homepage.html", neighborhoods=neighborhoods, STATES=STATES, state=state)
 
 # @app.route("/test_react")
 # def test_react(): 
 #     """test react"""
 #     return render_template("/react.html")
-
-# @app.route("/test_maps")
-# def test_maps(): 
-#     """test maps"""
-
-#     address = "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
-#     geocode = "https://maps.googleapis.com/maps/api/geocode/json?address={}&key=AIzaSyALsH-wBDg1jGymSzRN4cIL8rTVQo87PwM".format(address)
-#     print geocode
-
-#     return render_template("/maps.html", address=address, geocode=geocode)
 
 
 
@@ -131,7 +130,6 @@ def make_listing_profile():
 
 
     roommates = request.form.getlist("roommates")
-    print roommates
 
     laundry = True if request.form.get("laundry") == "True" else False
     pets = True if request.form.get("pets") == "True" else False
@@ -202,6 +200,7 @@ def user_profile(user_id):
         are_friends = functions.are_friends(me, user)
         answers = functions.get_common_answers(me, user)
         favorites = me.favorites
+        favorites = [favorite for favorite in favorites if favorite.active]
         if me.user_id == user.user_id: 
             my_page = True
 
@@ -294,6 +293,40 @@ def reactivate():
 
     return redirect("/listings/{}".format(listing_id))
 
+@app.route("/change_primary", methods=["POST"])
+def change_primary(): 
+    """change primary lister"""
+
+    listing_id = request.form.get("listing_id")
+    user_id = request.form.get("new_primary")
+    listing = Listing.query.get(listing_id)
+    listing.primary_lister = user_id
+    db.session.commit()
+
+    return redirect("/listings/{}".format(listing_id))
+
+
+@app.route("/deactivate_user", methods=["POST"])
+def deactivate_user(): 
+    """take user off market"""
+
+    user = functions.get_current_user()
+    user.looking_for_apt = False
+    db.session.commit()
+
+    return redirect("/users/{}".format(session["current_user"]))
+
+
+@app.route("/reactivate_user", methods=["POST"])
+def reactivate_user(): 
+    """put user back in play"""
+
+    user = functions.get_current_user()
+    user.looking_for_apt = True
+    db.session.commit()
+
+    return redirect("/users/{}".format(session["current_user"]))
+
 
 @app.route("/add_roommate", methods=["POST"])
 def add_roommate(): 
@@ -375,41 +408,42 @@ def users_by_state():
 def listings_by_friends_in_state():
     """display all listings by your friends in your state, sorted by neighborhood"""
 
-    if "current_user" in session: 
-        user = User.query.get(session["current_user"])
-        all_listings = functions.get_all_listings_by_friends_of_any_degree(user)
-        listings = []
-        for listing in all_listings:
-            if listing not in user.listings: 
-                listings.append(listing) 
-        state = user.state
-        neighborhoods = set()
-        for listing in listings: 
-            if state in listing.address: 
-                neighborhoods.add(listing.neighborhood)
+    # if "current_user" in session: 
+    #     user = User.query.get(session["current_user"])
+    user = functions.get_current_user()
+    listings = functions.get_all_listings_by_friends_of_any_degree(user)
+    listings = [listing for listing in listings if listing not in user.listings]
+    listings = [listing for listing in listings if listing.active]
+    state = user.state
+    neighborhoods = set()
+    for listing in listings: 
+        if state in listing.address: 
+            neighborhoods.add(listing.neighborhood)
 
-        return render_template("/listings_by_friends_in_state.html",  state=state, listings=listings, neighborhoods=neighborhoods)
-    else: 
-        flash("Don't forget to log in!")
-        return redirect("/")
+    return render_template("/listings_by_friends_in_state.html",  state=state, listings=listings, neighborhoods=neighborhoods)
+    # else: 
+    #     flash("Don't forget to log in!")
+    #     return redirect("/")
 
 
 @app.route("/user_friends_in_state")
 def user_friends_in_state():
     """display all users friends with your friends in your state"""
 
-    if "current_user" in session: 
-        user = User.query.get(session["current_user"])
-        friends = functions.get_all_friends_of_any_degree(user)
+    # if "current_user" in session: 
+    #     user = User.query.get(session["current_user"])
+    user = functions.get_current_user()
+    friends = functions.get_all_friends_of_any_degree(user)
 
-        state = user.state
+    state = user.state
 
-        users = [friend for friend in friends if friend.state == state]
-    
-        return render_template("/users_w_friends_in_state.html", state=state, users=users)
-    else: 
-        flash("Don't forget to log in!")
-        return redirect("/")
+    users = [friend for friend in friends if friend.state == state]
+    users = [user for user in users if user.looking_for_apt]
+
+    return render_template("/users_w_friends_in_state.html", state=state, users=users)
+    # else: 
+    #     flash("Don't forget to log in!")
+    #     return redirect("/")
 
 
 
@@ -434,32 +468,12 @@ def find_houses():
     price_cap = int(request.args.get("price_cap"))
     start_date = request.args.get("start_date")
     neighborhoods = request.args.getlist("neighborhoods")
-    user = User.query.get(session["current_user"])
+    user = functions.get_current_user()
     listings_by_friends = functions.get_all_listings_by_friends_of_any_degree(user)
+    state = user.state
 
-    listings = []
-    right_neighborhoods = []
-    if neighborhoods: 
-        for neighborhood in neighborhoods:
-            right_neighborhoods += Listing.query.filter(Listing.neighborhood == neighborhood).all()
-    else: 
-        right_neighborhoods += Listing.query.all()
-    for listing in right_neighborhoods: 
-        if listing.price <= price_cap and str(listing.avail_as_of) >= start_date: 
-            listings.append(listing)
-    for listing in listings: 
-        if listing in user.listings or listing.primary_lister == user.user_id: 
-            listings.remove(listing)
-    if live_alone is "yes": 
-        for listing in listings: 
-            print "test"
-            print listing.users
-            if listing.users:
-                listings.remove(listing)
-    elif live_alone is "no":
-        for listing in listings: 
-            if not listing.users:
-                listings.remove(listing)
+    listings = functions.get_listings(state, neighborhoods, price_cap, live_alone, start_date)
+    
   
     return render_template("/house_search_results.html", listings=listings, listings_by_friends=listings_by_friends)
 

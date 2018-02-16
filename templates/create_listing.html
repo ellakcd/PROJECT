@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Create Your Profile{% endblock %}
 {% block content %}
-
+<a href="/"> Homepage </a>
 <div>
 Tell us a little about your place: 
 <form action="/make_listing_profile" method="POST" enctype="multipart/form-data">
@@ -11,12 +11,6 @@ Address:<br>
 	<input type="text" name="address" required><br>
 Neighborhood:<br>
 	<input type="text" name="neighborhood" required><br>
-State: 
-	<select name="state" required>
-	{% for state in STATES %}
-  		<option value="{{ state }}">{{ state }}</option>
-	{% endfor %}
-	</select><br>
 Price per month:<br>
 	<input type="text" name="price" required><br>
 Available as of:<br>

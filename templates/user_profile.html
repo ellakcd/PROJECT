@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{user.user_id}}{% endblock %}
 {% block content %}
-
+<a href="/"> Homepage </a>
 {% if session.get("current_user") and not my_page and not are_friends %}
 	</form>
 		<form action="/add_as_friend" method="POST">
@@ -11,6 +11,21 @@
 {% endif %}
 
 {% if session.get("current_user") == user.user_id %} 
+
+	{% if user.looking_for_apt %}
+	<form action="/deactivate_user" method="POST">
+		<input type="hidden" name="user_id" value="{{ user.user_id }}">
+		<input type="submit" value="Not Currently Looking for Apt"><br><br>
+	</form>
+	{% endif %}
+
+	{% if not user.looking_for_apt %}
+	<form action="/reactivate_user" method="POST">
+		<input type="hidden" name="user_id" value="{{ user.user_id }}">
+		<input type="submit" value="Looking once more!"><br><br>
+	</form>
+	{% endif %}
+
 	Only you can see this: 
 	<div id="photo" class="big_photo"> <img src="{{ user.photo }}"> </div>
 	<div id="user_name"> USER_NAME: {{ user.user_id }} </div>
@@ -39,7 +54,12 @@
 			{% for answer in answers %}
 			{{ answer }}<br>
 			{% endfor %}
-	{% endif %}
+	{% endif %}<br>
+
+	Answers: <br>
+	{% for answer in user.answers %}
+	{{  answer.question.question }}: {{ answer.answer }}<br>
+	{% endfor %}<br>
 {% endif %}
 
 

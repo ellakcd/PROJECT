@@ -25,7 +25,8 @@ img {
 
 
 #map {
-    height:800px;
+  height: 300px;
+  width: 300px;
 }
 
 #popup {
@@ -35,7 +36,6 @@ img {
     width: 200px;
     height: 400px;
     opacity: .7;
-    background-color: purple;
 }
 
 a {

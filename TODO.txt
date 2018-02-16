@@ -1,35 +1,21 @@
+Features: 
+User can log in and log out
+User can register
+User list a house
+User can add and remove favorites
+Listing can add and remove roommates
+Primary lister can assign a different primary lister
+User can view properties in their state listed by people they have friends in common with
+User can hover over a person to see mutual friends and common answers
+User can hover over a property to see price and avail date
+User can view listings on a map
 
-<br><br>
-Favorites: <br>
-	{% for listing in favorites %}
-			<a href="/listings/{{ listing.listing.listing_id }}">
-				<img src="{{ listing.listing.main_photo }}">
-			</a>
-	{% endfor %}
-
-
-
-
-
-// FB.getLoginStatus(function(response) {
-//   if (response.status === 'connected') {
-//     var accessToken = response.authResponse.accessToken;
-//     statusChangeCallback(response);
-//     console.log(response);
-//   } 
-// } );
+User can click on another user and chat with them
+User can click on a link to someone's venmo
+User can post a listing to facebook
 
 
-//  FB.api('/me', function(response) {
-//     console.log(JSON.stringify(response));
-// });
 
-
-  function logIn(evt) {
-    $.post
-  }
-
-  $("#fb-login-button").on("click", logIn);
 
 
 CHAT: 
@@ -42,9 +28,8 @@ when they submit, shows up on screen and saves to db
 
 
 MAPS: 
-geocoding for all addresses
-each listing's page has their dot on a map
 map of all listings in your state with hover window of cost, neighborhood, start date, mutual friends
+map in pop up for listings
 
 
 FACEBOOK: 
@@ -53,118 +38,53 @@ user id from that - no need for password, email, phone
 then make profile
 get friends list - put into DB
 can post to FB
+pay w FB?
+chat?
 
 
 
 
-Features: 
-User can log in and log out
-User can register
-User list a house
-User can add and remove favorites
-Listing can add and remove roommates
-Primary lister can assign a different primary lister
-User can view properties in their state listed by people they have friends in common with
-User can hover over a person to see mutual friends and common answers
-User can hover over a property to see price and avail date
-
-User can click on another user and chat with them
-User can click on a link to someone's venmo
-User can post a listing to facebook
-User can view listings on a map
-
-
-Wed: 
+TODO: 
 display listing even if just primary lister and don't live there
-
-filter for state then display neighborhood
-only display active listings and users
-
-don't show own listings in search 
-don't show self in users
 
 list of users friends in state - start dates?
 
-finish search 
-search for users
+only show labels in pop ups if have info to put
 
-logged in function
-defaults
+only show mutuals in listing if no friends
+
+in state listing list, highlite user's state
 
 
-Thurs: Testing / password encrypt? 
-Fri: React
+IMPROVE SEARCH: 
+showresults on main page
+factor in duration
+one at a time - click for next
+
+
+Thurs: 
+Fri: React / Testing 
 Mon: FB
-Wed: Map
-Thurs: Refactor and get rid of extra stuff
+Wed: Chat?
+Thurs: Refactor and get rid of extra stuff / deal w flash in functions / move functions to model / put JS in seperate file
 
-MVP: 
-user accounts
-input friends
-user can create listings
-
-2.0: 
-filter listings
-ask personality qs
-post to FB
 
 3.0: 
-Primary Lister
 FB
-roommates
 chat - contact button on user and listings pages
 map
 esign
 rent
 
-
-
-
-editing profile and listing page(only if primary lister)
-password encryption
+editing profile and listing page(only if primary lister) - can click on a section and edit it - JQERY
+password encryption - bcrypt package
 FB chat and pay
 
-If primary lister: 
-can take it off and on market
-can edit listing
-can add roommates
-can make someone else primary / take yourself off
 
-
-
-Only show active listings in searches and lists
-Unless you are lister - then see listing w option to relist for set dates
-Only show users if looking in searches
-User can toggle looking or not
-On profile add yourself to an active listing
-can favorite or unfavorite a listing - only see option to do the other
-view all favorites
-
-
-USER PAGES: 
-
-
-FRIENDS: 
-add functions to model.py as user methods
-
-TODO: 
-in state listing list, highlite user's state
-
-
-
-edit profile page - when logged in and on own profile, can click on a section and edit it - JQERY
 Handle bad user input / no user input
-Default Date is today
-
-Dictionary to be sure input isn't scary
-
-Save a list of favorite houses and users
-
-Lat Long
-Map of houses by state with price and mutuals as pop up
-Map of each house
-
-password protection - bcrypt package
-
+Defaults: Date is today
 
 TESTS
+
+
+

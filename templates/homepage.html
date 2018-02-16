@@ -59,8 +59,8 @@ function showFriends() {
 </div>
 
 <a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br>
-<a href="/listings_by_friends_in_state"> View All Listings By Friends in Your State </a><br>
-<a href="/user_friends_in_state"> View All Users with Mutual Friends in Your State </a><br><br><br>
+<a href="/listings_by_friends_in_state"> View All Listings By Friends in {{ state }} </a><br>
+<a href="/user_friends_in_state"> View All Users with Mutual Friends in {{ state }} </a><br><br><br>
 <form action="/update_state" method="POST">
 State: 
 	<select name="state" required>
@@ -77,7 +77,7 @@ Search for your new HOME:<br>
 What neighborhood do you want to live in?:<br>
 	{% for neighborhood in neighborhoods %}
 	<input type="checkbox" name="neighborhoods" value="{{ neighborhood }}"> {{ neighborhood }}
-	{% endfor %}
+	{% endfor %}<br>
 Do you want (a) roommate(s)?:<br>
 	<input type="radio" name="live_alone" value="no" checked> Heck Yes! <br>
 	<input type="radio" name="live_alone" value="yes"> Nope <br>
