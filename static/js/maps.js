@@ -25,9 +25,7 @@ function addPointerByAddress(address) {
         marker.addListener('click', function() {
           infoWindow.open(map, marker);
         });
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
+      } 
   });
 }
 

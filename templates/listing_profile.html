@@ -77,7 +77,7 @@
 <br><br><br>
 
 {% if friends %}
-	You have friends living here!
+	You have friends living here!<br>
 	{% for friend in friends %}
 		{{ friend.user_id }}<br>
 		<a href="/users/{{ friend.user_id }}">
@@ -86,7 +86,7 @@
 	{% endfor %}
 {% endif %}
 
-{% if mutuals %}
+{% if mutuals and not friends %}
 	There are people living here who are friends of: <br>
 	{% for mutual in mutuals %}
 		{{ mutual.user_id }}<br>

@@ -22,9 +22,13 @@ img {
 	height: 100px;
 	width: 100px;
 }
-
-
+ 
 #map {
+  height: 300px;
+  width: 300px;
+}
+
+#main_map {
   height: 300px;
   width: 300px;
 }
@@ -35,7 +39,6 @@ img {
     right: 300px;
     width: 200px;
     height: 400px;
-    opacity: .7;
 }
 
 a {

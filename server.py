@@ -36,6 +36,7 @@ def index():
 
     return render_template("homepage.html", neighborhoods=neighborhoods, STATES=STATES, state=state)
 
+
 # @app.route("/test_react")
 # def test_react(): 
 #     """test react"""
@@ -201,10 +202,11 @@ def user_profile(user_id):
         answers = functions.get_common_answers(me, user)
         favorites = me.favorites
         favorites = [favorite for favorite in favorites if favorite.active]
+        mutuals = functions.mutual_friends(me, user)
         if me.user_id == user.user_id: 
             my_page = True
 
-    return render_template("user_profile.html", user=user, answers=answers, my_page=my_page, are_friends=are_friends)
+    return render_template("user_profile.html", user=user, answers=answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals)
 
 
 
@@ -424,6 +426,26 @@ def listings_by_friends_in_state():
     # else: 
     #     flash("Don't forget to log in!")
     #     return redirect("/")
+
+
+@app.route("/listings_by_friends_in_state.json")
+def listing_friend_state_json():
+    """send listings by friends in state as json"""
+
+    user = functions.get_current_user()
+    state = user.state
+    listings = functions.get_all_listings_by_friends_of_any_degree(user)
+    listings = [listing for listing in listings if listing not in user.listings]
+    listings = [listing for listing in listings if listing.active]
+    listings = [listing for listing in listings if state in listing.address] 
+
+    addresses = []
+    for listing in listings:
+        addresses.append((listing.address, listing.listing_id))
+
+    info = {"addresses" : addresses}
+
+    return jsonify(info)
 
 
 @app.route("/user_friends_in_state")

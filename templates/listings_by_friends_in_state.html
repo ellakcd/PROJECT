@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 {% block title %}{{ state }}{% endblock %}
 {% block content %}
+
 <a href="/"> Homepage </a><br>
 
 
 
 {% if neighborhoods %}
 {{ state }}: <br>
+<div id="main_map" date-state="{{ state }}"></div>
 {% for neighborhood in neighborhoods %}
 			<h1> {{ neighborhood }} </h1>
 			{% for listing in listings %}
@@ -22,4 +24,5 @@
 {% else %}
 Sorry!  None of your friends have listings in {{ state }}
 {% endif %}
+<script src="../static/js/listings_by_friends_in_state.js"></script>
 {% endblock %}

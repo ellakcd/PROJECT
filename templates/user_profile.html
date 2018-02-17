@@ -8,6 +8,13 @@
 		<input type="hidden" name="user_id" value="{{ user.user_id }}">
 		<input type="submit" value="Add This User as a Friend"><br><br>
 	</form>
+	{% if mutuals %}
+	Mutual Friends:<br>
+	{% for mutual in mutuals %}
+	<a href="/users/{{ mutual.user_id }}"><br>
+				<img src="{{ mutual.photo }}" class="small_photo"><br>
+	{% endfor %}
+	{% endif %}
 {% endif %}
 
 {% if session.get("current_user") == user.user_id %} 

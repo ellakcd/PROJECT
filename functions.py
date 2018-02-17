@@ -6,6 +6,12 @@ from model import connect_to_db, db
 UPLOAD_FOLDER = "static/uploaded_images/"
 
 
+def logged_in():
+    """returns true if the user is logged in"""
+
+    return "current_user" in session
+
+
 def get_current_user(): 
     """if there is a current user in session, query for that user"""
 

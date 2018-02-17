@@ -15,9 +15,6 @@ User can click on a link to someone's venmo
 User can post a listing to facebook
 
 
-
-
-
 CHAT: 
 contact button on each user page if logged in
 when click button, text window
@@ -25,11 +22,16 @@ when submit, shows on your screen and saves to db
 when other user opens app, get mailbox w message
 when click, see your message and text area
 when they submit, shows up on screen and saves to db
+Twilio - between multiple users
 
 
 MAPS: 
 map of all listings in your state with hover window of cost, neighborhood, start date, mutual friends
 map in pop up for listings
+put data in scripts from jinja 
+maps for search results
+if can't geolocate, just no map/marker, not alert - why is the div empty
+map marker links to actual google maps?
 
 
 FACEBOOK: 
@@ -41,6 +43,10 @@ can post to FB
 pay w FB?
 chat?
 
+PAYMENT: 
+stripe?
+
+ESIGN: 
 
 
 
@@ -51,22 +57,26 @@ list of users friends in state - start dates?
 
 only show labels in pop ups if have info to put
 
-only show mutuals in listing if no friends
-
 in state listing list, highlite user's state
 
-
-IMPROVE SEARCH: 
+search: 
 showresults on main page
 factor in duration
 one at a time - click for next
 
 
-Thurs: 
-Fri: React / Testing 
+
 Mon: FB
+Tues: Pay?
 Wed: Chat?
-Thurs: Refactor and get rid of extra stuff / deal w flash in functions / move functions to model / put JS in seperate file
+Thurs: fix search
+Fri: Refactor and get rid of extra stuff / deal w flash in functions / move functions to model / factor out ajax stuff
+
+Mon: editing profile - profile and listing page(only if primary lister) - can click on a section and edit it - JQERY
+Tues: Finish Maps
+Wed: TESTS
+Thurs: TESTS
+Fri: re-freeze requirements
 
 
 3.0: 
@@ -76,15 +86,12 @@ map
 esign
 rent
 
-editing profile and listing page(only if primary lister) - can click on a section and edit it - JQERY
 password encryption - bcrypt package
-FB chat and pay
 
-
-Handle bad user input / no user input
-Defaults: Date is today
+defaults?
 
 TESTS
+React
 
 
 
