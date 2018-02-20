@@ -35,6 +35,14 @@ class User(db.Model):
 								primaryjoin="User.user_id==Friendship.friend_1_id", 
 								secondaryjoin="User.user_id==Friendship.friend_2_id")
 
+	sent_messages = db.relationship("Message", 
+									foreign_keys="Message.sender_id",
+									backref=db.backref("sender"))
+
+	received_messages = db.relationship("Message", 
+									foreign_keys="Message.receiver_id",
+									backref=db.backref("receiver"))
+
 	favorites = db.relationship("Listing", 
 								secondary="favorites")
 
@@ -105,6 +113,23 @@ class Favorite(db.Model):
 		"""Provide helpful representation when printed"""
 
 		return "<Favorite id={}>".format(self.favorite_id)
+
+
+class Message(db.Model):
+	"""messages between users"""
+
+	__tablename__ = "messages"
+
+	message_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+	sender_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
+	receiver_id = db.Column(db.String(20), db.ForeignKey("users.user_id"), nullable=False)
+	message = db.Column(db.String(500), nullable=False)
+
+
+	def __repr__(self):
+		"""Provide helpful representation when printed"""
+
+		return "<Message id={} message={}>".format(self.message_id, message)
 
 
 class Picture(db.Model):

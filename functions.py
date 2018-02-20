@@ -1,6 +1,6 @@
 from collections import defaultdict
 from flask import request, session
-from model import User, Listing, UserListing, Favorite, Friendship, Picture, Question, Answer, UserAnswer
+from model import User, Listing, UserListing, Favorite, Friendship, Picture, Question, Answer, UserAnswer, Message
 from model import connect_to_db, db 
 
 UPLOAD_FOLDER = "static/uploaded_images/"
@@ -220,6 +220,16 @@ def add_friendship(friend_1_id, friend_2_id):
 
     db.session.add(Friendship(friend_1_id=friend_2_id,
                                friend_2_id=friend_1_id))
+
+    db.session.commit()
+
+
+def add_message(user_1_id, user_2_id, message):
+    """add a message between two users"""
+
+    db.session.add(Message(sender_id=user_1_id,
+                               receiver_id=user_2_id, 
+                               message=message))
 
     db.session.commit()
 

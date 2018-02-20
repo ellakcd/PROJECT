@@ -11,9 +11,8 @@
         <div id="status">
 </div>
 
-
-<div id="logout">
 {% if session.get("current_user") %}
+<div id="logout">
 <button id="logout" onClick="logout();">
 </button>
 <form action="/logout">

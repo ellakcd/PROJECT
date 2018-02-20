@@ -3,7 +3,7 @@
 from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session, jsonify)
 from flask_debugtoolbar import DebugToolbarExtension
-from model import User, Listing, UserListing, Friendship, Picture, Question, Answer, UserAnswer
+from model import User, Listing, UserListing, Friendship, Picture, Question, Answer, UserAnswer, Message
 from model import connect_to_db, db 
 from sqlalchemy import func
 import functions
@@ -37,12 +37,21 @@ def index():
     return render_template("homepage.html", neighborhoods=neighborhoods, STATES=STATES, state=state)
 
 
-# @app.route("/test_react")
-# def test_react(): 
-#     """test react"""
-#     return render_template("/react.html")
+@app.route("/test_react")
+def test_react(): 
+    """test react"""
+    return render_template("/react.html")
 
 
+@app.route("/messages.json")
+def get_all_messages():
+    """get all messages a user has received"""
+
+    me = User.query.get(session["current_user"])
+    messages = me.received_messages
+    info = {"messages": messages}
+    return jsonify(info)
+    
 
 @app.route("/register")
 def registration_page():
@@ -205,8 +214,16 @@ def user_profile(user_id):
         mutuals = functions.mutual_friends(me, user)
         if me.user_id == user.user_id: 
             my_page = True
+        messages = me.received_messages
+        senders_and_messages = {}
+        for message in messages:
+            sender = message.sender_id
+            if sender in senders_and_messages: 
+                senders_and_messages[sender].append(message.message)
+            else: 
+                senders_and_messages[sender] = [message.message]
 
-    return render_template("user_profile.html", user=user, answers=answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals)
+    return render_template("user_profile.html", user=user, answers=answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, senders_and_messages=senders_and_messages)
 
 
 
@@ -231,6 +248,19 @@ def listing_profile(listing_id):
             mutuals = functions.mutual_friends_in_listing(user, listing)
 
     return render_template("listing_profile.html", listing=listing, users=users, lister=lister, friends=friends, mutuals=mutuals, favorite=favorite)
+
+
+@app.route("/add_message", methods=["POST"])
+def create_message():
+    """add a message between two users"""
+
+    user_id = request.form.get("user_id")
+    me = session["current_user"]
+    content = request.form.get("message")
+    print content
+    functions.add_message(me, user_id, content)
+
+    return redirect("/users/{}".format(user_id))
 
 
 @app.route("/add_as_friend", methods=["POST"])
@@ -523,7 +553,7 @@ def find_roommates():
 
 @app.route("/login", methods=['POST'])
 def login():
-    """Log In user."""
+    """Log In user"""
 
     user_info = db.session.query(User.email, User.password).all()
 
@@ -533,9 +563,6 @@ def login():
 
     name = request.form.get("name")
     user_id = request.form.get("id")
-    print " test" 
-    print name
-    print user_id
     
     try: 
         user_id = db.session.query(User.user_id).filter(User.email == email).one()[0]
@@ -548,6 +575,38 @@ def login():
     except: 
         flash("Ya gotta sign up first!")
         return redirect("/")
+
+
+@app.route("/test_facebook")
+def test_facebook():
+
+    # app_id = FB_APP_ID
+    return render_template("facebook_test.html")
+
+# @app.route("/fb-login", methods=['POST'])
+# def fb_login():
+#     """Log In user with facebook"""
+
+#     user_info = db.session.query(User.email, User.password).all()
+
+#     email = request.form.get("email")
+#     password = request.form.get("password")
+#     user = (email, password)
+
+#     name = request.form.get("name")
+#     user_id = request.form.get("id")
+    
+#     try: 
+#         user_id = db.session.query(User.user_id).filter(User.email == email).one()[0]
+#         if user in user_info:
+#             session['current_user'] = user_id
+#             flash('Successfully logged in as {}'.format(email))
+#             return redirect("/users/{}".format(user_id))
+#         else:
+#             flash("Ya gotta sign up first!")
+#     except: 
+#         flash("Ya gotta sign up first!")
+#         return redirect("/")
 
 
 @app.route("/logout")

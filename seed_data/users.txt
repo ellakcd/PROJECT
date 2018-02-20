@@ -1,6 +1,6 @@
 HP|Harry Potter|harry@hogwarts.edu|password1|1111111111|wizard|../static/images/Harry.jpg|NY|True
 HG|Hermoine Granger|hermione@hogwarts.edu|password2|2222222222|witch|../static/images/Hermione.jpg|CA|True
-RW|Ron Weasley|ron@hogwarts.edu|password3|3333333333||../static/images/../Ron.jpg|NY|True
+RW|Ron Weasley|ron@hogwarts.edu|password3|3333333333||../static/images/Ron.jpg|NY|True
 GW|Ginny Weasley|ginny@hogwarts.edu|password4|4444444444||../static/images/Ginny.jpg|CA|False
 DM|Draco Malfoy|draco@hogwarts.edu|password5|5555555555||../static/images/Draco.jpg|NY|True
 LL|Luna Lovegood|luna@hogwarts.edu|password11|121212121||../static/images/Luna.jpg|NY|True

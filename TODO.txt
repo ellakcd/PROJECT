@@ -22,7 +22,6 @@ when submit, shows on your screen and saves to db
 when other user opens app, get mailbox w message
 when click, see your message and text area
 when they submit, shows up on screen and saves to db
-Twilio - between multiple users
 
 
 MAPS: 
@@ -63,18 +62,23 @@ search:
 showresults on main page
 factor in duration
 one at a time - click for next
+filters instead of search?
+user filters?
+within 1 month of search dates
+
+check login info function
+
+get rid of secrets
 
 
-
-Mon: FB
-Tues: Pay?
-Wed: Chat?
+Tues: Chat and Profile in React
+Wed: Update Profile in React / editing profile - profile and listing page(only if primary lister) - can click on a section and edit it 
 Thurs: fix search
 Fri: Refactor and get rid of extra stuff / deal w flash in functions / move functions to model / factor out ajax stuff
 
-Mon: editing profile - profile and listing page(only if primary lister) - can click on a section and edit it - JQERY
-Tues: Finish Maps
-Wed: TESTS
+Mon: FB
+Tues: Pay?
+Wed: Finish Maps
 Thurs: TESTS
 Fri: re-freeze requirements
 
@@ -86,12 +90,7 @@ map
 esign
 rent
 
-password encryption - bcrypt package
-
-defaults?
-
-TESTS
-React
+password encryption - bcrypt package if no FB
 
 
 
