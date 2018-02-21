@@ -129,7 +129,7 @@ class Message(db.Model):
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
 
-		return "<Message id={} message={}>".format(self.message_id, message)
+		return "<Message id={} message={}>".format(self.message_id, self.message)
 
 
 class Picture(db.Model):

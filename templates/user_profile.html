@@ -3,7 +3,7 @@
 {% block content %}
 <a href="/"> Homepage </a><br>
 
-{% if session.get("current_user") and not my_page %}
+{% if session.get("current_user") %}
 <div id="chat_form"> 
 <form action="/add_message" method="POST">
 <textarea maxlength="500" name="message">
@@ -14,7 +14,7 @@
 </div>
 {% endif %}
 
-{% if session.get("current_user") and not my_page and not are_friends %}
+{% if session.get("current_user") and not are_friends %}
 	</form>
 		<form action="/add_as_friend" method="POST">
 		<input type="hidden" name="user_id" value="{{ user.user_id }}">
@@ -25,61 +25,19 @@
 	{% for mutual in mutuals %}
 	<a href="/users/{{ mutual.user_id }}"><br>
 				<img src="{{ mutual.photo }}" class="small_photo"><br>
+	</a>
 	{% endfor %}
 	{% endif %}
 {% endif %}
-
-{% if session.get("current_user") == user.user_id %} 
-<div id="mail">
-<h1> Mailbox </h1>
-{% for sender in senders_and_messages %}
-	{{ sender }}:
-	{% for message in senders_and_messages[sender] %}
-	{{ message }}
-	{% endfor %}
-{% endfor %}
-</div>
-
-	{% if user.looking_for_apt %}
-	<form action="/deactivate_user" method="POST">
-		<input type="hidden" name="user_id" value="{{ user.user_id }}">
-		<input type="submit" value="Not Currently Looking for Apt"><br><br>
-	</form>
-	{% endif %}
-
-	{% if not user.looking_for_apt %}
-	<form action="/reactivate_user" method="POST">
-		<input type="hidden" name="user_id" value="{{ user.user_id }}">
-		<input type="submit" value="Looking once more!"><br><br>
-	</form>
-	{% endif %}
-
-	Only you can see this: 
-	<div id="photo" class="big_photo"> <img src="{{ user.photo }}"> </div>
-	<div id="user_name"> USER_NAME: {{ user.user_id }} </div>
-	<div id="email"> EMAIL: {{ user.email }} </div>
-	<div id="bio"> BIO: {{ user.bio }} </div>
-	<div id="state"> STATE: {{ user.state }} </div>
-	<div id="looking"> LOOKING FOR APT?: {{ user.looking_for_apt }} </div>
-
-	<div id="my-favorites">
-	Favorites: <br> 
-	{% for listing in user.favorites %}
-			<a href="/listings/{{ listing.listing_id }}">
-					<img src="{{ listing.main_photo }}">
-			</a>
-	{% endfor %}
-	</div>
-{% else %}
 
 	<h1> USER_NAME: {{ user.user_id }} </h1>
 	<img src="{{ user.photo }}" class="big_photo">
 	<p> BIO: {{ user.bio }} </p>
 	STATE: {{ user.state }}<br>
 	LOOKING FOR APT?: {{ user.looking_for_apt }}<br><br><br>
-	{% if answers %}
+	{% if common_answers %}
 	You both said: <br>
-			{% for answer in answers %}
+			{% for answer in common_answers %}
 			{{ answer }}<br>
 			{% endfor %}
 	{% endif %}<br>
@@ -88,7 +46,7 @@
 	{% for answer in user.answers %}
 	{{  answer.question.question }}: {{ answer.answer }}<br>
 	{% endfor %}<br>
-{% endif %}
+
 
 
 <div id="my-listings">

@@ -40,18 +40,8 @@ def index():
 @app.route("/test_react")
 def test_react(): 
     """test react"""
-    return render_template("/react.html")
+    return render_template("react.html")
 
-
-@app.route("/messages.json")
-def get_all_messages():
-    """get all messages a user has received"""
-
-    me = User.query.get(session["current_user"])
-    messages = me.received_messages
-    info = {"messages": messages}
-    return jsonify(info)
-    
 
 @app.route("/register")
 def registration_page():
@@ -201,29 +191,24 @@ def user_profile(user_id):
 
     user = User.query.get(user_id)
     listings = user.listings
-    answers = []
+    common_answers = []
     favorites = []
+    message_dict = {}
     my_page = False
     are_friends = False
     if session.get("current_user"):
         me = User.query.get(session["current_user"])
         are_friends = functions.are_friends(me, user)
-        answers = functions.get_common_answers(me, user)
+        common_answers = functions.get_common_answers(me, user)
         favorites = me.favorites
         favorites = [favorite for favorite in favorites if favorite.active]
         mutuals = functions.mutual_friends(me, user)
         if me.user_id == user.user_id: 
-            my_page = True
-        messages = me.received_messages
-        senders_and_messages = {}
-        for message in messages:
-            sender = message.sender_id
-            if sender in senders_and_messages: 
-                senders_and_messages[sender].append(message.message)
-            else: 
-                senders_and_messages[sender] = [message.message]
+            message_dict = functions.get_messages(me)
+            return render_template("my_profile.html", user=user, message_dict=message_dict)
 
-    return render_template("user_profile.html", user=user, answers=answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, senders_and_messages=senders_and_messages)
+
+    return render_template("user_profile.html", user=user, common_answers=common_answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, message_dict=message_dict)
 
 
 
@@ -250,6 +235,24 @@ def listing_profile(listing_id):
     return render_template("listing_profile.html", listing=listing, users=users, lister=lister, friends=friends, mutuals=mutuals, favorite=favorite)
 
 
+@app.route("/user_basics.json")
+def user_profile_react():
+    """query for user info to display"""
+
+    user = User.query.get(session["current_user"])
+    favorites = user.favorites
+    favorites = [(favorite.listing_id, favorite.main_photo) for favorite in favorites]
+
+    info = {
+    "user_id": user.user_id,
+    "photo": user.photo, 
+    "bio": user.bio,
+    "favorites": favorites
+    }
+    
+    return jsonify(info)
+
+
 @app.route("/add_message", methods=["POST"])
 def create_message():
     """add a message between two users"""
@@ -257,10 +260,21 @@ def create_message():
     user_id = request.form.get("user_id")
     me = session["current_user"]
     content = request.form.get("message")
-    print content
     functions.add_message(me, user_id, content)
 
-    return redirect("/users/{}".format(user_id))
+    return redirect("/users/{}".format(me))
+
+
+@app.route("/delete_convo", methods=["POST"])
+def delete_convo():
+    """delete message thread between two users"""
+
+    user_id = request.form.get("user_id")
+    me = session["current_user"]
+    
+    functions.delete_messages(me, user_id)
+
+    return redirect("/users/{}".format(me))
 
 
 @app.route("/add_as_friend", methods=["POST"])
@@ -366,18 +380,6 @@ def add_roommate():
 
     listing_id = request.form.get("listing_id")
     user_id = request.form.get("roomie")
-
-    functions.add_UserListing(user_id, listing_id)
-
-    return redirect("/listings/{}".format(listing_id))
-
-
-@app.route("/add_self_as_roommate", methods=["POST"])
-def add_self_as_roommate(): 
-    """add yourself as a roommate to current listing"""
-
-    listing_id = request.form.get("listing_id")
-    user_id = session["current_user"]
 
     functions.add_UserListing(user_id, listing_id)
 
@@ -542,13 +544,6 @@ def find_roommates():
         if user.state == state:
             users_in_state.append(user)
     return render_template("/roommate_search_results.html")
-
-
-# @app.route("/mutuals")
-# def mutuals(user): 
-#     """takes a user_name and returns a list of mutual friends with current user"""
-
-#     return functions.mutual_friends(session["current_user"], user)
     
 
 @app.route("/login", methods=['POST'])

@@ -4,14 +4,16 @@
 
 <a href="/"> Homepage </a><br><br>
 {% if session.get("current_user") and not lister %}
-	<form action="/add_self_as_roommate" method="POST">
-		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		<input type="submit" value="Add Yourself As A Roommate"><br><br>
-	</form>
 	{% if not favorite %}
 		<form action="/add_favorite" method="POST">
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
 		<input type="submit" value="Favorite This Listing"><br><br>
+	</form>
+	{% endif %}
+	{% if favorite %}
+		<form action="/remove_favorite" method="POST">
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Unfavorite This Listing"><br><br>
 	</form>
 	{% endif %}
 {% endif %}

@@ -9,13 +9,15 @@ User can view properties in their state listed by people they have friends in co
 User can hover over a person to see mutual friends and common answers
 User can hover over a property to see price and avail date
 User can view listings on a map
-
 User can click on another user and chat with them
+
 User can click on a link to someone's venmo
 User can post a listing to facebook
 
 
 CHAT: 
+hide convo instead of delete
+Push protocol - ask henry to see other project
 contact button on each user page if logged in
 when click button, text window
 when submit, shows on your screen and saves to db
@@ -49,12 +51,29 @@ ESIGN:
 
 
 
+
+MY PAGE: 
+react
+show whole profile
+feilds you can't edit are dark
+feilds you can are light
+can edit and reload in place
+send update to db
+
+message area in corner
+can click mailbox and it expands to show every convo
+can click convo and expand to show all messages
+can reply and set timeout in JS to check 
+can hide convo
+
+
 TODO: 
+
+Jquery autocomplete plugin
+
+add pics for friends on registration page
+
 display listing even if just primary lister and don't live there
-
-list of users friends in state - start dates?
-
-only show labels in pop ups if have info to put
 
 in state listing list, highlite user's state
 
@@ -74,7 +93,7 @@ get rid of secrets
 Tues: Chat and Profile in React
 Wed: Update Profile in React / editing profile - profile and listing page(only if primary lister) - can click on a section and edit it 
 Thurs: fix search
-Fri: Refactor and get rid of extra stuff / deal w flash in functions / move functions to model / factor out ajax stuff
+Fri: Refactor and get rid of extra stuff / indent jinja / deal w flash in functions / move functions to model / factor out ajax stuff
 
 Mon: FB
 Tues: Pay?

@@ -234,6 +234,49 @@ def add_message(user_1_id, user_2_id, message):
     db.session.commit()
 
 
+def delete_messages(user_1_id, user_2_id):
+    """delete messages between two users"""
+
+    Message.query.filter_by(sender_id=user_1_id, receiver_id=user_2_id).delete()
+    Message.query.filter_by(sender_id=user_2_id, receiver_id=user_1_id).delete()
+
+    db.session.commit()
+    
+
+def get_messages(user):
+    """returns a dictionary of a user's sent and received messages"""
+
+    received_messages = user.received_messages
+    sent_messages = user.sent_messages
+
+    senders_and_messages = {}
+
+    for received in received_messages:
+        sender = received.sender_id
+        if sender in senders_and_messages: 
+            senders_and_messages[sender].append((received.message_id, received.sender_id, received.message))
+        else: 
+            senders_and_messages[sender] = [(received.message_id, received.sender_id, received.message)]
+    for sent in sent_messages:
+        receiver = sent.receiver_id
+        if receiver in senders_and_messages: 
+            senders_and_messages[receiver].append((sent.message_id, sent.sender_id, sent.message))
+        else: 
+            senders_and_messages[receiver] = [(sent.message_id, sent.sender_id, sent.message)]
+    for sender in senders_and_messages:
+        senders_and_messages[sender] = sorted(senders_and_messages[sender])
+
+
+    message_dict = {}
+
+    for sender in senders_and_messages:
+        message_dict[sender] = []
+        for message in senders_and_messages[sender]:
+            message_dict[sender].append("{}: {}".format(message[1], message[2]))
+
+    return message_dict
+
+
 def save_photo(photo_name):
     """gets photo from form, saves to db, returns filepath"""
 
