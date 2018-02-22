@@ -70,18 +70,18 @@ $(".user").on("mouseleave", clear);
 
 
 // not in use - for expanding mailbox convos:
-function showConvo(results) {
+// function showConvo(results) {
 
-}
+// }
 
-function getConvo(evt) {
-  let convo_partner_id = $(this).data("userID");
-  let formInputs = {
-    "convo_partner_id": convo_partner_id;
-  };
+// function getConvo(evt) {
+//   let convo_partner_id = $(this).data("userID");
+//   let formInputs = {
+//     "convo_partner_id": convo_partner_id;
+//   };
 
-  $.get("/all_messages.json", formInputs, showConvo);
-}
+//   $.get("/all_messages.json", formInputs, showConvo);
+// }
 
-$("#view_convo").on("click", getConvo);
+// $("#view_convo").on("click", getConvo);
 

@@ -19,7 +19,7 @@ function addPointerByAddress(address) {
         });
         let infoWindow = new google.maps.InfoWindow({
           map: map,
-          content: houseAddress,
+          content: `<a href="https://maps.google.com/?q=${houseAddress}">View on Google Maps</a>`,
           maxWidth: 200
         });
         marker.addListener('click', function() {

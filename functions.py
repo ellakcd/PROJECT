@@ -139,9 +139,9 @@ def get_all_friends_of_any_degree(user):
     friends = set()
     for friend in user.friends: 
         friends.add(friend)
-    for friend in user.friends: 
-        if user.user_id != friend.user_id:
-                friends.add(friend)
+        for friend_2 in friend.friends: 
+            if user.user_id != friend_2.user_id:
+                friends.add(friend_2)
 
     return friends
 
@@ -151,11 +151,11 @@ def get_all_listings_by_friends_of_any_degree(user):
     """returns all listings by any degree of friends"""
 
     listings = []
-    friends = get_all_second_degree_friends(user)
-    for key in friends: 
-        listings += key.listings
+    friends = get_all_friends_of_any_degree(user)
+    for friend in friends: 
+        listings += friend.listings
 
-    return listings
+    return set(listings)
 
 
 
@@ -243,6 +243,43 @@ def delete_messages(user_1_id, user_2_id):
     db.session.commit()
     
 
+def get_convo_partners(user):
+    """returns a list of user_ids of people user has convos with"""
+
+    received_messages = user.received_messages
+    sent_messages = user.sent_messages
+    partners = set()
+    for received in received_messages:
+        partners.add(received.sender_id)
+    for sent in sent_messages:
+        partners.add(sent.receiver_id)
+    partners = [str(partner) for partner in partners]
+
+    return partners
+
+
+def get_full_convo(user, partner):
+    """returns full text of convo between two users"""
+
+    messages = []
+    messages.append(user.received_messages)
+    messages.append(user.sent_messages)
+    messages = [message for message in messages if message.receiver_id is partner or messages.sender_id is partner]
+    messages = [(message.message_id, "{}: {}".format(message.sender_id, message.message)) for message in messages]
+
+    return sorted(messages)
+
+
+def new_messages(user, partner, last_message):
+    """gets all messages between two people since a certain message"""
+
+    all_messages = get_messages(user)
+    messages_with_partner = all_messages[partner]
+    new_messages = [message for message in messages_with_partner if message[0] > last_message]
+
+    return new_messages
+
+
 def get_messages(user):
     """returns a dictionary of a user's sent and received messages"""
 
@@ -272,7 +309,7 @@ def get_messages(user):
     for sender in senders_and_messages:
         message_dict[sender] = []
         for message in senders_and_messages[sender]:
-            message_dict[sender].append("{}: {}".format(message[1], message[2]))
+            message_dict[sender].append((message[0], "{}: {}".format(message[1], message[2])))
 
     return message_dict
 

@@ -55,7 +55,15 @@ Listings: <br>
 			<a href="/listings/{{ listing.listing_id }}">
 					<img src="{{ listing.main_photo }}">
 			</a>
+	{% endfor %} <br>
+{% if properties %}
+Listings where {{ user.user_id }} does not live on premises:<br>
+	{% for property in properties %}
+			<a href="/listings/{{ property.listing_id }}">
+					<img src="{{ property.main_photo }}">
+			</a>
 	{% endfor %}
+{% endif %}
 </div>
 
 {% if session.get("current_user") == user.user_id %} 

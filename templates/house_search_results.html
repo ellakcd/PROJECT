@@ -18,14 +18,9 @@
 	<a href="/listings_by_friends_in_state">Check out ALL the listings in your state here</a><br>
 	<a href="/">Try a new search</a>
 {% endif %}
-<!-- <script>
-let data = {
-	"addresses":[];
-};
-{% for listing in listings %}
-	data["addresses"].push({{ listing.address }}, {{ listing.listing_id }});
-{% endfor %}
-
-data = {{ data | tojson }};
-</script> -->
+<script>
+let map_data = {{ addresses_for_map }}
+console.log(map_data)
+<script src="../static/js/house_search_map.js"></script>
+</script>
 {% endblock %}

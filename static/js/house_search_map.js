@@ -50,22 +50,17 @@ function addMapByAddress(address) {
 }
 
 
-function showListingInfoOnMap(results) {
-  let addresses = results["addresses"];
-  console.log(addresses);
-  let centerPoint = addresses[0][0];
+function showListingInfoOnMap(map_data) {
+  let centerPoint = map_data[0][0];
 
   addMapByAddress(centerPoint);
 
-  for (let i=0; i<addresses.length; i++) {
-    let address = addresses[i];
+  for (let i=0; i<map_data.length; i++) {
+    let address = map_data[i];
     console.log(address);
     addPointerByAddress(address);
   }
 }
 
-function getAllListingInfoForMap() {
-  $.get("/listings_by_friends_in_state.json", showListingInfoOnMap);
-}
-
-getAllListingInfoForMap()
+showListingInfoOnMap(map_data);
+console.log(map_data);

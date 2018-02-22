@@ -3,8 +3,10 @@
 {% block content %}
 <a href="/"> Homepage </a><br>
 
+<!-- <button id="get-mail"> See Messages </button>
+<div id="mailbox"></div>
 
-<div id="mail">
+<div id="mail"> -->
 <h1> Mailbox </h1>
 {% for sender in message_dict %}
 <form action="/delete_convo" method="POST">
@@ -12,17 +14,19 @@
 <input type="submit" value="Delete Thread with {{ sender }}">
 </form>
 <div id="convo"></div>
+<span id="{{ sender }}" class="senders" data-last="{{ message_dict[sender][-1][0]}}" data-sender="{{ sender }}">
 	{{ sender }}:<br>
 	{% for message in message_dict[sender] %}
-	{{ message }}<br>
+	{{ message[1] }}<br>
 	{% endfor %}
+</span>
 <form action="/add_message" method="POST">
 <textarea maxlength="500" name="message">
 </textarea><br>
 <input type="hidden" name="user_id" value="{{ sender }}">
 <input type="submit" value="Send {{ sender }} a Message">
 </form>
-{% endfor %}
+{% endfor %}<br><br>
 
 </div>
 
@@ -67,11 +71,18 @@ Listings: <br>
 					<img src="{{ listing.main_photo }}">
 			</a>
 	{% endfor %}
+
+	{% for property in properties %}
+			<a href="/listings/{{ property.listing_id }}">
+					<img src="{{ property.main_photo }}">
+			</a>
+	{% endfor %}
+
 </div>
 
 {% if session.get("current_user") == user.user_id %} 
 	<a href="/add_listing"> Add A Listing </a>
 {% endif %}
 	
-
+<script src="../static/js/mailbox.js"></script>
 {% endblock %}

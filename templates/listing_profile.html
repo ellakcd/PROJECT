@@ -6,43 +6,52 @@
 {% if session.get("current_user") and not lister %}
 	{% if not favorite %}
 		<form action="/add_favorite" method="POST">
-		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		<input type="submit" value="Favorite This Listing"><br><br>
-	</form>
+			<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+			<input type="submit" value="Favorite This Listing"><br><br>
+		</form>
 	{% endif %}
 	{% if favorite %}
 		<form action="/remove_favorite" method="POST">
-		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		<input type="submit" value="Unfavorite This Listing"><br><br>
-	</form>
+			<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+			<input type="submit" value="Unfavorite This Listing"><br><br>
+		</form>
 	{% endif %}
+	<div id="chat_form"> 
+		<form action="/add_message" method="POST">
+			<textarea maxlength="500" name="message">
+			</textarea><br>
+			<input type="hidden" name="user_id" value="{{ listing.primary_lister }}">
+			<input type="submit" value="Send Primary Lister a Message">
+		</form>
+	</div>
 {% endif %}
+
 
 {% if session.get("current_user") == listing.primary_lister %}
 	Change primary lister to: 
 	<form action="/change_primary" method="POST">
-	<select name="new_primary" required>
-	{% for user in listing.users %}
-  		<option value="{{ user.user_id }}">{{ user.user_id }}</option>
-	{% endfor %}
-	</select><br>
-	<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-	<input type="submit" value="Change Primary Lister"><br><br>
+		<select name="new_primary" required>
+		{% for user in listing.users %}
+  			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
+		{% endfor %}
+		</select><br>
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Change Primary Lister"><br><br>
 	</form><br>
 	{% if listing.active %}
-	<form action="/deactivate_listing" method="POST">
-		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		<input type="submit" value="Take This Listing off the Market"><br><br>
-	</form>
+		<form action="/deactivate_listing" method="POST">
+			<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+			<input type="submit" value="Take This Listing off the Market"><br><br>
+		</form>
 	{% endif %}
 
 	{% if not listing.active %}
-	<form action="/reactivate_listing" method="POST">
-		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		When is it avail?:<br>
-		<input type="date" name="avail"><br>
-		<input type="submit" value="Put This Listing Back on the Market"><br><br>
-	</form>
+		<form action="/reactivate_listing" method="POST">
+			<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+			When is it avail?:<br>
+			<input type="date" name="avail"><br>
+			<input type="submit" value="Put This Listing Back on the Market"><br><br>
+		</form>
 	{% endif %}
 {% endif %}
 
@@ -112,7 +121,13 @@ Bathrooms: {{ listing.bathrooms }}<br>
 Laundry: {{ listing.laundry }}<br>
 Pets: {{ listing.pets }} <br><br><br>
 
-
+{% if primary_lister %}
+Primary Lister (not living on premises):<br>
+	<a href="/users/{{ primary_lister.id }}"><br>
+				<img src="{{ primary_lister.photo }}" class="small_photo"><br>
+				{{ primary_lister.id }}
+	</a><br><br>
+{% endif %}
 Roommates: 
 <br>
 	{% for user in listing.users %}

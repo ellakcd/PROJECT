@@ -184,18 +184,56 @@ def make_listing_profile():
         return redirect("/listings/{}".format(listing_id))
 
 
+@app.route("/conversations.json")
+def get_conversations():
+    """get all conversations user in part of"""
+
+    user = User.query.get(session["current_user"])
+    partners = functions.get_convo_partners(user)
+    info = {"convo_partners": partners}
+    return jsonify(info)
+
+
+@app.route("/convo.json")
+def get_convo():
+    """get the text of a conversation between user and someone else"""
+
+    partner = request.args.get("partner_id")
+    user = User.query.get(session["current_user"])
+    convo = functions.get_full_convo(user, partner)
+    info = {"convo": convo}
+    return jsonify(convo)
+
+
+@app.route("/new_messages.json")
+def get_new_messages():
+    """get new messages"""
+
+    user = User.query.get(session["current_user"])
+    partner = request.args.get("sender")
+    last = request.args.get("last")
+    new_messages = functions.get_new_messages(user, partner, last)
+
+    info = {
+        "new_messages": new_messages
+    }
+
+    return jsonify(info)
+
 
 @app.route("/users/<user_id>")
 def user_profile(user_id):
     """query for user info to display"""
 
     user = User.query.get(user_id)
-    listings = user.listings
+    # listings = user.listings
     common_answers = []
     favorites = []
     message_dict = {}
     my_page = False
     are_friends = False
+    properties = Listing.query.filter(Listing.primary_lister == user_id)
+    properties = [prop for prop in properties if prop not in user.listings]
     if session.get("current_user"):
         me = User.query.get(session["current_user"])
         are_friends = functions.are_friends(me, user)
@@ -205,10 +243,10 @@ def user_profile(user_id):
         mutuals = functions.mutual_friends(me, user)
         if me.user_id == user.user_id: 
             message_dict = functions.get_messages(me)
-            return render_template("my_profile.html", user=user, message_dict=message_dict)
+            return render_template("my_profile.html", user=user, properties=properties, message_dict=message_dict)
 
 
-    return render_template("user_profile.html", user=user, common_answers=common_answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, message_dict=message_dict)
+    return render_template("user_profile.html", user=user, properties=properties, common_answers=common_answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, message_dict=message_dict)
 
 
 
@@ -218,10 +256,19 @@ def listing_profile(listing_id):
 
     users = User.query.all()
     listing = Listing.query.get(listing_id)
+    primary_lister = {}
     lister = False
     favorite = False
     friends = []
     mutuals = []
+
+
+    primary = User.query.get(listing.primary_lister)
+    if primary not in listing.users:
+        photo = primary.photo
+        primary_lister = {"id": primary.user_id, 
+                        "photo": photo}
+
     if session.get("current_user"):
         user = User.query.get(session["current_user"])
         if listing in user.favorites:
@@ -232,7 +279,7 @@ def listing_profile(listing_id):
             friends = functions.friends_in_listing(user, listing)
             mutuals = functions.mutual_friends_in_listing(user, listing)
 
-    return render_template("listing_profile.html", listing=listing, users=users, lister=lister, friends=friends, mutuals=mutuals, favorite=favorite)
+    return render_template("listing_profile.html", listing=listing, users=users, lister=lister, primary_lister=primary_lister, friends=friends, mutuals=mutuals, favorite=favorite)
 
 
 @app.route("/user_basics.json")
@@ -527,9 +574,12 @@ def find_houses():
     state = user.state
 
     listings = functions.get_listings(state, neighborhoods, price_cap, live_alone, start_date)
-    
+    addresses_for_map = []
+    for listing in listings:
+        addresses_for_map.append((listing.address, listing.listing_id))
+ 
   
-    return render_template("/house_search_results.html", listings=listings, listings_by_friends=listings_by_friends)
+    return render_template("/house_search_results.html", addresses_for_map=addresses_for_map, listings=listings, listings_by_friends=listings_by_friends)
 
 
 @app.route("/roommate_search")
@@ -621,7 +671,9 @@ def listing_info():
     listing_id = request.args.get("listing_id")
     listing = Listing.query.get(listing_id)
     user = User.query.get(session["current_user"])
-    friends = functions.mutual_friends_in_listing(user, listing)
+    friends = set(functions.mutual_friends_in_listing(user, listing))
+    for friend in functions.friends_in_listing(user, listing):
+        friends.add(friend)
     friends = [(friend.name, friend.photo) for friend in friends]
 
     info = {
