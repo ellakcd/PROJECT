@@ -42,13 +42,18 @@
 
 
 function renderNewConvos(results) {
+	console.log(results);
 	let new_messages = results["new_messages"];
+	let partner = results["partner"];
+	let last = null;
 	for (let i=0; i<new_messages.length; i++) {
 		let new_message = new_messages[i];
 		$(".senders").append("<br>" + new_message[1])
+		last = new_message[0];
 	}
+	$(`#${partner}`).last = last;
 }
-//HOW DOES LAST MESSAGE UPDATE?
+//HOW DOES LAST MESSAGE UPDATE? - div.data = 
 
 //wrap this in function and call setinterval on that function
 function getNewMail() {
@@ -63,12 +68,9 @@ function getNewMail() {
 	});
 }
 
-function alert() {
-	alert("test");
-}
 
-// setInterval(getNewMail, 3000);
-// window.setInterval(alert, 3000);
+setInterval(getNewMail, 10000);
+
 
 console.log("in page");
 

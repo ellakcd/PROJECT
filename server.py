@@ -213,9 +213,10 @@ def get_new_messages():
     partner = request.args.get("sender")
     last = request.args.get("last")
     new_messages = functions.get_new_messages(user, partner, last)
-
+    print new_messages
     info = {
-        "new_messages": new_messages
+        "new_messages": new_messages,
+        "partner": partner
     }
 
     return jsonify(info)

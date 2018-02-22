@@ -270,11 +270,13 @@ def get_full_convo(user, partner):
     return sorted(messages)
 
 
-def new_messages(user, partner, last_message):
+def get_new_messages(user, partner, last_message):
     """gets all messages between two people since a certain message"""
 
+    print last_message
     all_messages = get_messages(user)
     messages_with_partner = all_messages[partner]
+    print messages_with_partner
     new_messages = [message for message in messages_with_partner if message[0] > last_message]
 
     return new_messages
