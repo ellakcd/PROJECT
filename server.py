@@ -37,10 +37,10 @@ def index():
     return render_template("homepage.html", neighborhoods=neighborhoods, STATES=STATES, state=state)
 
 
-@app.route("/test_react")
-def test_react(): 
-    """test react"""
-    return render_template("react.html")
+# @app.route("/test_react")
+# def test_react(): 
+#     """test react"""
+#     return render_template("react.html")
 
 
 @app.route("/register")
@@ -184,25 +184,25 @@ def make_listing_profile():
         return redirect("/listings/{}".format(listing_id))
 
 
-@app.route("/conversations.json")
-def get_conversations():
-    """get all conversations user in part of"""
+# @app.route("/conversations.json")
+# def get_conversations():
+#     """get all conversations user in part of"""
 
-    user = User.query.get(session["current_user"])
-    partners = functions.get_convo_partners(user)
-    info = {"convo_partners": partners}
-    return jsonify(info)
+#     user = User.query.get(session["current_user"])
+#     partners = functions.get_convo_partners(user)
+#     info = {"convo_partners": partners}
+#     return jsonify(info)
 
 
-@app.route("/convo.json")
-def get_convo():
-    """get the text of a conversation between user and someone else"""
+# @app.route("/convo.json")
+# def get_convo():
+#     """get the text of a conversation between user and someone else"""
 
-    partner = request.args.get("partner_id")
-    user = User.query.get(session["current_user"])
-    convo = functions.get_full_convo(user, partner)
-    info = {"convo": convo}
-    return jsonify(convo)
+#     partner = request.args.get("partner_id")
+#     user = User.query.get(session["current_user"])
+#     convo = functions.get_full_convo(user, partner)
+#     info = {"convo": convo}
+#     return jsonify(convo)
 
 
 @app.route("/new_messages.json")
@@ -213,13 +213,66 @@ def get_new_messages():
     partner = request.args.get("sender")
     last = request.args.get("last")
     new_messages = functions.get_new_messages(user, partner, last)
-    print new_messages
+    # print new_messages
     info = {
         "new_messages": new_messages,
         "partner": partner
     }
 
     return jsonify(info)
+
+
+@app.route("/listings_in_neighborhood")
+def get_listings_in_neighborhood():
+    """get info about listings in a neighborhood"""
+
+    neighborhood = request.args.get("neighborhood")
+        # If they've selected specific neighborhoods, make a list of all listings with those neighborhoods
+    if neighborhoods: 
+        for neighborhood in neighborhoods:
+            listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
+
+            # In case multiple states have neighborhoods with the same photo_name
+            right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+            for listing in listings:
+                if listing not in right_state:
+                    listings.remove(listing)
+    # otherwise, start with a list of all houses in the right state
+    else: 
+        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+
+    info = {}
+    for listing in listings: 
+        info[listing] = {"address": listing.address, 
+                        "photo": listing.main_photo}
+
+    return jsonify(info)
+
+
+@app.route("/filter_for_houses")
+def show_all_houses():
+    """shows all houses so user can filter"""
+
+    user = User.query.get(session["current_user"])
+    state = user.state
+    neighborhoods = request.args.getlist("neighborhoods")
+    if neighborhoods: 
+        for neighborhood in neighborhoods:
+            listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
+
+            # In case multiple states have neighborhoods with the same neighborhood name
+            right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+            for listing in listings:
+                if listing not in right_state:
+                    listings.remove(listing)
+    # otherwise, start with a list of all houses in the right state
+    else: 
+        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+
+    listing_names = [listing.listing_id for listing in listings]
+
+    return render_template("/filter_houses.html", user=user, listings=listings, neighborhoods=neighborhoods, listing_names=listing_names)
+
 
 
 @app.route("/users/<user_id>")
@@ -243,8 +296,14 @@ def user_profile(user_id):
         favorites = [favorite for favorite in favorites if favorite.active]
         mutuals = functions.mutual_friends(me, user)
         if me.user_id == user.user_id: 
+            all_users = User.query.all()
+            all_listings = Listing.query.all()
+            # all_users = [user.user_id for user in all_users]
+            # all_listings = [listing.listing_id for listing in all_listings]
+            # names = all_users + all_listings
+            # print names
             message_dict = functions.get_messages(me)
-            return render_template("my_profile.html", user=user, properties=properties, message_dict=message_dict)
+            return render_template("my_profile.html", user=user, all_listings=all_listings, all_users=all_users, properties=properties, message_dict=message_dict)
 
 
     return render_template("user_profile.html", user=user, properties=properties, common_answers=common_answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, message_dict=message_dict)
@@ -283,32 +342,34 @@ def listing_profile(listing_id):
     return render_template("listing_profile.html", listing=listing, users=users, lister=lister, primary_lister=primary_lister, friends=friends, mutuals=mutuals, favorite=favorite)
 
 
-@app.route("/user_basics.json")
-def user_profile_react():
-    """query for user info to display"""
+# @app.route("/user_basics.json")
+# def user_profile_react():
+#     """query for user info to display"""
 
-    user = User.query.get(session["current_user"])
-    favorites = user.favorites
-    favorites = [(favorite.listing_id, favorite.main_photo) for favorite in favorites]
+#     user = User.query.get(session["current_user"])
+#     favorites = user.favorites
+#     favorites = [(favorite.listing_id, favorite.main_photo) for favorite in favorites]
 
-    info = {
-    "user_id": user.user_id,
-    "photo": user.photo, 
-    "bio": user.bio,
-    "favorites": favorites
-    }
+#     info = {
+#     "user_id": user.user_id,
+#     "photo": user.photo, 
+#     "bio": user.bio,
+#     "favorites": favorites
+#     }
     
-    return jsonify(info)
+#     return jsonify(info)
 
 
 @app.route("/add_message", methods=["POST"])
 def create_message():
     """add a message between two users"""
 
-    user_id = request.form.get("user_id")
+    receiver_id = request.form.get("user_id")
     me = session["current_user"]
     content = request.form.get("message")
-    functions.add_message(me, user_id, content)
+    print "receiver"
+    print receiver_id
+    functions.add_message(me, receiver_id, content)
 
     return redirect("/users/{}".format(me))
 
@@ -386,6 +447,7 @@ def reactivate():
     db.session.commit()
 
     return redirect("/listings/{}".format(listing_id))
+
 
 @app.route("/change_primary", methods=["POST"])
 def change_primary(): 
@@ -502,7 +564,9 @@ def listings_by_friends_in_state():
         if state in listing.address: 
             neighborhoods.add(listing.neighborhood)
 
-    return render_template("/listings_by_friends_in_state.html",  state=state, listings=listings, neighborhoods=neighborhoods)
+    listing_names = [listing.listing_id for listing in listings]
+
+    return render_template("/listings_by_friends_in_state.html",  state=state, listings=listings, neighborhoods=neighborhoods, listing_names=listing_names)
     # else: 
     #     flash("Don't forget to log in!")
     #     return redirect("/")
@@ -524,6 +588,21 @@ def listing_friend_state_json():
         addresses.append((listing.address, listing.listing_id))
 
     info = {"addresses" : addresses}
+
+    return jsonify(info)
+
+
+@app.route("/listings_info.json")
+def listing_info_json():
+    """takes a list of listing ids and returns info about them"""
+
+    listing_names = request.args.get("listing-names")
+    listings = []
+    for listing_name in listing_names:
+        listings.append(Listing.query.get(listing_name))
+    listings = [(listing.address, listing.listing_id) for listing in listings]
+
+    info = {"addresses" : listings}
 
     return jsonify(info)
 
@@ -578,9 +657,11 @@ def find_houses():
     addresses_for_map = []
     for listing in listings:
         addresses_for_map.append((listing.address, listing.listing_id))
+
+    listing_names = [listing.listing_id for listing in listings]
  
   
-    return render_template("/house_search_results.html", addresses_for_map=addresses_for_map, listings=listings, listings_by_friends=listings_by_friends)
+    return render_template("/house_search_results.html", addresses_for_map=addresses_for_map, listings=listings, listing_names=listing_names, listings_by_friends=listings_by_friends)
 
 
 @app.route("/roommate_search")

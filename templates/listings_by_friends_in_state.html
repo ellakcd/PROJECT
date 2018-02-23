@@ -8,7 +8,7 @@
 
 {% if neighborhoods %}
 {{ state }}: <br>
-<div id="main_map" ></div>
+<div id="main_map" data-listing-names="{{ listing_names }}"></div>
 {% for neighborhood in neighborhoods %}
 			<h1> {{ neighborhood }} </h1>
 			{% for listing in listings %}

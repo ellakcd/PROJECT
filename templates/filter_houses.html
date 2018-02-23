@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Results{% endblock %}
+{% block content %}
+
+<a href="/"> Homepage </a><br>
+
+
+Listings: <br>
+<div id="main_map" data-listing-names="{{ listing_names }}"></div>
+{% if neighborhoods %}
+	{% for neighborhood in neighborhoods %}
+			<h1> {{ neighborhood }} </h1>
+			{% for listing in listings %}
+				{% if listing.neighborhood == neighborhood %}
+					<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
+						<img src="{{ listing.main_photo }}"><br>
+					{{ listing.address }}
+ 					</a><br>  
+				{% endif %}
+			{% endfor %}
+	{% endfor %}
+{% else %}
+	{% for listing in listings %}
+			<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
+						<img src="{{ listing.main_photo }}"><br>
+					{{ listing.address }}
+ 			</a><br>  
+	{% endfor %}
+{% endif %}
+<script src="../static/js/map_with_multy.js"></script>
+{% endblock %}

@@ -112,25 +112,26 @@ def mutual_friends_in_listing(user1, listing):
 
     return set(mutuals)
 
+
 def get_all_friends(user):
     """returns list of friends"""
 
     return user.friends
 
 
-def get_all_second_degree_friends(user):
-    """returns second degree friends and the connections"""
+# def get_all_second_degree_friends(user):
+#     """returns second degree friends and the connections"""
 
-    friends_and_mutuals = defaultdict(list)
-    first_degrees = set(get_all_friends(user))
-    # if user.friends: 
-    for friend in user.friends: 
-        second_degrees = friend.friends
-        for second_degree in second_degrees: 
-            if user.user_id != second_degree.user_id and second_degree not in first_degrees:
-                friends_and_mutuals[second_degree].append(friend)
+#     friends_and_mutuals = defaultdict(list)
+#     first_degrees = set(get_all_friends(user))
+#     # if user.friends: 
+#     for friend in user.friends: 
+#         second_degrees = friend.friends
+#         for second_degree in second_degrees: 
+#             if user.user_id != second_degree.user_id and second_degree not in first_degrees:
+#                 friends_and_mutuals[second_degree].append(friend)
 
-    return friends_and_mutuals
+#     return friends_and_mutuals
 
 
 def get_all_friends_of_any_degree(user):
@@ -243,31 +244,31 @@ def delete_messages(user_1_id, user_2_id):
     db.session.commit()
     
 
-def get_convo_partners(user):
-    """returns a list of user_ids of people user has convos with"""
+# def get_convo_partners(user):
+#     """returns a list of user_ids of people user has convos with"""
 
-    received_messages = user.received_messages
-    sent_messages = user.sent_messages
-    partners = set()
-    for received in received_messages:
-        partners.add(received.sender_id)
-    for sent in sent_messages:
-        partners.add(sent.receiver_id)
-    partners = [str(partner) for partner in partners]
+#     received_messages = user.received_messages
+#     sent_messages = user.sent_messages
+#     partners = set()
+#     for received in received_messages:
+#         partners.add(received.sender_id)
+#     for sent in sent_messages:
+#         partners.add(sent.receiver_id)
+#     partners = [str(partner) for partner in partners]
 
-    return partners
+#     return partners
 
 
-def get_full_convo(user, partner):
-    """returns full text of convo between two users"""
+# def get_full_convo(user, partner):
+#     """returns full text of convo between two users"""
 
-    messages = []
-    messages.append(user.received_messages)
-    messages.append(user.sent_messages)
-    messages = [message for message in messages if message.receiver_id is partner or messages.sender_id is partner]
-    messages = [(message.message_id, "{}: {}".format(message.sender_id, message.message)) for message in messages]
+#     messages = []
+#     messages.append(user.received_messages)
+#     messages.append(user.sent_messages)
+#     messages = [message for message in messages if message.receiver_id is partner or messages.sender_id is partner]
+#     messages = [(message.message_id, "{}: {}".format(message.sender_id, message.message)) for message in messages]
 
-    return sorted(messages)
+    # return sorted(messages)
 
 
 def get_new_messages(user, partner, last_message):
@@ -277,7 +278,7 @@ def get_new_messages(user, partner, last_message):
     all_messages = get_messages(user)
     messages_with_partner = all_messages[partner]
     print messages_with_partner
-    new_messages = [message for message in messages_with_partner if message[0] > last_message]
+    new_messages = [message for message in messages_with_partner if int(message[0]) > int(last_message)]
 
     return new_messages
 
@@ -314,6 +315,37 @@ def get_messages(user):
             message_dict[sender].append((message[0], "{}: {}".format(message[1], message[2])))
 
     return message_dict
+
+
+    # received_messages = user.received_messages
+    # sent_messages = user.sent_messages
+
+    # convos_and_messages = {}
+
+    # for received in received_messages:
+    #     partner = received.sender_id
+    #     if partner in convos_and_messages: 
+    #         convos_and_messages[partner].append((received.message_id, received.sender_id, received.message))
+    #     else: 
+    #         convos_and_messages[partner] = [(received.message_id, received.sender_id, received.message)]
+    # for sent in sent_messages:
+    #     partner = sent.receiver_id
+    #     if partner in convos_and_messages: 
+    #         convos_and_messages[partner].append((sent.message_id, sent.sender_id, sent.message))
+    #     else: 
+    #         convos_and_messages[partner] = [(sent.message_id, sent.sender_id, sent.message)]
+    # for sender in convos_and_messages:
+    #     convos_and_messages[partner] = sorted(convos_and_messages[sender])
+
+
+    # message_dict = {}
+
+    # for partner in convos_and_messages:
+    #     message_dict[partner] = []
+    #     for message in convos_and_messages[partner]:
+    #         message_dict[partner].append({"message_id" : message[0], "text" : "{}: {}".format(message[1], message[2])})
+
+    # return message_dict
 
 
 def save_photo(photo_name):

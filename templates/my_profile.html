@@ -3,29 +3,41 @@
 {% block content %}
 <a href="/"> Homepage </a><br>
 
-<!-- <button id="get-mail"> See Messages </button>
-<div id="mailbox"></div>
-
-<div id="mail"> -->
 <h1> Mailbox </h1>
+	Start a Convo:<br>
+	<form action="/add_message" method="POST">
+	<!-- <input id="names" name="user_id" placeholder="Enter a User/Listing Id"><br> -->
+		<select name="user_id" required>
+		{% for user in all_users %}
+  			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
+		{% endfor %}
+		{% for listing in all_listings %}
+  			<option value="{{ listing.listing_id }}">{{ listing.listing_id }}</option>
+		{% endfor %}
+		</select>
+	</form>
+	<textarea maxlength="500" name="message"></textarea><br>
+	<input type="submit" value="Send a Message"><br>
+	</form><br><br>
 {% for sender in message_dict %}
-<form action="/delete_convo" method="POST">
-<input type="hidden" name="user_id" value="{{ sender }}">
-<input type="submit" value="Delete Thread with {{ sender }}">
-</form>
-<div id="convo"></div>
-<span id="{{ sender }}" class="senders" data-last="{{ message_dict[sender][-1][0]}}" data-sender="{{ sender }}">
-	{{ sender }}:<br>
-	{% for message in message_dict[sender] %}
-	{{ message[1] }}<br>
-	{% endfor %}
-</span>
-<form action="/add_message" method="POST">
-<textarea maxlength="500" name="message">
-</textarea><br>
-<input type="hidden" name="user_id" value="{{ sender }}">
-<input type="submit" value="Send {{ sender }} a Message">
-</form>
+	<form action="/delete_convo" method="POST">
+	<input type="hidden" name="user_id" value="{{ sender }}">
+	<input type="submit" value="Delete Thread with {{ sender }}">
+	</form>
+	<div id="convo"></div>
+	<div id="{{ sender }}" class="conversation" data-last="{{ message_dict[sender][-1][0] }}" data-sender="{{ sender }}">
+		{{ sender }}:<br>
+		{% for message in message_dict[sender] %}
+		{{ message[1] }}<br>
+		{% endfor %}
+	</div>
+
+	<form action="/add_message" data-last="{{ message_dict[sender][-1][0]}}" data-receiver="{{ sender }}" id="add_message" method="POST">
+	<textarea maxlength="500" id="message" name="message">
+	</textarea><br>
+	<input type="submit" value="Send {{ sender }} a Message">
+	</form>
+
 {% endfor %}<br><br>
 
 </div>
@@ -80,9 +92,12 @@ Listings: <br>
 
 </div>
 
+
+
 {% if session.get("current_user") == user.user_id %} 
 	<a href="/add_listing"> Add A Listing </a>
 {% endif %}
 	
 <script src="../static/js/mailbox.js"></script>
+
 {% endblock %}

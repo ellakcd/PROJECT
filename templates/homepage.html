@@ -5,11 +5,11 @@
 
 <h1>Welcome to Roommatch</h1> <br>
 
-<div class="container-fluid">
+<!-- <div class="container-fluid">
         <fb:login-button scope="public_profile,email,user_friends" onlogin="loggin();">
         </fb:login-button>
         <div id="status">
-</div>
+</div> -->
 
 {% if session.get("current_user") %}
 	<div id="logout">
@@ -33,12 +33,12 @@
 
 	<div id="housing-search">
 		Search for your new HOME:<br>
-		<form action="/house_search" method="GET">
+		<form action="/filter_for_houses" id="neighborhood" method="GET">
 		What neighborhood do you want to live in?:<br>
 			{% for neighborhood in neighborhoods %}
-			<input type="checkbox" name="neighborhoods" value="{{ neighborhood }}"> {{ neighborhood }}
+			<input type="checkbox" name="neighborhoods" class="hood" value="{{ neighborhood }}"> {{ neighborhood }}
 			{% endfor %}<br>
-		Do you want (a) roommate(s)?:<br>
+		<!-- Do you want (a) roommate(s)?:<br>
 			<input type="radio" name="live_alone" value="no" checked> Heck Yes! <br>
 			<input type="radio" name="live_alone" value="yes"> Nope <br>
 			<input type="radio" name="live_alone" value="maybe"> I'm happy either way <br>
@@ -52,18 +52,12 @@
 		What's the most you want to spend per month?:<br>
 			<input type="number" name="price_cap" required><br>
 		What's your earliest start date?:<br>
-			<input type="date" name="start_date" required><br>
+			<input type="date" name="start_date" required><br> -->
 
 		<input type="submit" value="Reveal Matches!">
-		</form><br>			
+		</form><br>	
+		<div id="results"></div>		
 	</div>
-
-<!-- 	<div id="roommate-search">
-		View some ROOMMATE options to move into your place: 
-			<form action="/roommate_search" method="GET">
-				<input type="submit" value="Find Roommates!">
-			</form>
-	</div> -->
 
 {% else %}
 	<p>Log In!<br>
@@ -79,5 +73,6 @@
 	<h1><a href="/register">Create Your Profile!</a></h1>
 	
 {% endif %}
-<script src="../static/js/facebook.js"></script>
+<!-- <script src="../static/js/facebook.js"></script> -->
+<script src="../static/js/filters.js"></script>
 {% endblock %}
