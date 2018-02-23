@@ -289,30 +289,30 @@ def get_messages(user):
     received_messages = user.received_messages
     sent_messages = user.sent_messages
 
-    senders_and_messages = {}
+    message_dict = {}
 
     for received in received_messages:
         sender = received.sender_id
-        if sender in senders_and_messages: 
-            senders_and_messages[sender].append((received.message_id, received.sender_id, received.message))
+        if sender in message_dict: 
+            message_dict[sender].append((received.message_id, "{}: {}".format(received.sender_id, received.message)))
         else: 
-            senders_and_messages[sender] = [(received.message_id, received.sender_id, received.message)]
+            message_dict[sender] = [(received.message_id, "{}: {}".format(received.sender_id, received.message))]
     for sent in sent_messages:
         receiver = sent.receiver_id
-        if receiver in senders_and_messages: 
-            senders_and_messages[receiver].append((sent.message_id, sent.sender_id, sent.message))
+        if receiver in message_dict: 
+            message_dict[receiver].append((sent.message_id, "{}: {}".format(sent.sender_id, sent.message)))
         else: 
-            senders_and_messages[receiver] = [(sent.message_id, sent.sender_id, sent.message)]
-    for sender in senders_and_messages:
-        senders_and_messages[sender] = sorted(senders_and_messages[sender])
+            message_dict[receiver] = [(sent.message_id, "{}: {}".format(sent.sender_id, sent.message))]
+    for partner in message_dict:
+        message_dict[partner] = sorted(message_dict[partner])
 
 
-    message_dict = {}
+    # message_dict = {}
 
-    for sender in senders_and_messages:
-        message_dict[sender] = []
-        for message in senders_and_messages[sender]:
-            message_dict[sender].append((message[0], "{}: {}".format(message[1], message[2])))
+    # for sender in senders_and_messages:
+    #     message_dict[sender] = []
+    #     for message in senders_and_messages[sender]:
+    #         message_dict[sender].append((message[0], "{}: {}".format(message[1], message[2])))
 
     return message_dict
 

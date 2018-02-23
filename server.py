@@ -226,7 +226,7 @@ def get_new_messages():
 def get_listings_in_neighborhood():
     """get info about listings in a neighborhood"""
 
-    neighborhood = request.args.get("neighborhood")
+    neighborhoods = request.args.get("neighborhoods")
         # If they've selected specific neighborhoods, make a list of all listings with those neighborhoods
     if neighborhoods: 
         for neighborhood in neighborhoods:
@@ -297,13 +297,13 @@ def user_profile(user_id):
         mutuals = functions.mutual_friends(me, user)
         if me.user_id == user.user_id: 
             all_users = User.query.all()
-            all_listings = Listing.query.all()
+            # all_listings = Listing.query.all()
             # all_users = [user.user_id for user in all_users]
             # all_listings = [listing.listing_id for listing in all_listings]
             # names = all_users + all_listings
             # print names
             message_dict = functions.get_messages(me)
-            return render_template("my_profile.html", user=user, all_listings=all_listings, all_users=all_users, properties=properties, message_dict=message_dict)
+            return render_template("my_profile.html", user=user, all_users=all_users, properties=properties, message_dict=message_dict)
 
 
     return render_template("user_profile.html", user=user, properties=properties, common_answers=common_answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, message_dict=message_dict)
@@ -529,6 +529,7 @@ def listings_by_state():
 
     for state in STATES: 
         listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+        listings = [listing for listing in listings if listing.active]
         listings_by_state[state] = listings
     
     return render_template("/listings_by_state.html", STATES=STATES, listings_by_state=listings_by_state)
@@ -542,6 +543,7 @@ def users_by_state():
 
     for state in STATES: 
         users = User.query.filter(User.state == state).all()
+        users = [user for user in users if user.looking_for_apt]
         users_by_state[state] = users
     
     return render_template("/users_by_state.html", STATES=STATES, users_by_state=users_by_state)
@@ -664,18 +666,18 @@ def find_houses():
     return render_template("/house_search_results.html", addresses_for_map=addresses_for_map, listings=listings, listing_names=listing_names, listings_by_friends=listings_by_friends)
 
 
-@app.route("/roommate_search")
-def find_roommates():
-    """query for roommates in state"""
+# @app.route("/roommate_search")
+# def find_roommates():
+#     """query for roommates in state"""
 
-    user = session["current_user"]
-    state = User.query.get(user).state
-    users = User.query.all()
-    users_in_state = []
-    for user in users: 
-        if user.state == state:
-            users_in_state.append(user)
-    return render_template("/roommate_search_results.html")
+#     user = session["current_user"]
+#     state = User.query.get(user).state
+#     users = User.query.all()
+#     users_in_state = []
+#     for user in users: 
+#         if user.state == state:
+#             users_in_state.append(user)
+#     return render_template("/roommate_search_results.html")
     
 
 @app.route("/login", methods=['POST'])
@@ -704,11 +706,11 @@ def login():
         return redirect("/")
 
 
-@app.route("/test_facebook")
-def test_facebook():
+# @app.route("/test_facebook")
+# def test_facebook():
 
-    # app_id = FB_APP_ID
-    return render_template("facebook_test.html")
+#     # app_id = FB_APP_ID
+#     return render_template("facebook_test.html")
 
 # @app.route("/fb-login", methods=['POST'])
 # def fb_login():

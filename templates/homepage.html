@@ -33,12 +33,12 @@
 
 	<div id="housing-search">
 		Search for your new HOME:<br>
-		<form action="/filter_for_houses" id="neighborhood" method="GET">
+		<form action="/house_search" id="neighborhood" method="GET">
 		What neighborhood do you want to live in?:<br>
 			{% for neighborhood in neighborhoods %}
 			<input type="checkbox" name="neighborhoods" class="hood" value="{{ neighborhood }}"> {{ neighborhood }}
 			{% endfor %}<br>
-		<!-- Do you want (a) roommate(s)?:<br>
+		Do you want (a) roommate(s)?:<br>
 			<input type="radio" name="live_alone" value="no" checked> Heck Yes! <br>
 			<input type="radio" name="live_alone" value="yes"> Nope <br>
 			<input type="radio" name="live_alone" value="maybe"> I'm happy either way <br>
@@ -52,7 +52,7 @@
 		What's the most you want to spend per month?:<br>
 			<input type="number" name="price_cap" required><br>
 		What's your earliest start date?:<br>
-			<input type="date" name="start_date" required><br> -->
+			<input type="date" name="start_date" required><br>
 
 		<input type="submit" value="Reveal Matches!">
 		</form><br>	

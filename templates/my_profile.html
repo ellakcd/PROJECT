@@ -11,11 +11,7 @@
 		{% for user in all_users %}
   			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
 		{% endfor %}
-		{% for listing in all_listings %}
-  			<option value="{{ listing.listing_id }}">{{ listing.listing_id }}</option>
-		{% endfor %}
-		</select>
-	</form>
+		</select><br>
 	<textarea maxlength="500" name="message"></textarea><br>
 	<input type="submit" value="Send a Message"><br>
 	</form><br><br>

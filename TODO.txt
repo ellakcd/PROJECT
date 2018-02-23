@@ -15,23 +15,6 @@ User can click on a link to someone's venmo
 User can post a listing to facebook
 
 
-MAPS: 
-put data in scripts from jinja 
-maps for search results
-if can't geolocate, just no map/marker, not alert - why is the div empty
-map marker links to actual google maps?
-
-
-FACEBOOK: 
-log in w facebook 
-user id from that - no need for password, email, phone
-then make profile
-get friends list - put into DB
-can post to FB
-pay w FB?
-
-
-
 
 
 TODO: 
@@ -44,23 +27,27 @@ in state listing list, highlite user's state?
 
 
 
-
+MAPS: 
+put data in scripts from jinja 
+maps for search results
+if can't geolocate, just no map/marker, not alert - why is the div empty
+map marker links to actual google maps?
 
 
 
 QS: 
-why can't open new convo
+
 see why map listing doesn't work
-add venmo links 
+
 turn search into filter - state / neighborhoods / start date / end date / price / friends / live alone / laundry / pets
 rerender same page / (map on results page) 
 
-Fri: Refactor and  / factor out mail logic / deal w flash in functions / move functions to model / factor out ajax map thing / make tuples into dictionaries 
+Fri: deal w flash in functions / move functions to model / factor out ajax map thing / make tuples into dictionaries 
 
 WEEKEND: 
-refactor/fix variable names/different files for helper functions by theme / get rid of extra stuff / indent jinja
+refactor/fix variable names/different files for helper functions by theme? / get rid of extra stuff / indent jinja / add venmo links /password encryption - bicrypt
 
-Mon: password encryption - bicrypt / finish filters / check login info function / Update profile
+Mon: finish filters / check login info function / Update profile
 Tues: TESTS
 Wed: TESTS
 Thurs: TESTS
@@ -71,20 +58,3 @@ Fri: re-freeze requirements / get secrets down / write read-me
 MAKE READ ME
 COPY FACEBOOK CSS
 ADD COMMENTS
-
-
-<!-- <script type="text/javascript">
-	console.log("in script");
-
-	let js_names = [];
-	let n;
-	{% for name in names %}
-	n = "{{ name }}";
-	js_names.push(n);
-	{% endfor %}
-
-	console.log(js_names);
-	$("#names").autocomplete({
-		source: js_names
-		});
-</script> -->

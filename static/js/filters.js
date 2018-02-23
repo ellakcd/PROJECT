@@ -1,16 +1,16 @@
 
 
-function renderNewConvos(results) {
-	let new_messages = results["new_messages"];
-	let partnerId = results["partner"];
-	let last = $(`#${partnerId}`).data("last");
-	for (let i=0; i<new_messages.length; i++) {
-		let new_message = new_messages[i];
-		$(`#${partnerId}`).append(new_message[1])
-		last = new_message[0];
-	}
-	$(`#${partnerId}`).data("last", last);
-}
+// function renderNewConvos(results) {
+// 	let new_messages = results["new_messages"];
+// 	let partnerId = results["partner"];
+// 	let last = $(`#${partnerId}`).data("last");
+// 	for (let i=0; i<new_messages.length; i++) {
+// 		let new_message = new_messages[i];
+// 		$(`#${partnerId}`).append(new_message[1])
+// 		last = new_message[0];
+// 	}
+// 	$(`#${partnerId}`).data("last", last);
+// }
 
 
 function showListings(results) {
@@ -46,6 +46,6 @@ function filterByNeighborhood(evt) {
 
 
 
-$("#neighborhood").on("submit", filterByNeighborhood);
+// $("#neighborhood").on("submit", filterByNeighborhood);
 
 
