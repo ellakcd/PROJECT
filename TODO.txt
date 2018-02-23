@@ -25,29 +25,23 @@ factor primary lister into friendships?
 
 in state listing list, highlite user's state?
 
-
-
-MAPS: 
-put data in scripts from jinja 
-maps for search results
-if can't geolocate, just no map/marker, not alert - why is the div empty
-map marker links to actual google maps?
+make state update in place?
 
 
 
 QS: 
-
+why not prevent default and why text box not empty now
 see why map listing doesn't work
 
 turn search into filter - state / neighborhoods / start date / end date / price / friends / live alone / laundry / pets
 rerender same page / (map on results page) 
 
-Fri: deal w flash in functions / move functions to model / factor out ajax map thing / make tuples into dictionaries 
+Fri: deal w flash in functions - make sure logged in on every page that needs it / factor out ajax map thing / make tuples into dictionaries 
 
 WEEKEND: 
-refactor/fix variable names/different files for helper functions by theme? / get rid of extra stuff / indent jinja / add venmo links /password encryption - bicrypt
+refactor/comments/fix variable names/different files for helper functions by theme? /move functions to model/ get rid of extra stuff / indent jinja / add venmo links /password encryption - bicrypt
 
-Mon: finish filters / check login info function / Update profile
+Mon: finish filters / check login info function / Update profile / put reqs in session
 Tues: TESTS
 Wed: TESTS
 Thurs: TESTS

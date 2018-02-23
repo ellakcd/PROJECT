@@ -6,7 +6,7 @@ function renderNewConvos(results) {
 	let last = $(`#${partnerId}`).data("last");
 	for (let i=0; i<new_messages.length; i++) {
 		let new_message = new_messages[i];
-		$(`#${partnerId}`).append(new_message[1])
+		$(`#${partnerId}`).append(new_message[1] + "<br>")
 		last = new_message[0];
 	}
 	$(`#${partnerId}`).data("last", last);
@@ -25,18 +25,21 @@ function getNewMail() {
 }
 
 
-setInterval(getNewMail, 1000);
-
+setInterval(getNewMail, 2000);
 
 
 function sendNewMessage(evt) {
+	console.log(evt);
 	evt.preventDefault();
 	console.log("it works");
 	let receiverId = $(this).data("receiver");
 	// debugger;
 	console.log(receiverId);
-	let message = $("textarea#message").val();
+	let message_space = $("textarea#"+receiverId+"message");
+	let message = message_space.val();
+	message_space.val("");
 	console.log(message);
+
 	let formInputs = {
 			"user_id": receiverId, 
 			"message": message
@@ -45,4 +48,4 @@ function sendNewMessage(evt) {
 }
 
 
-$("#add_message").on("submit", sendNewMessage);
+$(".add_message").on("submit", sendNewMessage);

@@ -61,7 +61,7 @@ def get_listings(state, neighborhoods, price_cap, live_alone, start_date):
 
 
 def get_neighborhoods():
-    """query for all neighborhoods in db"""
+    """query for all neighborhoods currently in db"""
 
     neighborhoods = db.session.query(Listing.neighborhood).group_by(Listing.neighborhood).all()
     neighborhoods = [neighborhood[0] for neighborhood in neighborhoods]

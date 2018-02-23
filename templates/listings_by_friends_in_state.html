@@ -7,21 +7,21 @@
 
 
 {% if neighborhoods %}
-{{ state }}: <br>
-<div id="main_map" data-listing-names="{{ listing_names }}"></div>
-{% for neighborhood in neighborhoods %}
-			<h1> {{ neighborhood }} </h1>
-			{% for listing in listings %}
-				{% if listing.neighborhood == neighborhood %}
-					<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
-						<img src="{{ listing.main_photo }}"><br>
-					{{ listing.address }}
- 					</a><br>  
-				{% endif %}
-			{% endfor %}
-{% endfor %}
+	{{ state }}: <br>
+	<div id="main_map" data-listing-names="{{ listing_names }}"></div>
+	{% for neighborhood in neighborhoods %}
+				<h1> {{ neighborhood }} </h1>
+				{% for listing in listings %}
+					{% if listing.neighborhood == neighborhood %}
+						<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
+							<img src="{{ listing.main_photo }}"><br>
+						{{ listing.address }}
+	 					</a><br>  
+					{% endif %}
+				{% endfor %}
+	{% endfor %}
 {% else %}
-Sorry!  None of your friends have listings in {{ state }}
+	Sorry!  None of your friends have listings in {{ state }}
 {% endif %}
 <script src="../static/js/listings_by_friends_in_state.js"></script>
 {% endblock %}

@@ -6,32 +6,32 @@
 <h1> Mailbox </h1>
 	Start a Convo:<br>
 	<form action="/add_message" method="POST">
-	<!-- <input id="names" name="user_id" placeholder="Enter a User/Listing Id"><br> -->
 		<select name="user_id" required>
 		{% for user in all_users %}
   			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
 		{% endfor %}
 		</select><br>
-	<textarea maxlength="500" name="message"></textarea><br>
-	<input type="submit" value="Send a Message"><br>
+		<textarea maxlength="500" name="message"></textarea><br>
+		<input type="submit" value="Send a Message"><br>
 	</form><br><br>
-{% for sender in message_dict %}
+{% for partner in message_dict %}
 	<form action="/delete_convo" method="POST">
-	<input type="hidden" name="user_id" value="{{ sender }}">
-	<input type="submit" value="Delete Thread with {{ sender }}">
+		<input type="hidden" name="user_id" value="{{ partner }}">
+		<input type="submit" value="Delete Thread with {{ partner }}">
 	</form>
 	<div id="convo"></div>
-	<div id="{{ sender }}" class="conversation" data-last="{{ message_dict[sender][-1][0] }}" data-sender="{{ sender }}">
-		{{ sender }}:<br>
-		{% for message in message_dict[sender] %}
-		{{ message[1] }}<br>
+	<div id="{{ partner }}" class="conversation" data-last="{{ message_dict[partner][-1][0] }}" data-sender="{{ partner }}">
+		{{ partner }}:<br>
+		{% for message in message_dict[partner] %}
+			{{ message[1] }}<br>
 		{% endfor %}
 	</div>
 
-	<form action="/add_message" data-last="{{ message_dict[sender][-1][0]}}" data-receiver="{{ sender }}" id="add_message" method="POST">
-	<textarea maxlength="500" id="message" name="message">
-	</textarea><br>
-	<input type="submit" value="Send {{ sender }} a Message">
+	<form action="/add_message" data-last="{{ message_dict[partner][-1][0]}}" data-receiver="{{ partner }}" class="add_message" method="POST">
+		<textarea maxlength="500" id="{{partner}}message" name="message">
+		</textarea><br>
+		<input type="hidden" name="user_id" value="{{ partner }}">
+		<input type="submit" value="Send {{ partner }} a Message">
 	</form>
 
 {% endfor %}<br><br>
@@ -39,53 +39,52 @@
 </div>
 
 	{% if user.looking_for_apt %}
-	<form action="/deactivate_user" method="POST">
-		<input type="hidden" name="user_id" value="{{ user.user_id }}">
-		<input type="submit" value="Not Currently Looking for Apt"><br><br>
-	</form>
+		<form action="/deactivate_user" method="POST">
+			<input type="hidden" name="user_id" value="{{ user.user_id }}">
+			<input type="submit" value="Not Currently Looking for Apt"><br><br>
+		</form>
 	{% endif %}
 
 	{% if not user.looking_for_apt %}
-	<form action="/reactivate_user" method="POST">
-		<input type="hidden" name="user_id" value="{{ user.user_id }}">
-		<input type="submit" value="Looking once more!"><br><br>
-	</form>
+		<form action="/reactivate_user" method="POST">
+			<input type="hidden" name="user_id" value="{{ user.user_id }}">
+			<input type="submit" value="Looking once more!"><br><br>
+		</form>
 	{% endif %}
 
 	Only you can see this: 
-	<div id="photo" class="big_photo"> <img src="{{ user.photo }}"> </div>
-	<div id="user_name"> USER_NAME: {{ user.user_id }} </div>
-	<div id="email"> EMAIL: {{ user.email }} </div>
-	<div id="bio"> BIO: {{ user.bio }} </div>
-	<div id="state"> STATE: {{ user.state }} </div>
-	<div id="looking"> LOOKING FOR APT?: {{ user.looking_for_apt }} </div>
-	Answers: <br>
-	{% for answer in user.answers %}
-	{{  answer.question.question }}: {{ answer.answer }}<br>
-	{% endfor %}<br>
-	<div id="my-favorites">
-	Favorites: <br> 
-	{% for listing in user.favorites %}
-			<a href="/listings/{{ listing.listing_id }}">
-					<img src="{{ listing.main_photo }}">
-			</a>
-	{% endfor %}
+		<div id="photo" class="big_photo"> <img src="{{ user.photo }}"> </div>
+		<div id="user_name"> USER_NAME: {{ user.user_id }} </div>
+		<div id="email"> EMAIL: {{ user.email }} </div>
+		<div id="bio"> BIO: {{ user.bio }} </div>
+		<div id="state"> STATE: {{ user.state }} </div>
+		<div id="looking"> LOOKING FOR APT?: {{ user.looking_for_apt }} </div>
+		Answers: <br>
+		{% for answer in user.answers %}
+		{{  answer.question.question }}: {{ answer.answer }}<br>
+		{% endfor %}<br>
+		<div id="my-favorites">
+		Favorites: <br> 
+		{% for listing in user.favorites %}
+				<a href="/listings/{{ listing.listing_id }}">
+						<img src="{{ listing.main_photo }}">
+				</a>
+		{% endfor %}
 	</div>
 
 <div id="my-listings">
-Listings: <br> 
-	{% for listing in user.listings %}
-			<a href="/listings/{{ listing.listing_id }}">
-					<img src="{{ listing.main_photo }}">
-			</a>
-	{% endfor %}
+	Listings: <br> 
+		{% for listing in user.listings %}
+				<a href="/listings/{{ listing.listing_id }}">
+						<img src="{{ listing.main_photo }}">
+				</a>
+		{% endfor %}
 
-	{% for property in properties %}
-			<a href="/listings/{{ property.listing_id }}">
-					<img src="{{ property.main_photo }}">
-			</a>
-	{% endfor %}
-
+		{% for property in properties %}
+				<a href="/listings/{{ property.listing_id }}">
+						<img src="{{ property.main_photo }}">
+				</a>
+		{% endfor %}
 </div>
 
 

@@ -4,29 +4,28 @@
 <a href="/"> Homepage </a><br>
 
 {% if session.get("current_user") %}
-<div id="chat_form"> 
-<form action="/add_message" method="POST">
-<textarea maxlength="500" name="message">
-</textarea><br>
-<input type="hidden" name="user_id" value="{{ user.user_id }}">
-<input type="submit" value="Send {{ user.user_id }} a Message">
-</form>
-</div>
+	<div id="chat_form"> 
+		<form action="/add_message" method="POST">
+			<textarea maxlength="500" name="message">
+			</textarea><br>
+			<input type="hidden" name="user_id" value="{{ user.user_id }}">
+			<input type="submit" value="Send {{ user.user_id }} a Message">
+		</form>
+	</div>
 {% endif %}
 
 {% if session.get("current_user") and not are_friends %}
-	</form>
-		<form action="/add_as_friend" method="POST">
+	<form action="/add_as_friend" method="POST">
 		<input type="hidden" name="user_id" value="{{ user.user_id }}">
 		<input type="submit" value="Add This User as a Friend"><br><br>
 	</form>
 	{% if mutuals %}
-	Mutual Friends:<br>
-	{% for mutual in mutuals %}
-	<a href="/users/{{ mutual.user_id }}"><br>
-				<img src="{{ mutual.photo }}" class="small_photo"><br>
-	</a>
-	{% endfor %}
+		Mutual Friends:<br>
+		{% for mutual in mutuals %}
+			<a href="/users/{{ mutual.user_id }}"><br>
+						<img src="{{ mutual.photo }}" class="small_photo"><br>
+			</a>
+		{% endfor %}
 	{% endif %}
 {% endif %}
 
@@ -36,15 +35,15 @@
 	STATE: {{ user.state }}<br>
 	LOOKING FOR APT?: {{ user.looking_for_apt }}<br><br><br>
 	{% if common_answers %}
-	You both said: <br>
-			{% for answer in common_answers %}
-			{{ answer }}<br>
-			{% endfor %}
+		You both said: <br>
+				{% for answer in common_answers %}
+					{{ answer }}<br>
+				{% endfor %}
 	{% endif %}<br>
 
 	Answers: <br>
 	{% for answer in user.answers %}
-	{{  answer.question.question }}: {{ answer.answer }}<br>
+		{{  answer.question.question }}: {{ answer.answer }}<br>
 	{% endfor %}<br>
 
 
@@ -57,12 +56,12 @@ Listings: <br>
 			</a>
 	{% endfor %} <br>
 {% if properties %}
-Listings where {{ user.user_id }} does not live on premises:<br>
-	{% for property in properties %}
-			<a href="/listings/{{ property.listing_id }}">
-					<img src="{{ property.main_photo }}">
-			</a>
-	{% endfor %}
+	Listings where {{ user.user_id }} does not live on premises:<br>
+		{% for property in properties %}
+				<a href="/listings/{{ property.listing_id }}">
+						<img src="{{ property.main_photo }}">
+				</a>
+		{% endfor %}
 {% endif %}
 </div>
 

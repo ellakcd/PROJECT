@@ -5,12 +5,6 @@
 
 <h1>Welcome to Roommatch</h1> <br>
 
-<!-- <div class="container-fluid">
-        <fb:login-button scope="public_profile,email,user_friends" onlogin="loggin();">
-        </fb:login-button>
-        <div id="status">
-</div> -->
-
 {% if session.get("current_user") %}
 	<div id="logout">
 		<form action="/logout">
@@ -73,6 +67,5 @@
 	<h1><a href="/register">Create Your Profile!</a></h1>
 	
 {% endif %}
-<!-- <script src="../static/js/facebook.js"></script> -->
 <script src="../static/js/filters.js"></script>
 {% endblock %}
