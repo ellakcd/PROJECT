@@ -30,18 +30,16 @@ make state update in place?
 
 
 QS: 
-why not prevent default and why text box not empty now
-see why map listing doesn't work
 
 turn search into filter - state / neighborhoods / start date / end date / price / friends / live alone / laundry / pets
-rerender same page / (map on results page) 
+rerender same page / (map on results page) / fix roommate logic
 
-Fri: deal w flash in functions - make sure logged in on every page that needs it / factor out ajax map thing / make tuples into dictionaries 
-
+Fri: 
+try adding to classes but not db
 WEEKEND: 
-refactor/comments/fix variable names/different files for helper functions by theme? /move functions to model/ get rid of extra stuff / indent jinja / add venmo links /password encryption - bicrypt
+refactor/comments/fix variable names/different files for helper functions by theme? /move functions to model/ get rid of extra stuff /password encryption - bicrypt
 
-Mon: finish filters / check login info function / Update profile / put reqs in session
+Mon: finish filters / check login info function
 Tues: TESTS
 Wed: TESTS
 Thurs: TESTS

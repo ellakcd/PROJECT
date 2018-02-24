@@ -1,16 +1,12 @@
 function addPointerByAddress(address) {
   let pointerLocation = new google.maps.Geocoder();
   let houseInfo = address;
-  console.log(houseInfo);
   let houseAddress = houseInfo[0];
   let houseId = houseInfo[1];
-  console.log(houseAddress);
-  console.log(houseId);
 
 // <a href="/listings/`${houseId}`">houseId</a>
   pointerLocation.geocode({'address': houseAddress},
     function(results, status) {
-      console.log(results);
       if (status === google.maps.GeocoderStatus.OK) {
         let marker = new google.maps.Marker({
           map: main_map,
@@ -52,7 +48,6 @@ function addMapByAddress(address) {
 
 function showListingInfoOnMap(results) {
   let addresses = results["addresses"];
-  console.log(addresses);
   let centerPoint = addresses[0][0];
 
   addMapByAddress(centerPoint);
@@ -65,15 +60,13 @@ function showListingInfoOnMap(results) {
 }
 
 function getAllListingInfoForMap() {
-    let listingNames = $(this).data("listingNames");
-    console.log(listingNames);
+    let listingNames = $("#main_map").data("listingNames");
     let formInputs = {
-      "listing-names": listingNames
+    "listing_names": listingNames
     }
 
   $.get("/listings_info.json", formInputs, showListingInfoOnMap);
 }
 
-console.log("in map");
 
 getAllListingInfoForMap()

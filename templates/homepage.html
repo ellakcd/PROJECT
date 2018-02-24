@@ -30,7 +30,7 @@
 		<form action="/house_search" id="neighborhood" method="GET">
 		What neighborhood do you want to live in?:<br>
 			{% for neighborhood in neighborhoods %}
-			<input type="checkbox" name="neighborhoods" class="hood" value="{{ neighborhood }}"> {{ neighborhood }}
+			<input type="checkbox" name="neighborhoods" class="hood" value="{{ neighborhood }}"> {{ neighborhood }}<br>
 			{% endfor %}<br>
 		Do you want (a) roommate(s)?:<br>
 			<input type="radio" name="live_alone" value="no" checked> Heck Yes! <br>
@@ -53,10 +53,16 @@
 		<div id="results"></div>		
 	</div>
 
+	<form id="price_filter">
+		What's the most you want to spend per month?:<br>
+			<input type="number" name="price_cap" required><br>
+			<input type="submit" value="Filter by Price">
+	</form>
+
 {% else %}
 	<p>Log In!<br>
     	<form action="/login" method="POST">
-        	Email: <input type="text" name="email" required><br>
+        	User ID: <input type="text" name="user_id" required><br>
         	Password: <input type="text" name="password" required><br>
         	<input type="submit" value="Welcome Home!">
     	</form>

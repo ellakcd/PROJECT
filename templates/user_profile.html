@@ -49,6 +49,9 @@
 
 
 <div id="my-listings">
+{% if user.venmo %}
+	<a href="https://www.venmo.com/{{user.venmo}}">Send {{ user.user_id }} rent<br><img src = "../static/images/venmo.png"></a><br>
+{% endif %}
 Listings: <br> 
 	{% for listing in user.listings %}
 			<a href="/listings/{{ listing.listing_id }}">
