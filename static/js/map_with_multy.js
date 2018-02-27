@@ -54,7 +54,6 @@ function showListingInfoOnMap(results) {
 
   for (let i=0; i<addresses.length; i++) {
     let address = addresses[i];
-    console.log(address);
     addPointerByAddress(address);
   }
 }
@@ -69,4 +68,4 @@ function getAllListingInfoForMap() {
 }
 
 
-getAllListingInfoForMap()
+setTimeout(getAllListingInfoForMap, 1000);

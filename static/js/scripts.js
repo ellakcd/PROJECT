@@ -14,6 +14,7 @@ function showListingInfo(results) {
 }
 
 function getListingInfo(evt) {
+  console.log("mousover");
   let listing_id = $(this).data("listingId");
   let formInputs = {
     "listing_id": listing_id
@@ -26,7 +27,7 @@ function clear(evt) {
   $("#popup").empty();
 }
 
-$(".listing").on("mouseenter", getListingInfo);
+$(".listing").on("mouseover", getListingInfo);
 $(".listing").on("mouseleave", clear);
 
 
@@ -51,6 +52,7 @@ function showUserInfo(results) {
 }
 
 function getUserInfo(evt) {
+  console.log("MOuSING");
   let user_id = $(this).data("userId");
   let formInputs = {
     "user_id": user_id
@@ -67,4 +69,4 @@ $(".user").on("mouseenter", getUserInfo);
 $(".user").on("mouseleave", clear);
 
 
-
+console.log("IN SCRIPT");

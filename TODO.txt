@@ -10,14 +10,19 @@ User can hover over a person to see mutual friends and common answers
 User can hover over a property to see price and avail date
 User can view listings on a map
 User can click on another user and chat with them
-
 User can click on a link to someone's venmo
-User can post a listing to facebook
+
 
 
 
 
 TODO: 
+
+FIX NEIGHBORHOODS AND START DATE
+
+POP UPS ON HOMEPAGE
+
+MAKE SURE STATE FILTER WORKS WHEN NEW STATE
 
 add pics for friends on registration page?
 
@@ -25,22 +30,16 @@ factor primary lister into friendships?
 
 in state listing list, highlite user's state?
 
-make state update in place?
+change date format in seed data
 
+MAKE DATE NOT LOOK SLOPPY  - change in seed what format stored in
 
+FB?
 
-QS: 
-
-turn search into filter - state / neighborhoods / start date / end date / price / friends / live alone / laundry / pets
-rerender same page / (map on results page) / fix roommate logic
-
-Fri: 
-try adding to classes but not db
 WEEKEND: 
-refactor/comments/fix variable names/different files for helper functions by theme? /move functions to model/ get rid of extra stuff /password encryption - bicrypt
+refactor/comments/fix variable names/different files for helper functions by theme? / refactor mail / move functions to model/ get rid of extra stuff /password encryption - bicrypt
 
-Mon: finish filters / check login info function
-Tues: TESTS
+Tues: password protection
 Wed: TESTS
 Thurs: TESTS
 Fri: re-freeze requirements / get secrets down / write read-me 

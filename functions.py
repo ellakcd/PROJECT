@@ -1,5 +1,5 @@
 from collections import defaultdict
-from flask import request, flash, session
+from flask import request, flash, session, jsonify
 from model import User, Listing, UserListing, Favorite, Friendship, Picture, Question, Answer, UserAnswer, Message
 from model import connect_to_db, db 
 
@@ -20,33 +20,104 @@ def user_in_listing(listing):
         return True
     return False
 
-def get_listings(state, neighborhoods, price_cap, live_alone, start_date):
-    """get all listings that meet search filters"""
+def get_all_matching_listings():
+    """checks the user's house search requirements and returns appropriate listings"""
 
-    # If they've selected specific neighborhoods, make a list of all listings with those neighborhoods
-    if neighborhoods: 
-        for neighborhood in neighborhoods:
-            listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
+    user = User.query.get(session["current_user"])
+    all_listings = Listing.query.all()
+    all_listings = [listing for listing in all_listings if listing.active]
+    state = user.state
+    all_listings = [listing for listing in all_listings if state in listing.address]
+    all_listings = [listing for listing in all_listings if not user_in_listing(listing)]
 
-            # In case multiple states have neighborhoods with the same photo_name
-            right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
-            for listing in listings:
-                if listing not in right_state:
-                    listings.remove(listing)
-    # otherwise, start with a list of all houses in the right state
-    else: 
-        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+    if all_listings: 
+        if "price_cap" in session: 
+            all_listings = [listing for listing in all_listings if listing.price < int(session["price_cap"])]
+
+        if "laundry" in session: 
+            all_listings = [listing for listing in all_listings if listing.laundry]
+
+        if "friends" in session:
+            all_listings = [listing for listing in all_listings if friends_in_listing(user, listing) or mutual_friends_in_listing(user, listing)]
+
+        if "pets" in session:
+            if session["pets"] == True:
+                all_listings = [listing for listing in all_listings if listing.pets]
+            if session["pets"] == False: 
+                all_listings = [listing for listing in all_listings if not listing.pets]
+
+        if "roommates" in session:
+            if session["roommates"] == True:
+                all_listings = [listing for listing in all_listings if listing.users]
+            if session["roommates"] == False: 
+                all_listings = [listing for listing in all_listings if not listing.users]
+
+        if "neighborhoods" in session: 
+            print "backend"
+            print session["neighborhoods"]
+            all_listings = [listing for listing in all_listings if listing.neighborhood in session["neighborhoods"]]
+
+        if "start_dates" in session:
+            print session["start_dates"]
+            print session["start_dates"][6]
+            for listing in all_listings:
+                print listing.avail_as_of
+                print listing.avail_as_of[]
+
+        if "duration" in session:
+            duration = int(session["duration"])
+            all_listings = [listing for listing in all_listings if listing.length_of_rental < duration + 1 and listing.length_of_rental > duration - 1]
+
+
+    info = {}
+    for listing in all_listings: 
+        info[listing.listing_id] = {
+        "address": listing.address, 
+        "photo": listing.main_photo
+        }
+
+    return jsonify(info)
+
+
+def get_neighborhoods(state):
+    """returns a list of all neighborhoods in a state"""
+
+    neighborhoods = set()
+    
+    listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+    for listing in listings: 
+        neighborhoods.add(listing.neighborhood)
+
+    return neighborhoods
+
+
+# def get_listings(state, neighborhoods, price_cap, live_alone, start_date):
+#     """get all listings that meet search filters"""
+
+#     # If they've selected specific neighborhoods, make a list of all listings with those neighborhoods
+#     if neighborhoods: 
+#         for neighborhood in neighborhoods:
+#             listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
+
+#             # In case multiple states have neighborhoods with the same photo_name
+#             right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+#             for listing in listings:
+#                 if listing not in right_state:
+#                     listings.remove(listing)
+#     # otherwise, start with a list of all houses in the right state
+#     else: 
+#         listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
 
     
-    listings = [listing for listing in listings if listing.price <= price_cap and str(listing.avail_as_of) >= start_date]
-    listings = [listing for listing in listings if not user_in_listing(listing)]
+#     listings = [listing for listing in listings if listing.price <= price_cap and str(listing.avail_as_of) >= start_date]
+#     listings = [listing for listing in listings if not user_in_listing(listing)]
     
-    if live_alone == "yes": 
-        listings = [listing for listing in listings if not listing.users]
-    elif live_alone == "no":
-        listings = [listing for listing in listings if listing.users]
-    listings = [listing for listing in listings if listing.active]
-    return listings
+#     if live_alone == "yes": 
+#         listings = [listing for listing in listings if not listing.users]
+#     elif live_alone == "no":
+#         listings = [listing for listing in listings if listing.users]
+#     listings = [listing for listing in listings if listing.active]
+#     return listings
 
 def are_friends(user1, user2):
     """returns true if two users are friends"""

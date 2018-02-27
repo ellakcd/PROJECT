@@ -18,24 +18,27 @@ STATES = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA"
 "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", 
 "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"]
 
+MONTHS = [("01", "Jan"), ("02", "Feb"), ("03", "March"), ("04", "April"), ("05", "May"), ("06", "June"), ("07", "July"), ("08", "Aug"), ("09", "Sept"), ("10", "Oct"), ("11", "Nov"), ("12", "Dec")]
+
 UPLOAD_FOLDER = "static/uploaded_images/"
 
 @app.route("/")
 def index():
     """Homepage"""
 
-    neighborhoods = set()
     state = ""
     if "current_user" in session: 
         state = User.query.get(session["current_user"]).state
 
-    if state: 
-        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
-        for listing in listings: 
-            neighborhoods.add(listing.neighborhood)
+    neighborhoods = functions.get_neighborhoods(state)
+    # if state: 
+    #     listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+    #     for listing in listings: 
+    #         neighborhoods.add(listing.neighborhood)
 
 
-    return render_template("homepage.html", neighborhoods=neighborhoods, STATES=STATES, state=state)
+
+    return render_template("homepage.html", neighborhoods=neighborhoods, STATES=STATES, months=MONTHS, state=state)
 
 
 @app.route("/register")
@@ -200,63 +203,160 @@ def get_new_messages():
     return jsonify(info)
 
 
-@app.route("/listings_in_neighborhood")
-def get_listings_in_neighborhood():
-    """get info about listings in a neighborhood"""
+# @app.route("/listings_in_neighborhood")
+# def get_listings_in_neighborhood():
+#     """get info about listings in a neighborhood"""
 
-    neighborhoods = request.args.get("neighborhoods")
-        # If they've selected specific neighborhoods, make a list of all listings with those neighborhoods
-    if neighborhoods: 
-        for neighborhood in neighborhoods:
-            listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
+#     neighborhoods = request.args.get("neighborhoods")
+#         # If they've selected specific neighborhoods, make a list of all listings with those neighborhoods
+#     if neighborhoods: 
+#         for neighborhood in neighborhoods:
+#             listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
 
-            # In case multiple states have neighborhoods with the same photo_name
-            right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
-            for listing in listings:
-                if listing not in right_state:
-                    listings.remove(listing)
-    # otherwise, start with a list of all houses in the right state
-    else: 
-        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+#             # In case multiple states have neighborhoods with the same photo_name
+#             right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+#             for listing in listings:
+#                 if listing not in right_state:
+#                     listings.remove(listing)
+#     # otherwise, start with a list of all houses in the right state
+#     else: 
+#         listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
 
-    info = {}
-    for listing in listings: 
-        info[listing] = {"address": listing.address, 
-                        "photo": listing.main_photo}
+#     info = {}
+#     for listing in listings: 
+#         info[listing] = {"address": listing.address, 
+#                         "photo": listing.main_photo}
 
-    return jsonify(info)
+#     return jsonify(info)
 
 
-app.route("/filter_by_price.json")
+@app.route("/filter_by_price.json")
 def filter_by_price():
     """update user's price cap and return listings that match"""
 
-    
+    price_cap = request.args.get("price_cap")
+    session["price_cap"] = price_cap
+
+    return functions.get_all_matching_listings()
 
 
-@app.route("/filter_for_houses")
-def show_all_houses():
-    """shows all houses so user can filter"""
+@app.route("/filter_by_laundry.json")
+def filter_by_laundry():
+    """only return listings w laundry"""
 
-    user = User.query.get(session["current_user"])
-    state = user.state
-    neighborhoods = request.args.getlist("neighborhoods")
-    if neighborhoods: 
-        for neighborhood in neighborhoods:
-            listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
+    session["laundry"] = True
 
-            # In case multiple states have neighborhoods with the same neighborhood name
-            right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
-            for listing in listings:
-                if listing not in right_state:
-                    listings.remove(listing)
-    # otherwise, start with a list of all houses in the right state
+    return functions.get_all_matching_listings()
+
+@app.route("/filter_by_friends.json")
+def filter_by_friends():
+    """only return listings with mutual friends"""
+
+    session["friends"] = True
+
+    return functions.get_all_matching_listings()
+
+
+@app.route("/filter_by_pets.json")
+def filter_by_pets():
+    """only return listings with the correct preference on allowing pets"""
+
+    pets = request.args.get("pets")
+    if pets == "yes":
+        session["pets"] = True
     else: 
-        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+        session["pets"] = False
 
-    listing_names = [listing.listing_id for listing in listings]
+    return functions.get_all_matching_listings()
 
-    return render_template("/filter_houses.html", user=user, listings=listings, neighborhoods=neighborhoods, listing_names=listing_names)
+
+@app.route("/filter_by_roommates.json")
+def filter_by_roommates():
+    """only return listings with roommates or without depending on filter choice"""
+
+    roommates = request.args.get("roommates")
+    print roommates
+    if roommates == "yes":
+        session["roommates"] = True
+    else: 
+        session["roommates"] = False
+
+    return functions.get_all_matching_listings()
+
+
+@app.route("/filter_by_neighborhoods.json")
+def filter_by_neighborhoods():
+    """only return listings in neighborhoods of interest"""
+
+    neighborhoods = request.args.get("neighborhoods")
+    print "in python"
+    print neighborhoods
+    session["neighborhoods"] = neighborhoods
+
+    return functions.get_all_matching_listings()
+
+
+@app.route("/filter_by_start_date.json")
+def filter_by_start_date():
+    """only return listings with start dates within a month"""
+
+    start_dates = request.args.get("start_dates")
+    session["start_dates"] = start_dates
+
+    return functions.get_all_matching_listings()
+
+
+@app.route("/filter_by_duration.json")
+def filter_by_duration():
+    """factor duration in"""
+
+    duration = request.args.get("duration")
+    session["duration"] = duration
+
+    return functions.get_all_matching_listings()
+
+
+@app.route("/remove_all_filters.json")
+def remove_all_filters():
+    """removes all filters"""
+
+    for key in session.keys(): 
+        if key != "current_user":
+            del session[key]
+
+    return functions.get_all_matching_listings()
+
+
+@app.route("/get_all_listings.json")
+def get_all_listings_json():
+    """get all active listings in a user's state"""
+
+    return functions.get_all_matching_listings()
+
+
+# @app.route("/filter_for_houses")
+# def show_all_houses():
+#     """shows all houses so user can filter"""
+
+#     user = User.query.get(session["current_user"])
+#     state = user.state
+#     neighborhoods = request.args.getlist("neighborhoods")
+#     if neighborhoods: 
+#         for neighborhood in neighborhoods:
+#             listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
+
+#             # In case multiple states have neighborhoods with the same neighborhood name
+#             right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+#             for listing in listings:
+#                 if listing not in right_state:
+#                     listings.remove(listing)
+#     # otherwise, start with a list of all houses in the right state
+#     else: 
+#         listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+
+#     listing_names = [listing.listing_id for listing in listings]
+
+#     return render_template("/filter_houses.html", user=user, listings=listings, neighborhoods=neighborhoods, listing_names=listing_names)
 
 
 
@@ -569,10 +669,8 @@ def listing_info_json():
     """takes a list of listing ids and returns info about them"""
 
     listing_names = request.args.get("listing_names")
-
-    print listing_names
     listing_names = listing_names.split("|")
-    print listing_names
+
     listings = []
     for listing_name in listing_names:
         listing = Listing.query.get(listing_name)
@@ -602,7 +700,6 @@ def user_friends_in_state():
         return redirect("/")
 
 
-
 @app.route("/update_state", methods=["POST"])
 def update_state():
     """update user's state"""
@@ -616,32 +713,50 @@ def update_state():
     return redirect("/")
 
 
-@app.route("/house_search")
-def find_houses():
-    """query for houses that fit the description"""
+@app.route("/update_state.json", methods=["POST"])
+def update_state_json():
+    """update user's state"""
 
-    if "current_user" in session: 
-        live_alone = request.args.get("live_alone")
-        duration = request.args.get("duration")
-        price_cap = int(request.args.get("price_cap"))
-        start_date = request.args.get("start_date")
-        neighborhoods = request.args.getlist("neighborhoods")
-        user = User.query.get(session["current_user"])
-        listings_by_friends = functions.get_all_listings_by_friends_of_any_degree(user)
-        state = user.state
+    state = request.form.get("state")
+    user = User.query.get(session["current_user"])
+    print "STATE"
+    print state
+    user.state = state
+    db.session.commit()
+    neighborhoods = functions.get_neighborhoods(state)
+    neighborhoods = list(neighborhoods)
 
-        listings = functions.get_listings(state, neighborhoods, price_cap, live_alone, start_date)
-        addresses_for_map = []
-        for listing in listings:
-            addresses_for_map.append((listing.address, listing.listing_id))
+    info = {"state": state, 
+            "neighborhoods": neighborhoods}
 
-        listing_names = [listing.listing_id for listing in listings]
-        listing_names = "|".join(listing_names)
+    return jsonify(info)
+
+# @app.route("/house_search")
+# def find_houses():
+#     """query for houses that fit the description"""
+
+#     if "current_user" in session: 
+#         live_alone = request.args.get("live_alone")
+#         duration = request.args.get("duration")
+#         price_cap = int(request.args.get("price_cap"))
+#         start_date = request.args.get("start_date")
+#         neighborhoods = request.args.getlist("neighborhoods")
+#         user = User.query.get(session["current_user"])
+#         listings_by_friends = functions.get_all_listings_by_friends_of_any_degree(user)
+#         state = user.state
+
+#         listings = functions.get_listings(state, neighborhoods, price_cap, live_alone, start_date)
+#         addresses_for_map = []
+#         for listing in listings:
+#             addresses_for_map.append((listing.address, listing.listing_id))
+
+#         listing_names = [listing.listing_id for listing in listings]
+#         listing_names = "|".join(listing_names)
       
-        return render_template("/house_search_results.html", addresses_for_map=addresses_for_map, listings=listings, listing_names=listing_names, listings_by_friends=listings_by_friends)
+#         return render_template("/house_search_results.html", addresses_for_map=addresses_for_map, listings=listings, listing_names=listing_names, listings_by_friends=listings_by_friends)
 
-    else: 
-        return redirect("/")
+#     else: 
+#         return redirect("/")
     
 
 @app.route("/login", methods=['POST'])
