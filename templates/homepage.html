@@ -14,8 +14,8 @@
 
 	<a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br>
 	<div id="listings_by_state">
-	<a href="/listings_by_friends_in_state"> View All Listings By Friends in {{ state }} </a><br>
-	<a href="/user_friends_in_state"> View All Users with Mutual Friends in {{ state }} </a><br><br><br>
+	<a href="/listings_by_friends_in_state"> View All Active Listings By Friends and Friends of Friends in {{ state }} </a><br>
+	<a href="/user_friends_in_state"> View All Friends and Friends of Friends Looking for Apts in {{ state }} </a><br><br><br>
 	</div>
 	<form action="/update_state" id="update_state" method="POST">
 		State: 
@@ -76,8 +76,15 @@
 		<input type="radio" name="duration" value="12" required> ~ A year + 
 		<input type="submit" value="Filter by Duration">
 	</form>
-		
-	<button id="remove_filters">Remove Filters</button>
+
+	<form id="remove_specific_filters">
+				{% for filter in filters %}
+					<input type="checkbox" name="filters" class="filters" value="{{ filter }}"> {{ filter }}
+				{% endfor %}
+			<input type="submit" value="Remove Filters">
+	</form>
+	
+	<button id="remove_filters">Remove All Filters</button>
 
 	<br><br><br><div id="results"></div>
 

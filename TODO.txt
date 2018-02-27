@@ -11,6 +11,7 @@ User can hover over a property to see price and avail date
 User can view listings on a map
 User can click on another user and chat with them
 User can click on a link to someone's venmo
+User can filter for houses based on lots of properties
 
 
 
@@ -18,31 +19,26 @@ User can click on a link to someone's venmo
 
 TODO: 
 
-FIX NEIGHBORHOODS AND START DATE
-
-POP UPS ON HOMEPAGE
-
 MAKE SURE STATE FILTER WORKS WHEN NEW STATE
 
-add pics for friends on registration page?
-
-factor primary lister into friendships?
+PASSWORD
 
 in state listing list, highlite user's state?
 
-change date format in seed data
-
-MAKE DATE NOT LOOK SLOPPY  - change in seed what format stored in
-
 FB?
 
-WEEKEND: 
-refactor/comments/fix variable names/different files for helper functions by theme? / refactor mail / move functions to model/ get rid of extra stuff /password encryption - bicrypt
 
-Tues: password protection
+
+
 Wed: TESTS
 Thurs: TESTS
-Fri: re-freeze requirements / get secrets down / write read-me 
+Fri: re-freeze requirements / get secrets down 
+
+
+
+WEEKEND: 
+refactor/comments/fix variable names/different files for helper functions by theme? / get rid of extra stuff/Read-me /
+move functions to model
 
 
 

@@ -88,7 +88,7 @@
 <br><br><br>
 
 {% if friends %}
-	You have friends living here!<br>
+	You have friends here!<br>
 	{% for friend in friends %}
 		{{ friend.user_id }}<br>
 		<a href="/users/{{ friend.user_id }}">
@@ -98,7 +98,7 @@
 {% endif %}
 
 {% if mutuals and not friends %}
-	There are people living here who are friends of: <br>
+	There are people here who are friends of: <br>
 	{% for mutual in mutuals %}
 		{{ mutual.user_id }}<br>
 		<a href="/users/{{ mutual.user_id }}">
@@ -115,7 +115,7 @@
 {% endfor %}
 Neighborhood: {{ listing.neighborhood }}<br>
 Monthly Price: {{ listing.price }}<br>
-Avail as Of: {{ listing.avail_as_of }}<br>
+Avail as Of: {{ avail_date }}<br>
 Length of Rental: {{ listing.length_of_rental }} Months<br>
 {{ listing.description }}<br>
 Bedrooms: {{ listing.bedrooms }}<br>

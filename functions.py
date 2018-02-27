@@ -2,6 +2,7 @@ from collections import defaultdict
 from flask import request, flash, session, jsonify
 from model import User, Listing, UserListing, Favorite, Friendship, Picture, Question, Answer, UserAnswer, Message
 from model import connect_to_db, db 
+import datetime
 
 UPLOAD_FOLDER = "static/uploaded_images/"
 
@@ -19,6 +20,7 @@ def user_in_listing(listing):
     if listing in user.listings or listing.primary_lister == user.user_id: 
         return True
     return False
+
 
 def get_all_matching_listings():
     """checks the user's house search requirements and returns appropriate listings"""
@@ -53,16 +55,11 @@ def get_all_matching_listings():
                 all_listings = [listing for listing in all_listings if not listing.users]
 
         if "neighborhoods" in session: 
-            print "backend"
-            print session["neighborhoods"]
             all_listings = [listing for listing in all_listings if listing.neighborhood in session["neighborhoods"]]
 
         if "start_dates" in session:
-            print session["start_dates"]
-            print session["start_dates"][6]
-            for listing in all_listings:
-                print listing.avail_as_of
-                print listing.avail_as_of[]
+            months = [int(month) for month in session["start_dates"]]
+            all_listings = [listing for listing in all_listings if listing.avail_as_of.month in months]
 
         if "duration" in session:
             duration = int(session["duration"])
@@ -91,76 +88,65 @@ def get_neighborhoods(state):
     return neighborhoods
 
 
-# def get_listings(state, neighborhoods, price_cap, live_alone, start_date):
-#     """get all listings that meet search filters"""
-
-#     # If they've selected specific neighborhoods, make a list of all listings with those neighborhoods
-#     if neighborhoods: 
-#         for neighborhood in neighborhoods:
-#             listings = Listing.query.filter(Listing.neighborhood == neighborhood).all()
-
-#             # In case multiple states have neighborhoods with the same photo_name
-#             right_state = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
-#             for listing in listings:
-#                 if listing not in right_state:
-#                     listings.remove(listing)
-#     # otherwise, start with a list of all houses in the right state
-#     else: 
-#         listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
-
-    
-#     listings = [listing for listing in listings if listing.price <= price_cap and str(listing.avail_as_of) >= start_date]
-#     listings = [listing for listing in listings if not user_in_listing(listing)]
-    
-#     if live_alone == "yes": 
-#         listings = [listing for listing in listings if not listing.users]
-#     elif live_alone == "no":
-#         listings = [listing for listing in listings if listing.users]
-#     listings = [listing for listing in listings if listing.active]
-#     return listings
-
 def are_friends(user1, user2):
     """returns true if two users are friends"""
 
     return user1 in user2.friends
 
 
-def friends_in_listing(user1, listing):
+def friends_in_listing(user, listing):
     """returns friends if user has friends in listing"""
 
     friends = []
 
-    for user2 in listing.users: 
-        if user1 in user2.friends: 
-            friends.append(user2)
+    for roommate in listing.users: 
+        if roommate in user.friends: 
+            friends.append(roommate)
+    primary = User.query.get(listing.primary_lister)
+    
+    if primary in user.friends: 
+        friends.append(primary)
 
-    return friends
+    return set(friends)
 
 
 def mutual_friends(user1, user2):
-    """returns a list of mutual friends"""
+    """returns a set of mutual friends"""
 
     mutuals = []
 
     friends1 = user1.friends
     friends2 = user2.friends
-    # if friends1 and friends2: 
-    for friend in friends1: 
-        if friend in friends2:
-            mutuals.append(friend)
+    if friends1 and friends2: 
+        for friend in friends1: 
+            if friend in friends2:
+                mutuals.append(friend)
 
     return set(mutuals)
 
 
-def mutual_friends_in_listing(user1, listing):
-    """returns a list of mutual friends in listing"""
+def mutual_friends_in_listing(user, listing):
+    """returns a set of mutual friends in listing"""
 
     mutuals = []
 
-    for user2 in listing.users: 
-        mutuals += mutual_friends(user1, user2)
+    for roommate in listing.users: 
+        mutuals += mutual_friends(user, roommate)
+
+    primary = User.query.get(listing.primary_lister)
+    mutuals += mutual_friends(user, primary)
 
     return set(mutuals)
+
+
+def all_friends_in_listing(user, listing):
+    """returns a set of friends and friends of friends associated with a listing"""
+
+    friends = set()
+    friends = friends | friends_in_listing(user, listing)
+    friends = friends | mutual_friends_in_listing(user, listing)
+
+    return list(friends)
 
 
 def get_all_friends(user):
@@ -186,10 +172,17 @@ def get_all_friends_of_any_degree(user):
 def get_all_listings_by_friends_of_any_degree(user):
     """returns all listings by any degree of friends"""
 
+    all_listings = Listing.query.all()
+
     listings = []
     friends = get_all_friends_of_any_degree(user)
     for friend in friends: 
         listings += friend.listings
+
+    for listing in all_listings:
+        primary_lister = User.query.get(listing.primary_lister)
+        if primary_lister in friends:
+            listings.append(listing) 
 
     return set(listings)
 

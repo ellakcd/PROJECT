@@ -94,6 +94,7 @@ function filterByStartDate(evt) {
 	});
 
 	console.log(start_dates);
+	start_dates = start_dates.join("|");
 
 	let formInputs = {
 		"start_dates": start_dates
@@ -128,7 +129,7 @@ function filterByNeighborhood(evt) {
 		neighborhoods.push($(this).val());
 	});
 
-	console.log(neighborhoods);
+	neighborhoods = neighborhoods.join("|");
 
 	let formInputs = {
 		"neighborhoods": neighborhoods
@@ -146,6 +147,28 @@ function showAllListingsPreFilter() {
 }
 
 
+function removeSpecificFilters(evt) {
+	evt.preventDefault();
+	let filters = [];
+
+	$(".filters:checked").each(function(){
+		filters.push($(this).val());
+	});
+
+	filters = filters.join("|");
+
+	console.log(filters);
+
+	let formInputs = {
+		"filters": filters
+	}
+	$.get("/remove_specific_filters.json", formInputs, showListingsThatMatch);
+}
+
+
+$("#remove_specific_filters").on("submit", removeSpecificFilters);
+
+
 function removeFilters(evt) {
 	$.get("/remove_all_filters.json", showListingsThatMatch);
 }
@@ -159,17 +182,19 @@ showAllListingsPreFilter();
 function showNewState(results) {
 	let new_state = results["state"];
 	console.log(new_state);
-	$("#listings_by_state").html("<a href='/listings_by_friends_in_state'> View All Listings By Friends in "+new_state+"</a><br>");
-	$("#listings_by_state").append("<a href='/user_friends_in_state'> View All Users With Mutual Friends in "+new_state+"</a><br>");
+	$("#listings_by_state").html("<a href='/listings_by_friends_in_state'> View All Active Listings By Friends and Friends of Friends in "+new_state+"</a><br>");
+	$("#listings_by_state").append("<a href='/user_friends_in_state'> View All Friends and Friends of Friends Looking for Apts in "+new_state+"</a><br><br><br>");
 	if (results["neighborhoods"].length === 0) {
 		$("#neighborhoods_in_state").empty();
 	} else {
-		$("#neighborhoods_in_state").html("<form id='neighborhood_filter'> What neighborhoods are you interested in?:<br>");
+		let htmlToAdd = "<form id='neighborhood_filter'> What neighborhoods are you interested in?:<br>"
+
 		for (let i=0; i<results["neighborhoods"].length; i++) {
 			let neighborhood = results["neighborhoods"][i];
-			$("#neighborhoods_in_state").append("<input type='checkbox' name='neighborhoods' class='hood' value='"+neighborhood+"'>"+neighborhood);
+			htmlToAdd += "<input type='checkbox' name='neighborhoods' class='hood' value='"+neighborhood+"'>"+neighborhood;
 		}
-		$("#neighborhoods_in_state").append(" <input type='submit' value='Filter By Neighborhood' </form>");
+		htmlToAdd += " <input type='submit' value='Filter By Neighborhood'></form>"
+		$("#neighborhoods_in_state").html(htmlToAdd);
 	}
 	removeFilters();
 }

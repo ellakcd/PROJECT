@@ -23,3 +23,8 @@
 23|5|Drama
 24|5|Documentary
 25|5|Romance
+26|6|Too Cold
+27|6|Too Hot
+28|6|Too Quiet
+29|6|Too Loud
+30|6|Too Messy

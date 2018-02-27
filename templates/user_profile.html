@@ -17,7 +17,7 @@
 {% if session.get("current_user") and not are_friends %}
 	<form action="/add_as_friend" method="POST">
 		<input type="hidden" name="user_id" value="{{ user.user_id }}">
-		<input type="submit" value="Add This User as a Friend"><br><br>
+		<input type="submit" value="Add {{ user.user_id }} as a Friend"><br><br>
 	</form>
 	{% if mutuals %}
 		Mutual Friends:<br>

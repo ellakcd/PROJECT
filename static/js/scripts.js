@@ -27,11 +27,6 @@ function clear(evt) {
   $("#popup").empty();
 }
 
-$(".listing").on("mouseover", getListingInfo);
-$(".listing").on("mouseleave", clear);
-
-
-
 
 
 function showUserInfo(results) {
@@ -65,8 +60,11 @@ function clear(evt) {
   $("#popup").empty();
 }
 
-$(".user").on("mouseenter", getUserInfo);
-$(".user").on("mouseleave", clear);
 
+$(document).ready(function(){
+  $(".listing").on("mouseenter", getListingInfo);
+  $(".listing").on("mouseleave", clear);
+  $(".user").on("mouseenter", getUserInfo);
+  $(".user").on("mouseleave", clear);
+});
 
-console.log("IN SCRIPT");

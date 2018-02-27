@@ -3,3 +3,4 @@
 3|Which of these sounds like the best way to spend a night?
 4|Which is your favorite kind of food?
 5|Which is your favorite genre?
+6|Which is the worst?
