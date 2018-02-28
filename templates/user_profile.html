@@ -17,21 +17,19 @@
 		</form><br>
 	</div>
 {% endif %}
-
-{% if session.get("current_user") and not are_friends %}
-	<form action="/add_as_friend" method="POST">
-		<input type="hidden" name="user_id" value="{{ user.user_id }}">
-		<input type="submit" value="Add {{ user.user_id }} as a Friend"><br><br>
-	</form>
-	{% if mutuals %}
+<div id="friends_or_not">
+	{% if session.get("current_user") and not are_friends %}
+		<button id="friend" data-user-id="{{ user.user_id }}"> Add {{ user.user_id }} as a Friend </button><br><br>
+		{% if mutuals %}
 		Mutual Friends:<br>
-		{% for mutual in mutuals %}
-			<a href="/users/{{ mutual.user_id }}"><br>
+			{% for mutual in mutuals %}
+				<a href="/users/{{ mutual.user_id }}"><br>
 						<img src="{{ mutual.photo }}" class="small_photo"><br>
-			</a>
-		{% endfor %}
+				</a>
+			{% endfor %}
+		{% endif %}
 	{% endif %}
-{% endif %}
+</div>
 	<div class="profile">
 	<h1> USER_NAME: {{ user.user_id }} </h1>
 	<img src="{{ user.photo }}" class="big_photo">
@@ -76,5 +74,5 @@ Listings: <br>
 	<a href="/add_listing"> Add A Listing </a>
 {% endif %}
 	
-
+<script src="../static/js/user_profile.js"> </script>
 {% endblock %}

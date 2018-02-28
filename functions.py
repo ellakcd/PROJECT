@@ -31,45 +31,62 @@ def get_all_matching_listings():
     state = user.state
     all_listings = [listing for listing in all_listings if state in listing.address]
     all_listings = [listing for listing in all_listings if not user_in_listing(listing)]
+    filters = set()
+    print filters
 
     if all_listings: 
         if "price_cap" in session: 
+            filters.add("price_cap")
             all_listings = [listing for listing in all_listings if listing.price < int(session["price_cap"])]
 
         if "laundry" in session: 
+            filters.add("laundry")
             all_listings = [listing for listing in all_listings if listing.laundry]
 
         if "friends" in session:
+            filters.add("friends")
             all_listings = [listing for listing in all_listings if friends_in_listing(user, listing) or mutual_friends_in_listing(user, listing)]
 
         if "pets" in session:
+            filters.add("pets")
             if session["pets"] == True:
                 all_listings = [listing for listing in all_listings if listing.pets]
             if session["pets"] == False: 
                 all_listings = [listing for listing in all_listings if not listing.pets]
 
         if "roommates" in session:
+            filters.add("roommates")
             if session["roommates"] == True:
                 all_listings = [listing for listing in all_listings if listing.users]
             if session["roommates"] == False: 
                 all_listings = [listing for listing in all_listings if not listing.users]
 
         if "neighborhoods" in session: 
+            filters.add("neighborhoods")
             all_listings = [listing for listing in all_listings if listing.neighborhood in session["neighborhoods"]]
 
         if "start_dates" in session:
+            filters.add("start_dates")
             months = [int(month) for month in session["start_dates"]]
             all_listings = [listing for listing in all_listings if listing.avail_as_of.month in months]
 
         if "duration" in session:
+            filters.add("duration")
             duration = int(session["duration"])
             length = int(listing.length_of_rental)
             all_listings = [listing for listing in all_listings if duration == length]
 
+    filters = list(filters)
+    filters = "|".join(filters)
+    print filters
 
-    info = {}
+    info = {
+        "listings": {},
+        "filters": filters
+    }
+
     for listing in all_listings: 
-        info[listing.listing_id] = {
+        info["listings"][listing.listing_id] = {
         "address": listing.address, 
         "photo": listing.main_photo
         }
@@ -271,44 +288,6 @@ def delete_messages(user_1_id, user_2_id):
     Message.query.filter_by(sender_id=user_2_id, receiver_id=user_1_id).delete()
 
     db.session.commit()
-
-
-# def get_new_messages(user, partner, last_message):
-#     """gets all messages between two people since a certain message"""
-
-#     all_messages = get_messages(user)
-#     messages_with_partner = all_messages[partner]
-#     new_messages = [message for message in messages_with_partner if int(message[0]) > int(last_message)]
-
-#     return new_messages
-
-
-# def get_messages(user):
-#     """returns a dictionary of a user's sent and received messages"""
-
-#     received_messages = user.received_messages
-#     sent_messages = user.sent_messages
-
-#     message_dict = {}
-
-#     for received in received_messages:
-#         sender = received.sender_id
-#         if sender in message_dict: 
-#             message_dict[sender].append((received.message_id, "{}: {}".format(received.sender_id, received.message)))
-#         else: 
-#             message_dict[sender] = [(received.message_id, "{}: {}".format(received.sender_id, received.message))]
-#     for sent in sent_messages:
-#         receiver = sent.receiver_id
-#         if receiver in message_dict: 
-#             message_dict[receiver].append((sent.message_id, "{}: {}".format(sent.sender_id, sent.message)))
-#         else: 
-#             message_dict[receiver] = [(sent.message_id, "{}: {}".format(sent.sender_id, sent.message))]
-#     for partner in message_dict:
-#         message_dict[partner] = sorted(message_dict[partner])
-
-#     return message_dict
-
-
 
 
 def save_photo(photo_name):

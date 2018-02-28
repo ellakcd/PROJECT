@@ -4,15 +4,26 @@ function showListingInfo(results) {
   console.dir(results)
   $(".popup").append("<br>Price: " + results["price"]);
   $(".popup").append("<br>Start date: " + results["start date"]);
-  $(".popup").append("<br> Friends:")
-  let friends = results["friends"]
-  for (let i=0; i < friends.length; i++){
-    let friend = friends[i]
-    $(".popup").append("<br>" + friend[0] + "<br>");
-    $(".popup").append($('<img>',{id:'friend-pic', class: "tiny_photo", src:friend[1]}))
+
+  let friends = results["friends"];
+  let mutuals = results["mutuals"];
+
+  if (friends.length > 0) {
+      $(".popup").append("<br> Friends:");
+      for (let i=0; i < friends.length; i++){
+          let friend = friends[i]
+          $(".popup").append("<br>" + friend[0] + "<br>");
+          $(".popup").append($('<img>',{id:'friend-pic', class: "tiny_photo", src:friend[1]}));
+  }} else {
+          if (mutuals.length > 0) {
+              $(".popup").append("<br> Mutual Friends:");
+              for (let i=0; i < mutuals.length; i++){
+                      let mutual = mutuals[i]
+                      $(".popup").append("<br>" + mutual[0] + "<br>");
+                      $(".popup").append($('<img>',{id:'friend-pic', class: "tiny_photo", src:mutual[1]}));
+  }}}
     $(".popup").attr("id", "popup");
-   }
-}
+  }
 
 function getListingInfo(evt) {
   console.log("mousover");
@@ -35,19 +46,29 @@ function showUserInfo(results) {
   console.dir(results)
   $(".popup").append("<br>Common Answers:<br>")
   let answers = results["answers"]
-  for (let i=0; i < answers.length; i++){
-    let answer = answers[i]
-    $(".popup").append(answer + "<br>");
+
+  if (answers.length > 0) {
+      for (let i=0; i < answers.length; i++){
+          let answer = answers[i]
+          $(".popup").append(answer + "<br>");
+      }
+  } else {
+      $(".popup").append("None, alas...<br>");
   }
   $(".popup").append("Mutual Friends:")
   let friends = results["friends"]
-  for (let i=0; i < friends.length; i++){
-    let friend = friends[i]
-    $(".popup").append("<br>" + friend[0] + "<br>");
-    $(".popup").append($('<img>',{id:'friend-pic', class: "tiny_photo", src:friend[1]}))
-    $(".popup").attr("id", "popup");
+  if (friends.length > 0) {
+    for (let i=0; i < friends.length; i++){
+        let friend = friends[i]
+        $(".popup").append("<br>" + friend[0] + "<br>");
+        $(".popup").append($('<img>',{id:'friend-pic', class: "tiny_photo", src:friend[1]}))
+      }
+  } else {
+    $(".popup").append("None, alas...<br>");
   }
+    $(".popup").attr("id", "popup");
 }
+
 
 function getUserInfo(evt) {
   let user_id = $(this).data("userId");

@@ -30,7 +30,7 @@
 		<div id="neighborhoods_in_state">
 		{% if neighborhoods %}
 		 	<form id="neighborhood_filter">
-		 		What neighborhoods are you interested in?:<br>
+		 		What neighborhoods are you interested in?:
 					{% for neighborhood in neighborhoods %}
 						<input type="checkbox" name="neighborhoods" class="hood" value="{{ neighborhood }}"> {{ neighborhood }}
 					{% endfor %}
@@ -75,16 +75,10 @@
 			<input type="radio" name="duration" value="6" required> ~ 6 Months
 			<input type="radio" name="duration" value="12" required> ~ A year + 
 			<input type="submit" value="Filter by Duration">
-		</form>
+		</form><br><br><br>
 
-		<form id="remove_specific_filters">
-					{% for filter in filters %}
-						<input type="checkbox" name="filters" class="filters" value="{{ filter }}"> {{ filter }}
-					{% endfor %}
-				<input type="submit" value="Remove Filters">
-		</form>
-		
-		<button id="remove_filters">Remove All Filters</button>
+		<div id="remove_filters">
+		</div>
 	</div>
 
 	<br><br><br><div id="results"></div>

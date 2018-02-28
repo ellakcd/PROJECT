@@ -3,7 +3,28 @@ function showListingsThatMatch(results) {
 
 	$("#results").html("POTENTIAL HOMES: ")
 
-	let listing_ids = Object.keys(results);
+	let filters = results["filters"];
+	if (filters) {
+		filters = filters.split("|");
+		let htmlToAdd = "";
+
+		for (let i=0; i<filters.length; i++) {
+			let filter = filters[i];
+			htmlToAdd += "<button class='remove_specific' id='remove_"+filter+"'> Remove "+filter+" filter</button>";
+		}
+		htmlToAdd += "<button id='remove_all_filters'> Remove All Filters </button>";
+
+		$("#remove_filters").html(htmlToAdd);
+		$("#remove_all_filters").on("click", removeFilters);
+		$(".remove_specific").on("click", removeSpecific);
+
+	} else {
+		$("#remove_filters").empty();
+	}
+
+
+	let listings = results["listings"];
+	let listing_ids = Object.keys(listings);
 	if (listing_ids) {
 		let listing_names = listing_ids.join("|");
 
@@ -12,7 +33,7 @@ function showListingsThatMatch(results) {
 
 	for(let i=0; i<listing_ids.length; i++) {
 	let listing_id = listing_ids[i];
-	$("#results").append("<br><a href='listings/"+listing_id+"' class='listing' data-listing-id="+listing_id+">"+results[listing_id].address+"<br><img src="+results[listing_id].photo+"><br></a>")
+	$("#results").append("<br><a href='listings/"+listing_id+"' class='listing' data-listing-id="+listing_id+">"+listings[listing_id].address+"<br><img src="+listings[listing_id].photo+"><br></a>")
 	}
 	$(".listing").on("mouseenter", getListingInfo);
   	$(".listing").on("mouseleave", clear);
@@ -149,33 +170,21 @@ function showAllListingsPreFilter() {
 }
 
 
-function removeSpecificFilters(evt) {
-	evt.preventDefault();
-	let filters = [];
-
-	$(".filters:checked").each(function(){
-		filters.push($(this).val());
-	});
-
-	filters = filters.join("|");
-
-	console.log(filters);
-
-	let formInputs = {
-		"filters": filters
+function removeSpecific(evt) {
+	let filterId = $(this).attr("id");
+	console.log(filterId);
+	formInputs = {
+		"filter": filterId
 	}
-	$.get("/remove_specific_filters.json", formInputs, showListingsThatMatch);
+
+	$.get("/remove_specific", formInputs, showListingsThatMatch);
 }
-
-
-$("#remove_specific_filters").on("submit", removeSpecificFilters);
 
 
 function removeFilters(evt) {
+	console.log("in remove all");
 	$.get("/remove_all_filters.json", showListingsThatMatch);
 }
-
-$("#remove_filters").on("click", removeFilters);
 
 
 showAllListingsPreFilter();

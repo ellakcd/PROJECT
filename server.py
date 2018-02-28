@@ -284,15 +284,13 @@ def filter_by_duration():
     return functions.get_all_matching_listings()
 
 
-@app.route("/remove_specific_filters.json")
-def remove_specific_filters():
-    """removes any selected filters"""
+@app.route("/remove_specific")
+def remove_specific():
+    """removes clicked filter"""
 
-    filters = request.args.get("filters")
-    filters = filters.split("|")
-    for f in filters: 
-        if f in session.keys():
-            del session[f]
+    f = request.args.get("filter")
+    f = f[7:]
+    del session[f]
 
     return functions.get_all_matching_listings()
 
@@ -304,6 +302,8 @@ def remove_all_filters():
     for key in session.keys(): 
         if key != "current_user":
             del session[key]
+
+    print session
 
     return functions.get_all_matching_listings()
 
@@ -404,40 +404,53 @@ def delete_convo():
     return redirect("/users/{}".format(me))
 
 
-@app.route("/add_as_friend", methods=["POST"])
-def add_as_friend(): 
-    """add as user as a friend"""
+@app.route("/friend_user", methods=["POST"])
+def friend_user():
+    """add user as friends"""
 
     user_id = request.form.get("user_id")
     me = session["current_user"]
 
     functions.add_friendship(user_id, me)
 
-    return redirect("/users/{}".format(user_id))
+    info = {
+    "friends": True,
+    "user_id": user_id
+    }
+
+    return jsonify(info)
 
 
-@app.route("/add_favorite", methods=["POST"])
-def add_favorite(): 
-    """add listing as favorite"""
+@app.route("/favorite_listing", methods=["POST"])
+def favorite_listing():
+    """mark listing as favorite"""
 
     listing_id = request.form.get("listing_id")
     user_id = session["current_user"]
 
     functions.add_favorite(user_id, listing_id)
+    info = {
+    "favorite": True, 
+    "listing_id": listing_id
+    }
 
-    return redirect("/listings/{}".format(listing_id))
+    return jsonify(info)
 
 
-@app.route("/remove_favorite", methods=["POST"])
-def remove_favorite(): 
-    """remove listing as favorite"""
+@app.route("/unfavorite_listing", methods=["POST"])
+def unfavorite_listing():
+    """mark listing as not favorite"""
 
     listing_id = request.form.get("listing_id")
     user_id = session["current_user"]
 
     functions.delete_favorite(user_id, listing_id)
+    info = {
+    "favorite": False,
+    "listing_id": listing_id
+    }
 
-    return redirect("/listings/{}".format(listing_id))
+    return jsonify(info)
 
 
 @app.route("/deactivate_listing", methods=["POST"])
@@ -580,8 +593,8 @@ def listings_by_friends_in_state():
         user = User.query.get(session["current_user"])
  
         listings = functions.get_all_listings_by_friends_of_any_degree(user)
-        listings = [listing for listing in listings if listing not in user.listings]
         listings = [listing for listing in listings if listing.active]
+        listings = [listing for listing in listings if not functions.user_in_listing(listing)]
         state = user.state
         neighborhoods = set()
         for listing in listings: 
@@ -653,8 +666,6 @@ def update_state_json():
 
     state = request.form.get("state")
     user = User.query.get(session["current_user"])
-    print "STATE"
-    print state
     user.state = state
     db.session.commit()
     neighborhoods = functions.get_neighborhoods(state)
@@ -705,14 +716,17 @@ def listing_info():
     listing_id = request.args.get("listing_id")
     listing = Listing.query.get(listing_id)
     user = User.query.get(session["current_user"])
-    friends = functions.all_friends_in_listing(user, listing)
+    friends = functions.friends_in_listing(user, listing)
     friends = [(friend.name, friend.photo) for friend in friends]
+    mutuals = functions.mutual_friends_in_listing(user, listing)
+    mutuals = [(mutual.name, mutual.photo) for mutual in mutuals]
     start_date = "{}/{}/{}".format(listing.avail_as_of.month, listing.avail_as_of.day, listing.avail_as_of.year)
 
     info = {
         "price" : listing.price, 
         "start date": start_date, 
-        "friends" : friends}
+        "friends" : friends, 
+        "mutuals": mutuals}
 
     return jsonify(info)
 

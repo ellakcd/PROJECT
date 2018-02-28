@@ -8,18 +8,14 @@
 {% endif %}<br>
 
 {% if session.get("current_user") and not lister %}
+<div id="favorite_or_not">
 	{% if not favorite %}
-		<form action="/add_favorite" method="POST">
-			<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-			<input type="submit" value="Favorite This Listing"><br><br>
-		</form>
+		<button id="favorite" data-listing-id="{{ listing.listing_id }}"> Favorite This Listing </button>
 	{% endif %}
 	{% if favorite %}
-		<form action="/remove_favorite" method="POST">
-			<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-			<input type="submit" value="Unfavorite This Listing"><br><br>
-		</form>
+		<button id="unfavorite" data-listing-id="{{ listing.listing_id }}"> Unfavorite This Listing </button>
 	{% endif %}
+</div>
 	<div id="chat_form"> 
 		<form action="/add_message" method="POST">
 			<textarea maxlength="500" name="message">
@@ -161,6 +157,7 @@ Roommates:
 	</div>
 	{% endfor %}
 <script src="../static/js/maps.js"> </script>
+<script src="../static/js/listing_profile.js"> </script>
 {% endblock %}
 
 

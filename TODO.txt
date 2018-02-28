@@ -16,20 +16,14 @@ User has protected password
 
 
 
-
-
 TODO: 
 
 in state listing list, highlite user's state?
 
-update favorites / friendships / lister in place
 
-remove friends?
-
+figure out why pop up * 3
 
 
-
-Wed: TESTS
 Thurs: TESTS
 Fri: re-freeze requirements / get secrets down 
 
