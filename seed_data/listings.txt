@@ -1,18 +1,18 @@
-1|Grammercy|201 East 17th St 15A NYC NY 10003|1500|01-Mar-2018|6|3|1|True|False||../static/images/main_1.jpg||RW
+1|Grammercy|201 East 17th St 15A NYC NY 10003|1500|01-Mar-2018|1|3|1|True|False||../static/images/main_1.jpg||RW
 2|Soho|145 Sullivan St Apt 3D New York NY 10012|2500|01-Apr-2018|6|3|2|False|True||../static/images/main_2.jpg||HG
 3|Noho|40 Bleecker St A New York NY 10012|3500|01-Jun-2018|6|3|2|True|False||../static/images/main_3.jpg||DM
-4|Mission|23 Woodward St, San Francisco, CA 94103|1500|01-Jun-2018|4|2|1|False|True||../static/images/main_4.jpg||TM
-5|Castro|52 Pond St San Francisco CA 94114|2000|01-Jun-2018|2|1|1|True|False||../static/images/main_5.jpg||LL
-6|Castro|4056 18th St San Francisco CA 94114|2000|01-Jun-2018|2|1|1|True|False||../static/images/main_6.jpg||HP
-7|Cambridge|26 Reservoir St Cambridge MA 02138|3000|01-Jun-2018|5|4|1|False|True||../static/images/main_7.jpg||TR
-8|Murray Hill|2 Tudor City Pl 7KN NYC NY 10015|2000|01-Jun-2018|2|1|0|False|True||../static/images/main_8.jpg||JS
-9|Murray Hill|2 Tudor City Pl 10EN NYC NY 10015|1500|01-Jun-2018|2|1|1|False|False||../static/images/main_9.jpg||BS
-10|Mission|3436 18th St, San Francisco, CA 94110|1500|01-Jun-2018|4|2|1|False|False||../static/images/main_10.jpg||RG
+4|Mission|23 Woodward St, San Francisco, CA 94103|1500|01-Jun-2018|12|2|1|False|True||../static/images/main_4.jpg||TM
+5|Castro|52 Pond St San Francisco CA 94114|2000|01-Jun-2018|1|1|1|True|False||../static/images/main_5.jpg||LL
+6|Castro|4056 18th St San Francisco CA 94114|2000|01-Jun-2018|3|1|1|True|False||../static/images/main_6.jpg||HP
+7|Cambridge|26 Reservoir St Cambridge MA 02138|3000|01-Jun-2018|6|4|1|False|True||../static/images/main_7.jpg||TR
+8|Murray Hill|2 Tudor City Pl 7KN NYC NY 10015|2000|01-Jun-2018|3|1|0|False|True||../static/images/main_8.jpg||JS
+9|Murray Hill|2 Tudor City Pl 10EN NYC NY 10015|1500|01-Jun-2018|6|1|1|False|False||../static/images/main_9.jpg||BS
+10|Mission|3436 18th St, San Francisco, CA 94110|1500|01-Jun-2018|12|2|1|False|False||../static/images/main_10.jpg||RG
 11|Dallas|12802 Midway Rd Apt 2003 Dallas TX 75244|800|01-Mar-2018|3|2|1|False|False||../static/images/main_11.jpg||PG
-12|Dallas|6318 Richmond Ave Unit 1203 Dallas TX 75214|900|01-May-2018|4|3|1|False|False||../static/images/main_12.jpg||LG
+12|Dallas|6318 Richmond Ave Unit 1203 Dallas TX 75214|900|01-May-2018|6|3|1|False|False||../static/images/main_12.jpg||LG
 13|Dallas|5727 Emrose Ter Dallas TX 75227|800|01-Mar-2018|3|2|1|False|False||../static/images/main_13.jpg||LL
 14|Nob Hill|1170 Sacramento St Apt 18A, San Francisco, CA 94108|2800|01-Mar-2018|3|2|1|False|False||../static/images/main_14.jpg||BS
-15|Bernal|334 Alemany Blvd Apt 3 San Francisco CA 94110|1800|01-Mar-2018|3|4|1|False|False||../static/images/main_15.jpg||HG
-16|Mission|1057 Florida St San Francisco CA 94110|1000|01-Mar-2018|3|2|1|False|False||../static/images/main_16.jpg||LC
-17|Haight Ashbury|1701 Page St Unit 1 San Francisco CA 94117|1200|01-Mar-2018|3|2|1|False|False||../static/images/main_17.jpg||TC
+15|Bernal|334 Alemany Blvd Apt 3 San Francisco CA 94110|1800|01-Mar-2018|1|4|1|False|False||../static/images/main_15.jpg||HG
+16|Mission|1057 Florida St San Francisco CA 94110|1000|01-Mar-2018|1|2|1|False|False||../static/images/main_16.jpg||LC
+17|Haight Ashbury|1701 Page St Unit 1 San Francisco CA 94117|1200|01-Mar-2018|6|2|1|False|False||../static/images/main_17.jpg||TC
 18|Mission|2600 18th St Apt 4 San Francisco CA 94110|2000|01-Mar-2018|3|2|1|False|False||../static/images/main_18.jpg||TM

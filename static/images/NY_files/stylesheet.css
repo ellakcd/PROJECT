@@ -3,13 +3,8 @@ body {
 }
 
 .big_photo {
-	height: 250px;
-	width: 250px;
-	border-radius: 25px;
-}
-
-.listing_photos {
-	display: inline-block;
+	height: 300px;
+	width: 300px;
 }
 
 .small_photo {
@@ -33,30 +28,18 @@ img {
 	border-radius: 25px;
   	height: 300px;
   	width: 300px;
-  	margin-left: auto;
-  	margin-right: auto;
 }
 
 #main_map {
+	border: 3px solid black;
 	border-radius: 25px;
   	height: 300px;
   	width: 300px;
 }
 
-.popup {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	visibility: hidden;
-}
-
 #popup {
-	border: 3px solid black;
-	border-radius: 25px;
-	background: purple;
-	visibility: visible;
-	padding: 15px;
-	text-align: center;
+	position: relative;
+	right: 50%;
 }
 
 a {
@@ -68,25 +51,15 @@ a {
 	text-align: center;
 }
 
-.friends_in_house {
-	display: inline-block;
-	text-align: center;
-}
-
-.roommates {
-	display: inline-block;
-	text-align: center;
-}
-
 #chat_form {
 	border: 3px solid black;
 	border-radius: 25px;
+	margin: 5px;
 	width: 25%;
 	margin-left: auto;
 	margin-right: auto;
 	background: grey;
 	text-align: center;
-	padding: 10px;
 }
 
 #search_form {
@@ -101,15 +74,6 @@ a {
 
 .message_thread {
 	display: inline-block;
-	border: 5px solid purple;
-	padding: 10px;
-	border-radius: 25px;
-	text-align: center;
-	vertical-align: top;
-}
-
-.listing_description {
 	border: 10px solid black;
 	text-align: center;
 }
-

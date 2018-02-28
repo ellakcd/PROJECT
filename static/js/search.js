@@ -14,6 +14,8 @@ function showListingsThatMatch(results) {
 	let listing_id = listing_ids[i];
 	$("#results").append("<br><a href='listings/"+listing_id+"' class='listing' data-listing-id="+listing_id+">"+results[listing_id].address+"<br><img src="+results[listing_id].photo+"><br></a>")
 	}
+	$(".listing").on("mouseenter", getListingInfo);
+  	$(".listing").on("mouseleave", clear);
 	getAllListingInfoForMap();
 }
 
@@ -195,6 +197,7 @@ function showNewState(results) {
 		}
 		htmlToAdd += " <input type='submit' value='Filter By Neighborhood'></form>"
 		$("#neighborhoods_in_state").html(htmlToAdd);
+		$("#neighborhood_filter").on("submit", filterByNeighborhood);
 	}
 	removeFilters();
 }

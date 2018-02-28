@@ -63,7 +63,8 @@ def get_all_matching_listings():
 
         if "duration" in session:
             duration = int(session["duration"])
-            all_listings = [listing for listing in all_listings if listing.length_of_rental < duration + 1 and listing.length_of_rental > duration - 1]
+            length = int(listing.length_of_rental)
+            all_listings = [listing for listing in all_listings if duration == length]
 
 
     info = {}
@@ -103,7 +104,7 @@ def friends_in_listing(user, listing):
         if roommate in user.friends: 
             friends.append(roommate)
     primary = User.query.get(listing.primary_lister)
-    
+
     if primary in user.friends: 
         friends.append(primary)
 

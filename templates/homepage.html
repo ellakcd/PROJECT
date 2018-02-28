@@ -26,65 +26,66 @@
 		</select><br>
 		<input type="submit" value="Update State">
 	</form><br><br><br>
+	<div id="search_form">
+		<div id="neighborhoods_in_state">
+		{% if neighborhoods %}
+		 	<form id="neighborhood_filter">
+		 		What neighborhoods are you interested in?:<br>
+					{% for neighborhood in neighborhoods %}
+						<input type="checkbox" name="neighborhoods" class="hood" value="{{ neighborhood }}"> {{ neighborhood }}
+					{% endfor %}
+				<input type="submit" value="Filter by neighborhood">
+			</form>
+		{% endif %}
+		</div>
 
-	<div id="neighborhoods_in_state">
-	{% if neighborhoods %}
-	 	<form id="neighborhood_filter">
-	 		What neighborhoods are you interested in?:<br>
-				{% for neighborhood in neighborhoods %}
-					<input type="checkbox" name="neighborhoods" class="hood" value="{{ neighborhood }}"> {{ neighborhood }}
-				{% endfor %}
-			<input type="submit" value="Filter by neighborhood">
+		<form id="price_filter">
+			What's the most you want to spend per month?:
+				<input type="number" id="price_cap" required>
+				<input type="submit" value="Filter by Price">
 		</form>
-	{% endif %}
+
+		<button id="laundry_filter">Only places with Laundry</button>
+
+		<button id="friends_filter">Only places with Mutual Friends</button>
+
+		<form id="pets_filter">
+			<input type="radio" name="pets" value="yes" required> Pets!
+			<input type="radio" name="pets" value="no"> No Pets!
+			<input type="submit" value="Filter by Pets">
+		</form>
+
+		<form id="roommates_filter">
+			<input type="radio" name="roommates" value="yes" required> Roommates!
+			<input type="radio" name="roommates" value="no"> No Roommates!
+			<input type="submit" value="Filter by Roommates">
+		</form>
+
+		<form id="start_date_filter">
+		 		When could you move in?:<br>
+					{% for month in months %}
+						<input type="checkbox" name="months" class="months" value="{{ month[0] }}"> {{ month[1] }}
+					{% endfor %}
+				<input type="submit" value="Filter by Start Date">
+		</form>
+
+		<form id="duration_filter">
+			<input type="radio" name="duration" value="1" required> ~ 1 Month
+			<input type="radio" name="duration" value="3" required> ~ 3 Months
+			<input type="radio" name="duration" value="6" required> ~ 6 Months
+			<input type="radio" name="duration" value="12" required> ~ A year + 
+			<input type="submit" value="Filter by Duration">
+		</form>
+
+		<form id="remove_specific_filters">
+					{% for filter in filters %}
+						<input type="checkbox" name="filters" class="filters" value="{{ filter }}"> {{ filter }}
+					{% endfor %}
+				<input type="submit" value="Remove Filters">
+		</form>
+		
+		<button id="remove_filters">Remove All Filters</button>
 	</div>
-
-	<form id="price_filter">
-		What's the most you want to spend per month?:
-			<input type="number" id="price_cap" required>
-			<input type="submit" value="Filter by Price">
-	</form>
-
-	<button id="laundry_filter">Only places with Laundry</button>
-
-	<button id="friends_filter">Only places with Mutual Friends</button>
-
-	<form id="pets_filter">
-		<input type="radio" name="pets" value="yes" required> Pets!
-		<input type="radio" name="pets" value="no"> No Pets!
-		<input type="submit" value="Filter by Pets">
-	</form>
-
-	<form id="roommates_filter">
-		<input type="radio" name="roommates" value="yes" required> Roommates!
-		<input type="radio" name="roommates" value="no"> No Roommates!
-		<input type="submit" value="Filter by Roommates">
-	</form>
-
-	<form id="start_date_filter">
-	 		When could you move in?:<br>
-				{% for month in months %}
-					<input type="checkbox" name="months" class="months" value="{{ month[0] }}"> {{ month[1] }}
-				{% endfor %}
-			<input type="submit" value="Filter by Start Date">
-	</form>
-
-	<form id="duration_filter">
-		<input type="radio" name="duration" value="1" required> ~ 1 Month
-		<input type="radio" name="duration" value="3" required> ~ 3 Months
-		<input type="radio" name="duration" value="6" required> ~ 6 Months
-		<input type="radio" name="duration" value="12" required> ~ A year + 
-		<input type="submit" value="Filter by Duration">
-	</form>
-
-	<form id="remove_specific_filters">
-				{% for filter in filters %}
-					<input type="checkbox" name="filters" class="filters" value="{{ filter }}"> {{ filter }}
-				{% endfor %}
-			<input type="submit" value="Remove Filters">
-	</form>
-	
-	<button id="remove_filters">Remove All Filters</button>
 
 	<br><br><br><div id="results"></div>
 
@@ -96,7 +97,7 @@
         	User ID: <input type="text" name="user_id" required><br>
         	Password: <input type="text" name="password" required><br>
         	<input type="submit" value="Welcome Home!">
-    	</form>
+    	</form><br><br>
 
 	<a href="/listings_by_state"> View All Listings </a><br>
 	<a href="/users_by_state"> View All Users </a><br>

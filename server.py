@@ -65,10 +65,10 @@ def make_profile():
     looking = True if request.form.get("looking") == "True" else False
     questions = Question.query.all()
     user_id = request.form.get("user_name")
-    password = request.form.get("password")
-    # hashed = bcrypt.hashpw(password, bcrypt.gensalt())
-    # print hashed
-    hashed = password
+    password = request.form.get("password").encode('utf-8')
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
+    print hashed
+    # hashed = password
     venmo = request.form.get("venmo")
 
     photo = functions.save_photo("photo")
@@ -315,7 +315,6 @@ def get_all_listings_json():
     return functions.get_all_matching_listings()
 
 
-
 @app.route("/users/<user_id>")
 def user_profile(user_id):
     """query for user info to display"""
@@ -484,28 +483,27 @@ def change_primary():
 def deactivate_user(): 
     """take user off market"""
 
-    if "current_user" in session: 
-        user = User.query.get(session["current_user"])
-        user.looking_for_apt = False
-        db.session.commit()
-        return redirect("/users/{}".format(session["current_user"]))
-    else: 
-        flash("Please log in!")
-        return redirect("/")
+    user = User.query.get(session["current_user"])
+    user.looking_for_apt = False
+    db.session.commit()
+    info = {
+    "active": user.looking_for_apt
+    }
+    return jsonify(info);
 
 
 @app.route("/reactivate_user", methods=["POST"])
 def reactivate_user(): 
     """put user back in play"""
 
-    if "current_user" in session: 
-        user = User.query.get(session["current_user"])
-        user.looking_for_apt = True
-        db.session.commit()
-        return redirect("/users/{}".format(session["current_user"]))
-    else: 
-        flash("Please log in!")
-        return redirect("/")
+    user = User.query.get(session["current_user"])
+    user.looking_for_apt = True
+    db.session.commit()
+
+    info = {
+    "active": user.looking_for_apt
+    }
+    return jsonify(info);
 
 
 @app.route("/add_roommate", methods=["POST"])
@@ -600,26 +598,6 @@ def listings_by_friends_in_state():
         return redirect("/")
 
 
-# @app.route("/listings_by_friends_in_state.json")
-# def listing_friend_state_json():
-#     """send listings by friends in state as json"""
-
-#     user = User.query.get(session["current_user"])
-#     state = user.state
-#     listings = functions.get_all_listings_by_friends_of_any_degree(user)
-#     listings = [listing for listing in listings if listing not in user.listings]
-#     listings = [listing for listing in listings if listing.active]
-#     listings = [listing for listing in listings if state in listing.address] 
-
-#     addresses = []
-#     for listing in listings:
-#         addresses.append((listing.address, listing.listing_id))
-
-#     info = {"addresses" : addresses}
-
-#     return jsonify(info)
-
-
 @app.route("/listings_info.json")
 def listing_info_json():
     """takes a list of listing ids and returns info about them"""
@@ -692,23 +670,19 @@ def update_state_json():
 def login():
     """Log In user"""
 
-    user_id = request.form.get("user_id")
-    password = request.form.get("password")
-    print user_id
-    print password
-    
     try: 
+        user_id = request.form.get("user_id")
+        password = request.form.get("password").encode('utf-8')
         user = User.query.get(user_id)
-        # hashed = user.password
-        # if bcrypt.checkpw(password, hashed):
-        print user.password
-        print password
-        if user.password == password:
+        hashed = user.password.encode('utf-8')
+        if password == hashed:
+            match = True
+        elif bcrypt.hashpw(password, hashed) == hashed:
+            match = True
+        if match:
             session['current_user'] = user_id
             flash('Successfully logged in as {}'.format(user_id))
             return redirect("/users/{}".format(user_id))
-        else:
-            flash("Ya gotta sign up first!")
     except: 
         flash("Ya gotta sign up first!")
         return redirect("/")
@@ -749,6 +723,7 @@ def user_info():
 
     user_id = request.args.get("user_id")
     user2 = User.query.get(user_id)
+
     user = User.query.get(session["current_user"])
     friends = functions.mutual_friends(user, user2)
     friends = [(friend.name, friend.photo) for friend in friends]

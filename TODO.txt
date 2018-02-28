@@ -12,6 +12,7 @@ User can view listings on a map
 User can click on another user and chat with them
 User can click on a link to someone's venmo
 User can filter for houses based on lots of properties
+User has protected password
 
 
 
@@ -19,13 +20,11 @@ User can filter for houses based on lots of properties
 
 TODO: 
 
-MAKE SURE STATE FILTER WORKS WHEN NEW STATE
-
-PASSWORD
-
 in state listing list, highlite user's state?
 
-FB?
+update favorites / friendships / lister in place
+
+remove friends?
 
 
 
