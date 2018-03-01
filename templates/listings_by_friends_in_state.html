@@ -15,10 +15,14 @@
 				<h1> {{ neighborhood }} </h1>
 				{% for listing in listings %}
 					{% if listing.neighborhood == neighborhood %}
-						<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
-							<img src="{{ listing.main_photo }}"><br>
-						{{ listing.address }}
-	 					</a><br>  
+						<!-- <div class="listing_container" data-listing-id="{{ listing.listing_id }}">
+						<div style="display: inline-block;"> -->
+							<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
+								<img src="{{ listing.main_photo }}"><br>
+							{{ listing.address }}
+		 					</a><br>
+	 					<!-- </div>
+	 					</div>  -->
 					{% endif %}
 				{% endfor %}
 	{% endfor %}

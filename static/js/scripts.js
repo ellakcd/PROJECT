@@ -1,6 +1,7 @@
 
 
 function showListingInfo(results) {
+
   console.dir(results)
   $(".popup").append("Price: " + results["price"]);
   $(".popup").append("<br>Start date: " + results["start date"]);
@@ -30,6 +31,8 @@ function getListingInfo(evt) {
   let formInputs = {
     "listing_id": listing_id
   };
+  // debugger;
+  $(this).append($(".popup"));
 
   $.get("/listing-info.json", formInputs, showListingInfo);
 }
@@ -42,6 +45,7 @@ function clear(evt) {
 
 
 function showUserInfo(results) {
+
   $(".popup").append("<br>Common Answers:<br>")
   let answers = results["answers"]
 
@@ -73,6 +77,8 @@ function getUserInfo(evt) {
   let formInputs = {
     "user_id": user_id
   };
+
+   $(this).append($(".popup"));
 
   $.get("/user-info.json", formInputs, showUserInfo);
 }

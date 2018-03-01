@@ -19,6 +19,7 @@ body {
 }
 
 .tiny_photo {
+	border-radius: 50%;
 	height: 50px;
 	width: 50px;
 }
@@ -46,15 +47,20 @@ img {
 }
 
 .popup {
-	position: absolute;
-	left: 50%;
-	top: 50%;
+	/*position: absolute;*/
+	margin-left: auto;
+	margin-right: auto;
+/*	display: inline-block;*/
+	width: 50%;
+	height: 50%;
+/*	top: 50%;*/
 	visibility: hidden;
+
 }
 
 #popup {
 	border: 3px solid black;
-	border-radius: 25px;
+	border-radius: 50px;
 	background: purple;
 	visibility: visible;
 	padding: 15px;
@@ -126,6 +132,11 @@ a {
 }
 
 #results {
+	text-align: center;
+}
+
+body {
+	border: 3px dotted black;
 	text-align: center;
 }
 
