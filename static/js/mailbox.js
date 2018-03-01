@@ -29,16 +29,12 @@ setInterval(getNewMail, 2000);
 
 
 function sendNewMessage(evt) {
-	console.log(evt);
 	evt.preventDefault();
 	console.log("it works");
 	let receiverId = $(this).data("receiver");
-	// debugger;
-	console.log(receiverId);
 	let message_space = $("textarea#"+receiverId+"message");
 	let message = message_space.val();
 	message_space.val("");
-	console.log(message);
 
 	let formInputs = {
 			"user_id": receiverId, 

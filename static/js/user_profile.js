@@ -11,18 +11,6 @@ function showProfile(results) {
 	}
 }
 
-// function unfriendUser(evt) {
-
-// 	let userId = $(this).data("userId");
-// 	let formInputs = {
-// 		"user_id": userId
-// 	}
-
-// 	$.post("/unfriend_user", formInputs, showProfile);
-// }
-
-// $("#unfriend").on("click", unfriendUser);
-
 
 function friendUser(evt) {
 

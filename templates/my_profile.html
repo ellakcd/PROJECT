@@ -9,6 +9,7 @@
 	</div>
 
 	<h1> Mailbox </h1>
+	<div class="new_message_thread">
 		Start a Convo:<br>
 		<form action="/add_message" method="POST">
 			<select name="user_id" required>
@@ -18,7 +19,9 @@
 			</select><br>
 			<textarea maxlength="500" name="message"></textarea><br>
 			<input type="submit" value="Send a Message"><br>
-		</form><br><br>
+		</form>
+	</div><br><br>
+
 	{% for partner in message_dict %}
 		<div class="message_thread">
 			<form action="/delete_convo" method="POST">
@@ -94,6 +97,6 @@
 		<a href="/add_listing"> Add A Listing </a>
 	{% endif %}
 		
-	<script src="../static/js/mailbox.js"></script>
-	<script src="../static/js/my_profile.js"></script>
+	<script src="/static/js/mailbox.js"></script>
+	<script src="/static/js/my_profile.js"></script>
 {% endblock %}

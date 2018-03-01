@@ -2,7 +2,7 @@
 
 function showListingInfo(results) {
   console.dir(results)
-  $(".popup").append("<br>Price: " + results["price"]);
+  $(".popup").append("Price: " + results["price"]);
   $(".popup").append("<br>Start date: " + results["start date"]);
 
   let friends = results["friends"];
@@ -26,7 +26,6 @@ function showListingInfo(results) {
   }
 
 function getListingInfo(evt) {
-  console.log("mousover");
   let listing_id = $(this).data("listingId");
   let formInputs = {
     "listing_id": listing_id
@@ -43,7 +42,6 @@ function clear(evt) {
 
 
 function showUserInfo(results) {
-  console.dir(results)
   $(".popup").append("<br>Common Answers:<br>")
   let answers = results["answers"]
 
@@ -75,7 +73,6 @@ function getUserInfo(evt) {
   let formInputs = {
     "user_id": user_id
   };
-  console.log(formInputs);
 
   $.get("/user-info.json", formInputs, showUserInfo);
 }
@@ -86,10 +83,11 @@ function clear(evt) {
 }
 
 
-$(document).ready(function(){
-  $(".listing").on("mouseenter", getListingInfo);
-  $(".listing").on("mouseleave", clear);
-  $(".user").on("mouseenter", getUserInfo);
-  $(".user").on("mouseleave", clear);
-});
+
+$(".listing").on("mouseenter", getListingInfo);
+$(".listing").on("mouseleave", clear);
+
+$(".user").on("mouseenter", getUserInfo);
+$(".user").on("mouseleave", clear);
+
 

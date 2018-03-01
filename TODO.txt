@@ -21,9 +21,6 @@ TODO:
 in state listing list, highlite user's state?
 
 
-figure out why pop up * 3
-
-
 Thurs: TESTS
 Fri: re-freeze requirements / get secrets down 
 

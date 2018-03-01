@@ -4,7 +4,6 @@ function addPointerByAddress(address) {
   let houseAddress = houseInfo[0];
   let houseId = houseInfo[1];
 
-// <a href="/listings/`${houseId}`">houseId</a>
   pointerLocation.geocode({'address': houseAddress},
     function(results, status) {
       if (status === google.maps.GeocoderStatus.OK) {

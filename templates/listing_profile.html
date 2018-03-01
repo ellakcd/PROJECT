@@ -124,40 +124,41 @@
 	</div>
 {% endfor %}<br>
 <div class="listing_description">
-Neighborhood: {{ listing.neighborhood }}<br>
-Monthly Price: {{ listing.price }}<br>
-Avail as Of: {{ avail_date }}<br>
-Length of Rental: {{ listing.length_of_rental }} Months<br>
-{{ listing.description }}<br>
-Bedrooms: {{ listing.bedrooms }}<br>
-Bathrooms: {{ listing.bathrooms }}<br>
-Laundry: {{ listing.laundry }}<br>
-Pets: {{ listing.pets }} <br><br><br>
+	Neighborhood: {{ listing.neighborhood }}<br>
+	Monthly Price: {{ listing.price }}<br>
+	Avail as Of: {{ avail_date }}<br>
+	Length of Rental: {{ listing.length_of_rental }} Months<br>
+	{{ listing.description }}<br>
+	Bedrooms: {{ listing.bedrooms }}<br>
+	Bathrooms: {{ listing.bathrooms }}<br>
+	Laundry: {{ listing.laundry }}<br>
+	Pets: {{ listing.pets }} <br><br><br>
 </div><br>
 
 {% if primary_lister %}
-Primary Lister <br> (not living on premises):<br>
-	<div class="roommates">
-	<a href="/users/{{ primary_lister.id }}" class="user" data-user-id="{{ primary_lister.id }}"><br>
-				<img src="{{ primary_lister.photo }}" class="small_photo"><br>
-				{{ primary_lister.id }}
-	</a>
-	</div><br><br>
+	Primary Lister <br> (not living on premises):<br>
+		<div class="roommates">
+			<a href="/users/{{ primary_lister.id }}" class="user" data-user-id="{{ primary_lister.id }}"><br>
+						<img src="{{ primary_lister.photo }}" class="small_photo"><br>
+						{{ primary_lister.id }}
+			</a>
+		</div><br><br>
 {% endif %}
 Roommates: 
 	{% for user in listing.users %}<br>
-	<div class="roommates">
-		<a href="/users/{{ user.user_id }}" class="user" data-user-id="{{ user.user_id }}"><br>
-				<img src="{{ user.photo }}" class="small_photo"><br>
-				{{ user.user_id }}
-				{% if user.user_id == listing.primary_lister %}
-				<br>(Primary Lister)
-				{% endif %}
-		</a>
-	</div>
+		<div class="roommates">
+			<a href="/users/{{ user.user_id }}" class="user" data-user-id="{{ user.user_id }}"><br>
+					<img src="{{ user.photo }}" class="small_photo"><br>
+					{{ user.user_id }}
+					{% if user.user_id == listing.primary_lister %}
+					<br>(Primary Lister)
+					{% endif %}
+			</a>
+		</div>
 	{% endfor %}
-<script src="../static/js/maps.js"> </script>
-<script src="../static/js/listing_profile.js"> </script>
+<script src="/static/js/scripts.js"></script>
+<script src="/static/js/maps.js"> </script>
+<script src="/static/js/listing_profile.js"> </script>
 {% endblock %}
 
 

@@ -99,7 +99,7 @@ def make_profile():
         for friend in friends: 
             db.session.add(Friendship(friend_1_id=friend, 
                                     friend_2_id=user_id))
-            # db.session.flush()
+
             db.session.add(Friendship(friend_2_id=friend, 
                                     friend_1_id=user_id))
 

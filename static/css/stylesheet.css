@@ -41,6 +41,8 @@ img {
 	border-radius: 25px;
   	height: 300px;
   	width: 300px;
+  	margin-left: auto;
+  	margin-right: auto;
 }
 
 .popup {
@@ -97,9 +99,19 @@ a {
 	margin-right: auto;
 	background: purple;
 	text-align: center;
+	padding: 15px;
 }
 
 .message_thread {
+	display: inline-block;
+	border: 5px solid black;
+	padding: 10px;
+	border-radius: 25px;
+	text-align: center;
+	vertical-align: top;
+}
+
+.new_message_thread {
 	display: inline-block;
 	border: 5px solid purple;
 	padding: 10px;
@@ -110,6 +122,10 @@ a {
 
 .listing_description {
 	border: 10px solid black;
+	text-align: center;
+}
+
+#results {
 	text-align: center;
 }
 

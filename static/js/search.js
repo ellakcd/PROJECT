@@ -1,7 +1,7 @@
 
 function showListingsThatMatch(results) {
 
-	$("#results").html("POTENTIAL HOMES: ")
+	$("#results").html("<h1>POTENTIAL HOMES:</h1>")
 
 	let filters = results["filters"];
 	if (filters) {
@@ -32,11 +32,12 @@ function showListingsThatMatch(results) {
 	}
 
 	for(let i=0; i<listing_ids.length; i++) {
-	let listing_id = listing_ids[i];
-	$("#results").append("<br><a href='listings/"+listing_id+"' class='listing' data-listing-id="+listing_id+">"+listings[listing_id].address+"<br><img src="+listings[listing_id].photo+"><br></a>")
+		let listing_id = listing_ids[i];
+		$("#results").append("<br><a href='listings/"+listing_id+"' class='listing' data-listing-id="+listing_id+">"+listings[listing_id].address+"<br><img src="+listings[listing_id].photo+"><br></a>")
 	}
 	$(".listing").on("mouseenter", getListingInfo);
   	$(".listing").on("mouseleave", clear);
+
 	getAllListingInfoForMap();
 }
 
