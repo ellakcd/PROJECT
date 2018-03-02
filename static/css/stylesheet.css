@@ -108,6 +108,7 @@ a {
 	padding: 15px;
 }
 
+
 .message_thread {
 	display: inline-block;
 	border: 5px solid black;
@@ -136,7 +137,31 @@ a {
 }
 
 body {
-	border: 3px dotted black;
 	text-align: center;
+	color: black;
 }
 
+.conversation {
+	padding: 5px;
+	height: 100px;
+	overflow: auto;
+	margin: 10px;
+}
+
+.search_button {
+	border-radius: 25%;
+	border: 1px solid black;
+}
+/*button {
+	background-color: black;
+	color: blue;
+}*/
+
+
+/*#update_state {
+	background-image: url("/static/images/map.jpg");
+	background-size: 200px 200px;
+	width: 25%;
+	height: 25%;
+}
+*/

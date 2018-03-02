@@ -339,6 +339,9 @@ def user_profile(user_id):
             all_users = User.query.all()
             all_users = [user_not_me for user_not_me in all_users if user_not_me != me]
             message_dict = me.get_messages()
+            all_users = [user_not_partner for user_not_partner in all_users if user_not_partner.user_id not in message_dict]
+            print message_dict
+            print all_users
             return render_template("my_profile.html", user=me, all_users=all_users, properties=properties, message_dict=message_dict)
 
 
@@ -354,11 +357,11 @@ def listing_profile(listing_id):
     listing = Listing.query.get(listing_id)
     primary_lister = {}
     lister = False
+    am_primary = False
     favorite = False
     friends = []
     mutuals = []
     avail_date = "{}/{}/{}".format(listing.avail_as_of.month, listing.avail_as_of.day, listing.avail_as_of.year)
-
     primary = User.query.get(listing.primary_lister)
     if primary not in listing.users:
         photo = primary.photo
@@ -366,16 +369,18 @@ def listing_profile(listing_id):
                         "photo": photo}
 
     if session.get("current_user"):
-        user = User.query.get(session["current_user"])
-        if listing in user.favorites:
+        me = User.query.get(session["current_user"])
+        if listing in me.favorites:
             favorite = True
-        if user in listing.users: 
+        if me in listing.users: 
             lister = True
+        if me.user_id == listing.primary_lister:
+            am_primary = True
         else: 
-            friends = functions.friends_in_listing(user, listing)
-            mutuals = functions.mutual_friends_in_listing(user, listing)
+            friends = functions.friends_in_listing(me, listing)
+            mutuals = functions.mutual_friends_in_listing(me, listing)
 
-    return render_template("listing_profile.html", listing=listing, users=users, lister=lister, avail_date=avail_date, primary_lister=primary_lister, friends=friends, mutuals=mutuals, favorite=favorite)
+    return render_template("listing_profile.html", listing=listing, avail_date=avail_date, users=users, lister=lister, am_primary=am_primary, primary_lister=primary_lister, friends=friends, mutuals=mutuals, favorite=favorite)
 
 
 @app.route("/add_message", methods=["POST"])
@@ -453,7 +458,7 @@ def unfavorite_listing():
     return jsonify(info)
 
 
-@app.route("/deactivate_listing", methods=["POST"])
+@app.route("/unlist_listing", methods=["POST"])
 def deactivate(): 
     """take listing off market"""
 
@@ -462,10 +467,15 @@ def deactivate():
     listing.active = False
     db.session.commit()
 
-    return redirect("/listings/{}".format(listing_id))
+    info = {
+        "listed": listing.active,
+        "listing_id": listing_id
+    }
+
+    return jsonify(info)
 
 
-@app.route("/reactivate_listing", methods=["POST"])
+@app.route("/relist_listing", methods=["POST"])
 def reactivate(): 
     """put listing on market with new dates"""
 
@@ -474,9 +484,70 @@ def reactivate():
     listing = Listing.query.get(listing_id)
     listing.active = True
     listing.avail_as_of = avail_as_of
+    print "TEST"
+    print listing.avail_as_of
     db.session.commit()
+    avail_date = "{}/{}/{}".format(listing.avail_as_of.month, listing.avail_as_of.day, listing.avail_as_of.year)
 
-    return redirect("/listings/{}".format(listing_id))
+
+    info = {
+        "listed": listing.active,
+        "listing_id": listing_id,
+        "avail_date": avail_date
+    }
+    print info
+    return jsonify(info)
+
+@app.route("/listing_active")
+def listing_active():
+    """return info regarding whether listing is active"""
+
+    listing_id = request.args.get("listing_id")
+    print listing_id
+    listing = Listing.query.get(listing_id)
+    avail_date = "{}/{}/{}".format(listing.avail_as_of.month, listing.avail_as_of.day, listing.avail_as_of.year)
+
+
+    if listing.active: 
+        info = {
+        "listing_id": listing_id, 
+        "listed": True, 
+        "avail_date": avail_date
+        }
+    else: 
+        info = {
+            "listing_id": listing_id, 
+            "listed": False 
+        }
+
+    print info
+    return jsonify(info)
+
+
+# @app.route("/deactivate_listing", methods=["POST"])
+# def deactivate(): 
+#     """take listing off market"""
+
+#     listing_id = request.form.get("listing_id")
+#     listing = Listing.query.get(listing_id)
+#     listing.active = False
+#     db.session.commit()
+
+#     return redirect("/listings/{}".format(listing_id))
+
+
+# @app.route("/reactivate_listing", methods=["POST"])
+# def reactivate(): 
+#     """put listing on market with new dates"""
+
+#     listing_id = request.form.get("listing_id")
+#     avail_as_of = request.form.get("avail")
+#     listing = Listing.query.get(listing_id)
+#     listing.active = True
+#     listing.avail_as_of = avail_as_of
+#     db.session.commit()
+
+#     return redirect("/listings/{}".format(listing_id))
 
 
 @app.route("/change_primary", methods=["POST"])

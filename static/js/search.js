@@ -10,9 +10,9 @@ function showListingsThatMatch(results) {
 
 		for (let i=0; i<filters.length; i++) {
 			let filter = filters[i];
-			htmlToAdd += "<button class='remove_specific' id='remove_"+filter+"'> Remove "+filter+" filter</button>";
+			htmlToAdd += "<button class='remove_specific search_button btn' id='remove_"+filter+"'> &#x2717; Remove "+filter+" filter</button>";
 		}
-		htmlToAdd += "<button id='remove_all_filters'> Remove All Filters </button>";
+		htmlToAdd += "<button class='search_button btn' id='remove_all_filters'> &#x2717; Remove All Filters </button>";
 
 		$("#remove_filters").html(htmlToAdd);
 		$("#remove_all_filters").on("click", removeFilters);

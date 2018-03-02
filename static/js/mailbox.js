@@ -6,10 +6,11 @@ function renderNewConvos(results) {
 	let last = $(`#${partnerId}`).data("last");
 	for (let i=0; i<new_messages.length; i++) {
 		let new_message = new_messages[i];
-		$(`#${partnerId}`).append(new_message[1] + "<br>")
+		$(`#${partnerId}`).append("<b>"+new_message[1] + "</b><br>")
 		last = new_message[0];
 	}
 	$(`#${partnerId}`).data("last", last);
+	scrolledDown();
 }
 
 function getNewMail() {
@@ -45,3 +46,18 @@ function sendNewMessage(evt) {
 
 
 $(".add_message").on("submit", sendNewMessage);
+
+
+function scrolledDown() {
+	$(".conversation").each(function() {
+	$(".conversation").scrollTop($(".conversation")[0].scrollHeight);
+	});
+}
+
+scrolledDown();
+
+
+
+
+
+

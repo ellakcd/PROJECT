@@ -6,26 +6,28 @@
 <h1>Welcome to Roommatch</h1> <br>
 
 {% if session.get("current_user") %}
-	<div id="logout">
+	<!-- <div id="logout">
 		<form action="/logout">
 			<input type="submit" value="Log Out!"><br><br>
 		</form>
-	</div>
+	</div> -->
 
-	<a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br>
+	<!-- <a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br>
 	<div id="listings_by_state">
 	<a href="/listings_by_friends_in_state"> View All Active Listings By Friends and Friends of Friends in {{ state }} </a><br>
-	<a href="/user_friends_in_state"> View All Friends and Friends of Friends Looking for Apts in {{ state }} </a><br><br><br>
+	<a href="/user_friends_in_state"> View All Friends and Friends of Friends Looking for Apts in {{ state }} </a><br><br><br> -->
 	</div>
-	<form action="/update_state" id="update_state" method="POST">
-		State: 
-		<select name="state" id="state" required>
-			{% for state in STATES %}
-  				<option value="{{ state }}">{{ state }}</option>
-			{% endfor %}
-		</select><br>
-		<input type="submit" value="Update State">
-	</form><br><br><br>
+	<div id="update_state">
+		<form action="/update_state" id="update_state" method="POST">
+			Update Your State:<br>
+			<select name="state" id="state" required>
+				{% for state in STATES %}
+	  				<option value="{{ state }}">{{ state }}</option>
+				{% endfor %}
+			</select>
+			<input type="submit" class="search_button btn" value="&#127759;">
+		</form>
+	</div><br><br><br>
 	<div id="search_form">
 		<div id="neighborhoods_in_state">
 		{% if neighborhoods %}
@@ -34,7 +36,7 @@
 					{% for neighborhood in neighborhoods %}
 						<input type="checkbox" name="neighborhoods" class="hood" value="{{ neighborhood }}"> {{ neighborhood }}
 					{% endfor %}
-				<input type="submit" value="Filter by neighborhood">
+				<input type="submit" class="search_button btn" value="&#127960;">
 			</form>
 		{% endif %}
 		</div>
@@ -42,23 +44,19 @@
 		<form id="price_filter">
 			What's the most you want to spend per month?:
 				<input type="number" id="price_cap" required>
-				<input type="submit" value="Filter by Price">
+				<input type="submit" class="search_button btn" value="&#xFF04;">
 		</form>
-
-		<button id="laundry_filter">Only places with Laundry</button>
-
-		<button id="friends_filter">Only places with Mutual Friends</button>
 
 		<form id="pets_filter">
 			<input type="radio" name="pets" value="yes" required> Pets!
 			<input type="radio" name="pets" value="no"> No Pets!
-			<input type="submit" value="Filter by Pets">
+			<input type="submit" class="search_button btn" value="&#x1F984;">
 		</form>
 
 		<form id="roommates_filter">
 			<input type="radio" name="roommates" value="yes" required> Roommates!
 			<input type="radio" name="roommates" value="no"> No Roommates!
-			<input type="submit" value="Filter by Roommates">
+			<input type="submit" class="search_button btn" value="&#128111;">
 		</form>
 
 		<form id="start_date_filter">
@@ -66,7 +64,7 @@
 					{% for month in months %}
 						<input type="checkbox" name="months" class="months" value="{{ month[0] }}"> {{ month[1] }}
 					{% endfor %}
-				<input type="submit" value="Filter by Start Date">
+				<input type="submit" class="search_button btn" value="&#x1f4c5;">
 		</form>
 
 		<form id="duration_filter">
@@ -74,8 +72,12 @@
 			<input type="radio" name="duration" value="3" required> ~ 3 Months
 			<input type="radio" name="duration" value="6" required> ~ 6 Months
 			<input type="radio" name="duration" value="12" required> ~ A year + 
-			<input type="submit" value="Filter by Duration">
-		</form><br><br><br>
+			<input type="submit" class="search_button btn" value="&#9789;">
+		</form><br>
+		<button id="laundry_filter" class="search_button btn">Only places with Laundry &#10041;</button>
+
+		<button id="friends_filter" class="search_button btn">Only places with Mutual Friends &#10041;</button>
+		<br><br><br>
 
 		<div id="remove_filters">
 		</div>
@@ -89,7 +91,7 @@
 	<p>Log In!<br>
     	<form action="/login" method="POST">
         	User ID: <input type="text" name="user_id" required><br>
-        	Password: <input type="text" name="password" required><br>
+        	Password: <input type="password" name="password" required><br>
         	<input type="submit" value="Welcome Home!">
     	</form><br><br>
 

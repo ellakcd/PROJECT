@@ -14,7 +14,7 @@
 		<form action="/add_message" method="POST">
 			<select name="user_id" required>
 			{% for user in all_users %}
-	  			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
+	  				<option value="{{ user.user_id }}">{{ user.user_id }}</option>
 			{% endfor %}
 			</select><br>
 			<textarea maxlength="500" name="message"></textarea><br>
@@ -68,7 +68,7 @@
 			{% endfor %}<br>
 	</div>		
 		<div id="my-favorites">
-			Favorites: <br> 
+			&hearts; Favorites: <br> 
 			{% for listing in user.favorites %}
 					<a href="/listings/{{ listing.listing_id }}">
 							<img src="{{ listing.main_photo }}">
@@ -80,7 +80,7 @@
 		Listings: <br> 
 			{% for listing in user.listings %}
 					<a href="/listings/{{ listing.listing_id }}">
-							<img src="{{ listing.main_photo }}">
+							<img src="{{ listing.main_photo }}"> 
 					</a>
 			{% endfor %}
 

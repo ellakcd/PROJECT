@@ -7,10 +7,10 @@
 	<a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br>
 {% endif %}<br>
 
-{% if session.get("current_user") and not lister %}
+{% if session.get("current_user") and not lister and not am_primary %}
 <div id="favorite_or_not">
 	{% if not favorite %}
-		<button id="favorite" data-listing-id="{{ listing.listing_id }}"> Favorite This Listing </button>
+		<button id="favorite" data-listing-id="{{ listing.listing_id }}"> &#9825; Favorite This Listing &#9825;  </button>
 	{% endif %}
 	{% if favorite %}
 		<button id="unfavorite" data-listing-id="{{ listing.listing_id }}"> Unfavorite This Listing </button>
@@ -24,10 +24,36 @@
 			<input type="submit" value="Send Primary Lister a Message">
 		</form>
 	</div>
+
+{% if friends %}
+	You have friends here!<br><br>
+	{% for friend in friends %}
+	<div class="friends_in_house">
+		{{ friend.user_id }}<br>
+		<a href="/users/{{ friend.user_id }}">
+				<img src="{{ friend.photo }}" class="small_photo"><br>
+		</a><br>
+	</div>
+	{% endfor %}
+{% endif %}
+
+{% if mutuals and not friends %}
+	There are people here who are friends of: <br><br>
+	{% for mutual in mutuals %}
+	<div class="friends_in_house">
+		{{ mutual.user_id }}<br>
+		<a href="/users/{{ mutual.user_id }}">
+				<img src="{{ mutual.photo }}" class="tiny_photo"><br>
+		</a><br>
+	</div>
+	{% endfor %}
 {% endif %}
 
 
-{% if session.get("current_user") == listing.primary_lister %}
+{% endif %}
+
+
+{% if am_primary %}
 	Change primary lister to: 
 	<form action="/change_primary" method="POST">
 		<select name="new_primary" required>
@@ -38,21 +64,6 @@
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
 		<input type="submit" value="Change Primary Lister"><br><br>
 	</form><br>
-	{% if listing.active %}
-		<form action="/deactivate_listing" method="POST">
-			<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-			<input type="submit" value="Take This Listing off the Market"><br><br>
-		</form>
-	{% endif %}
-
-	{% if not listing.active %}
-		<form action="/reactivate_listing" method="POST">
-			<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-			When is it avail?:<br>
-			<input type="date" name="avail"><br>
-			<input type="submit" value="Put This Listing Back on the Market"><br><br>
-		</form>
-	{% endif %}
 {% endif %}
 
 {% if lister %}
@@ -87,31 +98,8 @@
 		</select>
 	</form>
 {% endif %}
-<br><br><br>
+<br><br>
 
-{% if friends %}
-	You have friends here!<br><br>
-	{% for friend in friends %}
-	<div class="friends_in_house">
-		{{ friend.user_id }}<br>
-		<a href="/users/{{ friend.user_id }}">
-				<img src="{{ friend.photo }}" class="small_photo"><br>
-		</a><br>
-	</div>
-	{% endfor %}
-{% endif %}
-
-{% if mutuals and not friends %}
-	There are people here who are friends of: <br><br>
-	{% for mutual in mutuals %}
-	<div class="friends_in_house">
-		{{ mutual.user_id }}<br>
-		<a href="/users/{{ mutual.user_id }}">
-				<img src="{{ mutual.photo }}" class="tiny_photo"><br>
-		</a><br>
-	</div>
-	{% endfor %}
-{% endif %}
 <h1>{{ listing. address }}</h1>
 <div id="map" data-address="{{ listing.address }}"></div><br>
 <div class="listing_photos">
@@ -123,16 +111,26 @@
 		<img src="{{ photo.photo }}" class="big_photo"><br>
 	</div>
 {% endfor %}<br>
-<div class="listing_description">
+<div class="listing_description"><br>
 	Neighborhood: {{ listing.neighborhood }}<br>
 	Monthly Price: {{ listing.price }}<br>
-	Avail as Of: {{ avail_date }}<br>
+	<div id="show_avail_dates">
+	{% if listing.active %}
+	Avail as Of: {{ avail_date }}
+	{% else %}
+	Listing not Currently Available
+	{% endif %}
+	</div>
+	{% if am_primary %}
+		<div id="listed_or_not" data-listing-id="{{ listing.listing_id }}">
+		</div>
+	{% endif %}
 	Length of Rental: {{ listing.length_of_rental }} Months<br>
 	{{ listing.description }}<br>
 	Bedrooms: {{ listing.bedrooms }}<br>
 	Bathrooms: {{ listing.bathrooms }}<br>
 	Laundry: {{ listing.laundry }}<br>
-	Pets: {{ listing.pets }} <br><br><br>
+	Pets: {{ listing.pets }} <br><br>
 </div><br>
 
 {% if primary_lister %}

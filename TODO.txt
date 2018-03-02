@@ -21,6 +21,9 @@ payment / esign / FB
 
 in state listing list, highlite user's state?
 
+activate/deactivate listing in place
+add age? - calendar math
+scroll boxes
 
 Thurs: TESTS
 Fri: re-freeze requirements / get secrets down 
