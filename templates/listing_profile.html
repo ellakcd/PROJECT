@@ -2,11 +2,6 @@
 {% block title %}{{ listing.listing_id }}{% endblock %}
 {% block content %}
 
-<a href="/"> Homepage </a><br>
-{% if "current_user" in session %}
-	<a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br>
-{% endif %}<br>
-
 {% if session.get("current_user") and not lister and not am_primary %}
 <div id="favorite_or_not">
 	{% if not favorite %}

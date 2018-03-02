@@ -33,7 +33,7 @@ function showListingsThatMatch(results) {
 
 	for(let i=0; i<listing_ids.length; i++) {
 		let listing_id = listing_ids[i];
-		$("#results").append("<br><a href='listings/"+listing_id+"' class='listing' data-listing-id="+listing_id+">"+listings[listing_id].address+"<br><img src="+listings[listing_id].photo+"><br></a>")
+		$("#results").append("<br><a href='listings/"+listing_id+"' class='listing' data-listing-id="+listing_id+">"+listings[listing_id].address+"<br><img src="+listings[listing_id].photo+" class='medium_photo'><br></a>")
 	}
 	$(".listing").on("mouseenter", getListingInfo);
   	$(".listing").on("mouseleave", clear);

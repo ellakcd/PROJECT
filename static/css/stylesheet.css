@@ -8,6 +8,12 @@ body {
 	border-radius: 25px;
 }
 
+.medium_photo {
+	height: 150px;
+	width: 150px;
+	border-radius: 25px;
+}
+
 .listing_photos {
 	display: inline-block;
 }
@@ -22,6 +28,7 @@ body {
 	border-radius: 50%;
 	height: 50px;
 	width: 50px;
+	border: 2px solid black;
 }
 
 img {
@@ -51,8 +58,8 @@ img {
 	margin-left: auto;
 	margin-right: auto;
 /*	display: inline-block;*/
-	width: 50%;
-	height: 50%;
+	width: 30%;
+	height: 30%;
 /*	top: 50%;*/
 	visibility: hidden;
 
@@ -61,7 +68,7 @@ img {
 #popup {
 	border: 3px solid black;
 	border-radius: 50px;
-	background: purple;
+	background: #66B380;
 	visibility: visible;
 	padding: 15px;
 	text-align: center;
@@ -103,9 +110,10 @@ a {
 	margin: 5px;
 	margin-left: auto;
 	margin-right: auto;
-	background: purple;
+	background: #B19CD9;
 	text-align: center;
 	padding: 15px;
+	width: 60%;
 }
 
 
@@ -139,6 +147,7 @@ a {
 body {
 	text-align: center;
 	color: black;
+	font: arial;
 }
 
 .conversation {
@@ -151,6 +160,22 @@ body {
 .search_button {
 	border-radius: 25%;
 	border: 1px solid black;
+	background-color: #66B380;
+}
+
+.round_search_button {
+	border-radius: 50%;
+	border: 1px solid black;
+	background-color: #66B380;
+}
+
+.flashes {
+	background-color: red;
+}
+
+.navbar {
+	background: #B19CD9;
+	color: black;
 }
 /*button {
 	background-color: black;

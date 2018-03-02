@@ -2,11 +2,6 @@
 {% block title %}{{ state }}{% endblock %}
 {% block content %}
 
-<a href="/"> Homepage </a><br>
-{% if "current_user" in session %}
-	<a href="/users/{{ session["current_user"] }}"> View Your Profile </a><br>
-{% endif %}<br><br>
-
 
 {% if neighborhoods %}
 	{{ state }}: <br>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Listings By State{% endblock %}
 {% block content %}
-<a href="/"> Homepage </a>
+
 {% for state in listings_by_state %}
 {{ state }}: <br> 
 	{% for listing in listings_by_state[state] %}

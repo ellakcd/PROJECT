@@ -22,18 +22,22 @@ MONTHS = [(1, "Jan"), (2, "Feb"), (3, "March"), (4, "April"), (5, "May"), (6, "J
 
 UPLOAD_FOLDER = "static/uploaded_images/"
 
+
+# LANDING PAGES
 @app.route("/")
 def index():
     """Homepage"""
 
+    user = None
     state = ""
     if "current_user" in session: 
-        state = User.query.get(session["current_user"]).state
+        user = User.query.get(session["current_user"])
+        state = user.state
 
     neighborhoods = functions.get_neighborhoods(state)
     filters = ["price_cap", "laundry", "friends", "pets", "roommates", "neighborhoods", "start_dates", "duration"]
 
-    return render_template("homepage.html", neighborhoods=neighborhoods, filters=filters, STATES=STATES, months=MONTHS, state=state)
+    return render_template("homepage.html", neighborhoods=neighborhoods, user=user, filters=filters, STATES=STATES, months=MONTHS, state=state)
 
 
 @app.route("/register")
@@ -43,8 +47,9 @@ def registration_page():
     users = User.query.all()
     listings = Listing.query.all()
     questions = Question.query.all()
+    user = None
     
-    return render_template("registration.html", users=users, STATES=STATES, listings=listings, questions=questions)
+    return render_template("registration.html", users=users, STATES=STATES, user=user, listings=listings, questions=questions)
 
 
 @app.route("/add_listing")
@@ -52,10 +57,160 @@ def listing_page():
     """Page to input info about a home"""
 
     users = User.query.all()
+    user = User.query.get(session["current_user"])
 
-    return render_template("create_listing.html", users=users, STATES=STATES)
+    return render_template("create_listing.html", users=users, user=user, STATES=STATES)
 
 
+@app.route("/users/<user_id>")
+def user_profile(user_id):
+    """query for user info to display"""
+
+    user = User.query.get(user_id)
+    common_answers = []
+    favorites = []
+    mutuals = []
+    message_dict = {}
+    my_page = False
+    are_friends = False
+    me = None
+    properties = Listing.query.filter(Listing.primary_lister == user_id)
+    properties = [prop for prop in properties if prop not in user.listings]
+    if session.get("current_user"):
+        me = User.query.get(session["current_user"])
+        are_friends = functions.are_friends(me, user)
+        common_answers = functions.get_common_answers(me, user)
+        favorites = me.favorites
+        favorites = [favorite for favorite in favorites if favorite.active]
+        mutuals = functions.mutual_friends(me, user)
+        if me.user_id == user.user_id: 
+            all_users = User.query.all()
+            all_users = [user_not_me for user_not_me in all_users if user_not_me != me]
+            message_dict = me.get_messages()
+            all_users = [user_not_partner for user_not_partner in all_users if user_not_partner.user_id not in message_dict]
+            print message_dict
+            print all_users
+            return render_template("my_profile.html", page_user=me, user=me, all_users=all_users, properties=properties, message_dict=message_dict)
+
+
+    return render_template("user_profile.html", page_user=user, user=me, properties=properties, common_answers=common_answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, message_dict=message_dict)
+
+
+
+@app.route("/listings/<listing_id>")
+def listing_profile(listing_id):
+    """query for listing info to display"""
+
+    users = User.query.all()
+    me = None
+    listing = Listing.query.get(listing_id)
+    primary_lister = {}
+    lister = False
+    am_primary = False
+    favorite = False
+    friends = []
+    mutuals = []
+    avail_date = "{}/{}/{}".format(listing.avail_as_of.month, listing.avail_as_of.day, listing.avail_as_of.year)
+    primary = User.query.get(listing.primary_lister)
+    if primary not in listing.users:
+        photo = primary.photo
+        primary_lister = {"id": primary.user_id, 
+                        "photo": photo}
+
+    if session.get("current_user"):
+        me = User.query.get(session["current_user"])
+        if listing in me.favorites:
+            favorite = True
+        if me in listing.users: 
+            lister = True
+        if me.user_id == listing.primary_lister:
+            am_primary = True
+        else: 
+            friends = functions.friends_in_listing(me, listing)
+            mutuals = functions.mutual_friends_in_listing(me, listing)
+
+    return render_template("listing_profile.html", listing=listing, user=me, avail_date=avail_date, users=users, lister=lister, am_primary=am_primary, primary_lister=primary_lister, friends=friends, mutuals=mutuals, favorite=favorite)
+
+
+@app.route("/listings_by_state")
+def listings_by_state():
+    """display all listings sorted by state"""
+
+    listings_by_state = {}
+
+    user = None
+
+    for state in STATES: 
+        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
+        listings = [listing for listing in listings if listing.active]
+        listings_by_state[state] = listings
+    
+    return render_template("/listings_by_state.html", STATES=STATES, user=user, listings_by_state=listings_by_state)
+
+
+@app.route("/users_by_state")
+def users_by_state():
+    """display all users sorted by state"""
+
+    users_by_state = {}
+
+    user = None
+
+    for state in STATES: 
+        users = User.query.filter(User.state == state).all()
+        users = [user for user in users if user.looking_for_apt]
+        users_by_state[state] = users
+    
+    return render_template("/users_by_state.html", STATES=STATES, user=user, users_by_state=users_by_state)
+
+
+
+@app.route("/listings_by_friends_in_state")
+def listings_by_friends_in_state():
+    """display all listings by your friends in your state, sorted by neighborhood"""
+
+    if "current_user" in session: 
+        user = User.query.get(session["current_user"])
+ 
+        listings = functions.get_all_listings_by_friends_of_any_degree(user)
+        listings = [listing for listing in listings if listing.active]
+        listings = [listing for listing in listings if not functions.user_in_listing(listing)]
+        state = user.state
+        neighborhoods = set()
+        for listing in listings: 
+            if state in listing.address: 
+                neighborhoods.add(listing.neighborhood)
+
+        listing_names = [listing.listing_id for listing in listings]
+        listing_names = "|".join(listing_names)
+        print listing_names
+
+        return render_template("/listings_by_friends_in_state.html",  user=user, state=state, listings=listings, neighborhoods=neighborhoods, listing_names=listing_names)
+    else: 
+        flash("Don't forget to log in!")
+        return redirect("/")
+
+
+@app.route("/user_friends_in_state")
+def user_friends_in_state():
+    """display all users friends with your friends in your state"""
+
+    if "current_user" in session: 
+        user = User.query.get(session["current_user"])
+        friends = functions.get_all_friends_of_any_degree(user)
+
+        state = user.state
+
+        users = [friend for friend in friends if friend.state == state]
+        users = [user for user in users if user.looking_for_apt]
+
+        return render_template("/users_w_friends_in_state.html", user=user, state=state, users=users)
+    else: 
+        flash("Don't forget to log in!")
+        return redirect("/")
+
+
+# REDIRECTS
 @app.route("/make_user_profile", methods=["POST"])
 def make_profile(): 
     """add user info to database"""
@@ -182,6 +337,126 @@ def make_listing_profile():
         return redirect("/listings/{}".format(listing_id))
 
 
+@app.route("/add_message", methods=["POST"])
+def create_message():
+    """add a message between two users"""
+
+    receiver_id = request.form.get("user_id")
+    me = session["current_user"]
+    content = request.form.get("message")
+    print "receiver"
+    print receiver_id
+    functions.add_message(me, receiver_id, content)
+
+    return redirect("/users/{}".format(me))
+
+
+@app.route("/delete_convo", methods=["POST"])
+def delete_convo():
+    """delete message thread between two users"""
+
+    user_id = request.form.get("user_id")
+    me = session["current_user"]
+    
+    functions.delete_messages(me, user_id)
+
+    return redirect("/users/{}".format(me))
+
+
+@app.route("/add_roommate", methods=["POST"])
+def add_roommate(): 
+    """add a roommate to current listing"""
+
+    listing_id = request.form.get("listing_id")
+    user_id = request.form.get("roomie")
+
+    functions.add_UserListing(user_id, listing_id)
+
+    return redirect("/listings/{}".format(listing_id))
+
+
+@app.route("/remove_roommate", methods=["POST"])
+def remove_roommate(): 
+    """remove a roommate from current listing"""
+
+    listing_id = request.form.get("listing_id")
+    user_id = request.form.get("roomie")
+    
+    functions.delete_UserListing(user_id, listing_id)
+
+    return redirect("/listings/{}".format(listing_id))
+
+
+@app.route("/remove_self_as_roommate", methods=["POST"])
+def remove_self_as_roommate(): 
+    """delete yourself as a roommate from current listing"""
+
+    listing_id = request.form.get("listing_id")
+    user_id = session["current_user"]
+
+    functions.delete_UserListing(user_id, listing_id)
+
+    return redirect("/listings/{}".format(listing_id))
+
+
+@app.route("/change_primary", methods=["POST"])
+def change_primary(): 
+    """change primary lister"""
+
+    listing_id = request.form.get("listing_id")
+    user_id = request.form.get("new_primary")
+    listing = Listing.query.get(listing_id)
+    listing.primary_lister = user_id
+    db.session.commit()
+
+    return redirect("/listings/{}".format(listing_id))
+
+
+@app.route("/login", methods=['POST'])
+def login():
+    """Log In user"""
+
+    try: 
+        user_id = request.form.get("user_id")
+        password = request.form.get("password").encode('utf-8')
+        user = User.query.get(user_id)
+        hashed = user.password.encode('utf-8')
+        if password == hashed:
+            match = True
+        elif bcrypt.hashpw(password, hashed) == hashed:
+            match = True
+        if match:
+            session['current_user'] = user_id
+            flash('Successfully logged in as {}'.format(user_id))
+            return redirect("/users/{}".format(user_id))
+    except: 
+        flash("Ya gotta sign up first!")
+        return redirect("/")
+
+
+@app.route("/logout")
+def logout():
+    """Log Out user."""
+
+    del session['current_user']
+    flash('Successfully logged out')
+
+    return redirect("/")
+
+
+@app.route("/update_state", methods=["POST"])
+def update_state():
+    """update user's state"""
+
+    state = request.form.get("state")
+    user = User.query.get(session["current_user"])
+    if user: 
+        user.state = state
+        db.session.commit()
+
+    return redirect("/")
+
+# AJAX ROUTES
 @app.route("/new_messages.json")
 def get_new_messages():
     """get new messages"""
@@ -315,100 +590,6 @@ def get_all_listings_json():
     return functions.get_all_matching_listings()
 
 
-@app.route("/users/<user_id>")
-def user_profile(user_id):
-    """query for user info to display"""
-
-    user = User.query.get(user_id)
-    common_answers = []
-    favorites = []
-    mutuals = []
-    message_dict = {}
-    my_page = False
-    are_friends = False
-    properties = Listing.query.filter(Listing.primary_lister == user_id)
-    properties = [prop for prop in properties if prop not in user.listings]
-    if session.get("current_user"):
-        me = User.query.get(session["current_user"])
-        are_friends = functions.are_friends(me, user)
-        common_answers = functions.get_common_answers(me, user)
-        favorites = me.favorites
-        favorites = [favorite for favorite in favorites if favorite.active]
-        mutuals = functions.mutual_friends(me, user)
-        if me.user_id == user.user_id: 
-            all_users = User.query.all()
-            all_users = [user_not_me for user_not_me in all_users if user_not_me != me]
-            message_dict = me.get_messages()
-            all_users = [user_not_partner for user_not_partner in all_users if user_not_partner.user_id not in message_dict]
-            print message_dict
-            print all_users
-            return render_template("my_profile.html", user=me, all_users=all_users, properties=properties, message_dict=message_dict)
-
-
-    return render_template("user_profile.html", user=user, properties=properties, common_answers=common_answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, message_dict=message_dict)
-
-
-
-@app.route("/listings/<listing_id>")
-def listing_profile(listing_id):
-    """query for listing info to display"""
-
-    users = User.query.all()
-    listing = Listing.query.get(listing_id)
-    primary_lister = {}
-    lister = False
-    am_primary = False
-    favorite = False
-    friends = []
-    mutuals = []
-    avail_date = "{}/{}/{}".format(listing.avail_as_of.month, listing.avail_as_of.day, listing.avail_as_of.year)
-    primary = User.query.get(listing.primary_lister)
-    if primary not in listing.users:
-        photo = primary.photo
-        primary_lister = {"id": primary.user_id, 
-                        "photo": photo}
-
-    if session.get("current_user"):
-        me = User.query.get(session["current_user"])
-        if listing in me.favorites:
-            favorite = True
-        if me in listing.users: 
-            lister = True
-        if me.user_id == listing.primary_lister:
-            am_primary = True
-        else: 
-            friends = functions.friends_in_listing(me, listing)
-            mutuals = functions.mutual_friends_in_listing(me, listing)
-
-    return render_template("listing_profile.html", listing=listing, avail_date=avail_date, users=users, lister=lister, am_primary=am_primary, primary_lister=primary_lister, friends=friends, mutuals=mutuals, favorite=favorite)
-
-
-@app.route("/add_message", methods=["POST"])
-def create_message():
-    """add a message between two users"""
-
-    receiver_id = request.form.get("user_id")
-    me = session["current_user"]
-    content = request.form.get("message")
-    print "receiver"
-    print receiver_id
-    functions.add_message(me, receiver_id, content)
-
-    return redirect("/users/{}".format(me))
-
-
-@app.route("/delete_convo", methods=["POST"])
-def delete_convo():
-    """delete message thread between two users"""
-
-    user_id = request.form.get("user_id")
-    me = session["current_user"]
-    
-    functions.delete_messages(me, user_id)
-
-    return redirect("/users/{}".format(me))
-
-
 @app.route("/friend_user", methods=["POST"])
 def friend_user():
     """add user as friends"""
@@ -524,45 +705,6 @@ def listing_active():
     return jsonify(info)
 
 
-# @app.route("/deactivate_listing", methods=["POST"])
-# def deactivate(): 
-#     """take listing off market"""
-
-#     listing_id = request.form.get("listing_id")
-#     listing = Listing.query.get(listing_id)
-#     listing.active = False
-#     db.session.commit()
-
-#     return redirect("/listings/{}".format(listing_id))
-
-
-# @app.route("/reactivate_listing", methods=["POST"])
-# def reactivate(): 
-#     """put listing on market with new dates"""
-
-#     listing_id = request.form.get("listing_id")
-#     avail_as_of = request.form.get("avail")
-#     listing = Listing.query.get(listing_id)
-#     listing.active = True
-#     listing.avail_as_of = avail_as_of
-#     db.session.commit()
-
-#     return redirect("/listings/{}".format(listing_id))
-
-
-@app.route("/change_primary", methods=["POST"])
-def change_primary(): 
-    """change primary lister"""
-
-    listing_id = request.form.get("listing_id")
-    user_id = request.form.get("new_primary")
-    listing = Listing.query.get(listing_id)
-    listing.primary_lister = user_id
-    db.session.commit()
-
-    return redirect("/listings/{}".format(listing_id))
-
-
 @app.route("/deactivate_user", methods=["POST"])
 def deactivate_user(): 
     """take user off market"""
@@ -588,196 +730,6 @@ def reactivate_user():
     "active": user.looking_for_apt
     }
     return jsonify(info);
-
-
-@app.route("/add_roommate", methods=["POST"])
-def add_roommate(): 
-    """add a roommate to current listing"""
-
-    listing_id = request.form.get("listing_id")
-    user_id = request.form.get("roomie")
-
-    functions.add_UserListing(user_id, listing_id)
-
-    return redirect("/listings/{}".format(listing_id))
-
-
-@app.route("/remove_roommate", methods=["POST"])
-def remove_roommate(): 
-    """remove a roommate from current listing"""
-
-    listing_id = request.form.get("listing_id")
-    user_id = request.form.get("roomie")
-    
-    functions.delete_UserListing(user_id, listing_id)
-
-    return redirect("/listings/{}".format(listing_id))
-
-
-@app.route("/remove_self_as_roommate", methods=["POST"])
-def remove_self_as_roommate(): 
-    """delete yourself as a roommate from current listing"""
-
-    listing_id = request.form.get("listing_id")
-    user_id = session["current_user"]
-
-    functions.delete_UserListing(user_id, listing_id)
-
-    return redirect("/listings/{}".format(listing_id))
-
-
-@app.route("/listings_by_state")
-def listings_by_state():
-    """display all listings sorted by state"""
-
-    listings_by_state = {}
-
-
-    for state in STATES: 
-        listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
-        listings = [listing for listing in listings if listing.active]
-        listings_by_state[state] = listings
-    
-    return render_template("/listings_by_state.html", STATES=STATES, listings_by_state=listings_by_state)
-
-
-@app.route("/users_by_state")
-def users_by_state():
-    """display all users sorted by state"""
-
-    users_by_state = {}
-
-    for state in STATES: 
-        users = User.query.filter(User.state == state).all()
-        users = [user for user in users if user.looking_for_apt]
-        users_by_state[state] = users
-    
-    return render_template("/users_by_state.html", STATES=STATES, users_by_state=users_by_state)
-
-
-
-@app.route("/listings_by_friends_in_state")
-def listings_by_friends_in_state():
-    """display all listings by your friends in your state, sorted by neighborhood"""
-
-    if "current_user" in session: 
-        user = User.query.get(session["current_user"])
- 
-        listings = functions.get_all_listings_by_friends_of_any_degree(user)
-        listings = [listing for listing in listings if listing.active]
-        listings = [listing for listing in listings if not functions.user_in_listing(listing)]
-        state = user.state
-        neighborhoods = set()
-        for listing in listings: 
-            if state in listing.address: 
-                neighborhoods.add(listing.neighborhood)
-
-        listing_names = [listing.listing_id for listing in listings]
-        listing_names = "|".join(listing_names)
-        print listing_names
-
-        return render_template("/listings_by_friends_in_state.html",  state=state, listings=listings, neighborhoods=neighborhoods, listing_names=listing_names)
-    else: 
-        flash("Don't forget to log in!")
-        return redirect("/")
-
-
-@app.route("/listings_info.json")
-def listing_info_json():
-    """takes a list of listing ids and returns info about them"""
-
-    listing_names = request.args.get("listing_names")
-    listing_names = listing_names.split("|")
-
-    listings = []
-    for listing_name in listing_names:
-        listing = Listing.query.get(listing_name)
-        listings.append((listing.address, listing.listing_id))
-
-    info = {"addresses" : listings}
-
-    return jsonify(info)
-
-
-@app.route("/user_friends_in_state")
-def user_friends_in_state():
-    """display all users friends with your friends in your state"""
-
-    if "current_user" in session: 
-        user = User.query.get(session["current_user"])
-        friends = functions.get_all_friends_of_any_degree(user)
-
-        state = user.state
-
-        users = [friend for friend in friends if friend.state == state]
-        users = [user for user in users if user.looking_for_apt]
-
-        return render_template("/users_w_friends_in_state.html", state=state, users=users)
-    else: 
-        flash("Don't forget to log in!")
-        return redirect("/")
-
-
-@app.route("/update_state", methods=["POST"])
-def update_state():
-    """update user's state"""
-
-    state = request.form.get("state")
-    user = User.query.get(session["current_user"])
-    if user: 
-        user.state = state
-        db.session.commit()
-
-    return redirect("/")
-
-
-@app.route("/update_state.json", methods=["POST"])
-def update_state_json():
-    """update user's state"""
-
-    state = request.form.get("state")
-    user = User.query.get(session["current_user"])
-    user.state = state
-    db.session.commit()
-    neighborhoods = functions.get_neighborhoods(state)
-    neighborhoods = list(neighborhoods)
-
-    info = {"state": state, 
-            "neighborhoods": neighborhoods}
-
-    return jsonify(info)
-    
-
-@app.route("/login", methods=['POST'])
-def login():
-    """Log In user"""
-
-    try: 
-        user_id = request.form.get("user_id")
-        password = request.form.get("password").encode('utf-8')
-        user = User.query.get(user_id)
-        hashed = user.password.encode('utf-8')
-        if password == hashed:
-            match = True
-        elif bcrypt.hashpw(password, hashed) == hashed:
-            match = True
-        if match:
-            session['current_user'] = user_id
-            flash('Successfully logged in as {}'.format(user_id))
-            return redirect("/users/{}".format(user_id))
-    except: 
-        flash("Ya gotta sign up first!")
-        return redirect("/")
-
-
-@app.route("/logout")
-def logout():
-    """Log Out user."""
-
-    del session['current_user']
-    flash('Successfully logged out')
-
-    return redirect("/")
 
 
 @app.route("/listing-info.json")
@@ -819,6 +771,44 @@ def user_info():
         "friends" : friends}
 
     return jsonify(info)
+
+
+@app.route("/listings_info.json")
+def listing_info_json():
+    """takes a list of listing ids and returns info about them"""
+
+    listing_names = request.args.get("listing_names")
+    listing_names = listing_names.split("|")
+
+    listings = []
+    for listing_name in listing_names:
+        listing = Listing.query.get(listing_name)
+        listings.append((listing.address, listing.listing_id))
+
+    info = {"addresses" : listings}
+
+    return jsonify(info)
+
+
+@app.route("/update_state.json", methods=["POST"])
+def update_state_json():
+    """update user's state"""
+
+    state = request.form.get("state")
+    user = User.query.get(session["current_user"])
+    user.state = state
+    db.session.commit()
+    neighborhoods = functions.get_neighborhoods(state)
+    neighborhoods = list(neighborhoods)
+
+    info = {"state": state, 
+            "neighborhoods": neighborhoods}
+
+    return jsonify(info)
+    
+
+
+
 
 
 if __name__ == "__main__":

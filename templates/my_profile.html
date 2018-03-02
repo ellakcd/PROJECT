@@ -1,20 +1,14 @@
 {% extends 'base.html' %}
 {% block title %} My Page {% endblock %}
 {% block content %}
-	<a href="/"> Homepage </a><br>
-	<div id="logout">
-			<form action="/logout">
-				<input type="submit" value="Log Out!"><br><br>
-			</form>
-	</div>
 
 	<h1> Mailbox </h1>
 	<div class="new_message_thread">
-		Start a Convo:<br>
+		 &#9993; Start a Convo:<br>
 		<form action="/add_message" method="POST">
 			<select name="user_id" required>
 			{% for user in all_users %}
-	  				<option value="{{ user.user_id }}">{{ user.user_id }}</option>
+	  				<option value="{{ page_user.user_id }}">{{ page_user.user_id }}</option>
 			{% endfor %}
 			</select><br>
 			<textarea maxlength="500" name="message"></textarea><br>
@@ -48,28 +42,28 @@
 
 	<div class="profile">
 		Only you can see this:<br>
-			<img src="{{ user.photo }}" class="big_photo" class="profile_picture"><br>
-			USER_NAME: {{ user.user_id }}<br>
-			EMAIL: {{ user.email }}<br>
-			BIO: {{ user.bio }}<br>
-			STATE: {{ user.state }}<br>
+			<img src="{{ page_user.photo }}" class="big_photo" class="profile_picture"><br>
+			USER_NAME: {{ page_user.user_id }}<br>
+			EMAIL: {{ page_user.email }}<br>
+			BIO: {{ page_user.bio }}<br>
+			STATE: {{ page_user.state }}<br>
 			<div id="looking_or_not">
-			LOOKING FOR APT: {{ user.looking_for_apt }}<br>
-				{% if user.looking_for_apt %}
+			LOOKING FOR APT: {{ page_user.looking_for_apt }}<br>
+				{% if page_user.looking_for_apt %}
 					<button id="deactivate"> Not Currently Looking For Apt? </button>
 				{% endif %}
-				{% if not user.looking_for_apt %}
+				{% if not page_user.looking_for_apt %}
 					<button id="activate"> Looking Once More! </button>
 				{% endif %}
 			</div>
 			Answers: <br>
-			{% for answer in user.answers %}
+			{% for answer in page_user.answers %}
 			{{  answer.question.question }}: {{ answer.answer }}<br>
 			{% endfor %}<br>
 	</div>		
 		<div id="my-favorites">
 			&hearts; Favorites: <br> 
-			{% for listing in user.favorites %}
+			{% for listing in page_user.favorites %}
 					<a href="/listings/{{ listing.listing_id }}">
 							<img src="{{ listing.main_photo }}">
 					</a>
@@ -78,7 +72,7 @@
 
 	<div id="my-listings">
 		Listings: <br> 
-			{% for listing in user.listings %}
+			{% for listing in page_user.listings %}
 					<a href="/listings/{{ listing.listing_id }}">
 							<img src="{{ listing.main_photo }}"> 
 					</a>
@@ -93,9 +87,8 @@
 
 
 
-	{% if session.get("current_user") == user.user_id %} 
-		<a href="/add_listing"> Add A Listing </a>
-	{% endif %}
+	<a href="/add_listing"> Add A Listing </a>
+
 		
 	<script src="/static/js/mailbox.js"></script>
 	<script src="/static/js/my_profile.js"></script>
