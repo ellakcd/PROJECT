@@ -2,7 +2,10 @@
 {% block title %}{{ listing.listing_id }}{% endblock %}
 {% block content %}
 
+<h1>{{ listing. address }}</h1><br><br>
+
 {% if session.get("current_user") and not lister and not am_primary %}
+
 <div id="favorite_or_not">
 	{% if not favorite %}
 		<button id="favorite" data-listing-id="{{ listing.listing_id }}"> &#9825; Favorite This Listing &#9825;  </button>
@@ -10,7 +13,7 @@
 	{% if favorite %}
 		<button id="unfavorite" data-listing-id="{{ listing.listing_id }}"> Unfavorite This Listing </button>
 	{% endif %}
-</div>
+</div><br><br>
 	<div id="chat_form"> 
 		<form action="/add_message" method="POST">
 			<textarea maxlength="500" name="message">
@@ -20,13 +23,13 @@
 		</form>
 	</div>
 
-{% if friends %}
+{% if friends %}<br><br>
 	You have friends here!<br><br>
 	{% for friend in friends %}
 	<div class="friends_in_house">
 		{{ friend.user_id }}<br>
 		<a href="/users/{{ friend.user_id }}">
-				<img src="{{ friend.photo }}" class="small_photo"><br>
+				<img src="{{ friend.photo }}" class="tiny_photo"><br>
 		</a><br>
 	</div>
 	{% endfor %}
@@ -95,7 +98,6 @@
 {% endif %}
 <br><br>
 
-<h1>{{ listing. address }}</h1>
 <div id="map" data-address="{{ listing.address }}"></div><br>
 <div class="listing_photos">
 	<img src="{{ listing.main_photo }}" class="big_photo"><br>
@@ -124,14 +126,18 @@
 	{{ listing.description }}<br>
 	Bedrooms: {{ listing.bedrooms }}<br>
 	Bathrooms: {{ listing.bathrooms }}<br>
-	Laundry: {{ listing.laundry }}<br>
-	Pets: {{ listing.pets }} <br><br>
+	{% if listing.laundry %}
+		Laundry<br>
+	{% endif %}
+	{% if listing.pets %}
+	Pets Allowed! <br>
+	{% endif %} <br>
 </div><br>
 
 {% if primary_lister %}
 	Primary Lister <br> (not living on premises):<br>
 		<div class="roommates">
-			<a href="/users/{{ primary_lister.id }}" class="user" data-user-id="{{ primary_lister.id }}"><br>
+			<a href="/users/{{ primary_lister.id }}"><br>
 						<img src="{{ primary_lister.photo }}" class="small_photo"><br>
 						{{ primary_lister.id }}
 			</a>
@@ -141,7 +147,7 @@ Roommates:
 	{% for user in listing.users %}<br>
 		<div class="roommates">
 			<a href="/users/{{ user.user_id }}" class="user" data-user-id="{{ user.user_id }}"><br>
-					<img src="{{ user.photo }}" class="small_photo"><br>
+					<img src="{{ user.photo }}" class="medium_photo"><br>
 					{{ user.user_id }}
 					{% if user.user_id == listing.primary_lister %}
 					<br>(Primary Lister)

@@ -205,7 +205,7 @@ function showNewState(results) {
 			let neighborhood = results["neighborhoods"][i];
 			htmlToAdd += "<input type='checkbox' name='neighborhoods' class='hood' value='"+neighborhood+"'>"+neighborhood;
 		}
-		htmlToAdd += " <input type='submit' value='Filter By Neighborhood'></form>"
+		htmlToAdd += " <input type='submit' class='round_search_button btn' value='&#10039;'></form>"
 		$("#neighborhoods_in_state").html(htmlToAdd);
 		$("#neighborhood_filter").on("submit", filterByNeighborhood);
 	}

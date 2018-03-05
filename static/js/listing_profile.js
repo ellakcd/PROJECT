@@ -52,12 +52,12 @@ function showActive(results) {
 	let listingId = results["listing_id"];
 	if (results["listed"] === true) {
 		let availDate = results["avail_date"];
-		$("#listed_or_not").html("<button id='unlist'> Take This Listing off The Market </button>");
+		$("#listed_or_not").html("<button id='unlist' class='search_button btn'> Take This Listing off The Market </button>");
 		$("#unlist").on("click", unlistListing);
 		$("#unlist").data("listing-id", listingId);
 		$("#show_avail_dates").html("Avail as Of: " + availDate);
 	} else {
-		$("#listed_or_not").html("<form id='relist' data-listing-id='"+listingId+"'>When is it avail?:<br><input type='date' id='avail'><br><input type='submit' value='Put This Listing Back on the Market'><br></form>");
+		$("#listed_or_not").html("<form id='relist' data-listing-id='"+listingId+"'>When is it avail?:<br><input type='date' id='avail'><br><input type='submit' value='Put This Listing Back on the Market' class='search_button btn'><br></form>");
 		$("#relist").on("submit", relistListing);
 		$("#relist").data("listing-id", listingId);
 		$("#show_avail_dates").html("Listing not Currently Available");

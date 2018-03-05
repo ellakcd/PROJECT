@@ -2,6 +2,7 @@
 {% block title %}{{page_user.user_id}}{% endblock %}
 {% block content %}
 
+<h1> {{ page_user.user_id }} </h1>
 {% if session.get("current_user") %}
 
 	<div id="chat_form"> <br>
@@ -11,7 +12,7 @@
 			<input type="hidden" name="user_id" value="{{ page_user.user_id }}">
 			<input type="submit" value="Send {{ page_user.user_id }} a Message">
 		</form><br>
-	</div>
+	</div><br><br>
 {% endif %}
 <div id="friends_or_not">
 	{% if session.get("current_user") and not are_friends %}
@@ -27,13 +28,12 @@
 	{% endif %}
 </div>
 	<div class="profile">
-	<h1> USER_NAME: {{ page_user.user_id }} </h1>
 	<img src="{{ page_user.photo }}" class="big_photo">
-	<p> BIO: {{ page_user.bio }} </p>
+	<p><br> BIO: {{ page_user.bio }} </p>
 	STATE: {{ page_user.state }}<br>
 	LOOKING FOR APT?: {{ page_user.looking_for_apt }}<br>
 	{% if common_answers %}
-		You both said: <br>
+		<br>You both said: <br>
 				{% for answer in common_answers %}
 					{{ answer }}<br>
 				{% endfor %}

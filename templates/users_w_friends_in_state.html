@@ -4,12 +4,12 @@
 
 
 {% if users %}
-	{{ state }}: <br>
+	<h1>{{ state }}:</h1> <br>
 	{% for user in users %}
 			<a href="/users/{{ user.user_id }}" class="user" data-user-id="{{ user.user_id }}">
-				<img src="{{ user.photo }}"><br>
+				<img src="{{ user.photo }}" class="medium_photo"><br>
 				{{ user.user_id }}
- 			</a><br>  
+ 			</a><br><br>  
 	{% endfor %}
 {% else %}
 	Sorry!  None of your friends have friends in {{ state }}

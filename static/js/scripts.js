@@ -10,14 +10,14 @@ function showListingInfo(results) {
   let mutuals = results["mutuals"];
 
   if (friends.length > 0) {
-      $(".popup").append("<br> Friends:");
+      $(".popup").append("<br><br> Friends:");
       for (let i=0; i < friends.length; i++){
           let friend = friends[i]
           $(".popup").append("<br>" + friend[0] + "<br>");
           $(".popup").append($('<img>',{id:'friend-pic', class: "tiny_photo", src:friend[1]}));
   }} else {
           if (mutuals.length > 0) {
-              $(".popup").append("<br> Mutual Friends:");
+              $(".popup").append("<br><br> Mutual Friends:");
               for (let i=0; i < mutuals.length; i++){
                       let mutual = mutuals[i]
                       $(".popup").append("<br>" + mutual[0] + "<br>");
@@ -57,7 +57,7 @@ function showUserInfo(results) {
   } else {
       $(".popup").append("None, alas...<br>");
   }
-  $(".popup").append("Mutual Friends:")
+  $(".popup").append("<br>Mutual Friends:")
   let friends = results["friends"]
   if (friends.length > 0) {
     for (let i=0; i < friends.length; i++){

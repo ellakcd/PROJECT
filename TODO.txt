@@ -17,15 +17,11 @@ User has protected password
 
 
 TODO: 
-payment / esign / FB
 
-in state listing list, highlite user's state?
+FONT
+border patterns
 
-activate/deactivate listing in place
-add age? - calendar math
-scroll boxes
 
-Thurs: TESTS
 Fri: re-freeze requirements / get secrets down 
 
 

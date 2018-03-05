@@ -1,5 +1,8 @@
 body {
-	background-color: blue;
+	background-color: #E6E6FA;
+	text-align: center;
+	color: black;
+	font-family: 'Josefin Sans', sans-serif;
 }
 
 .big_photo {
@@ -22,12 +25,13 @@ body {
 	height: 100px;
 	width: 100px;
 	display: inline-block;
+	border-radius: 25px;
 }
 
 .tiny_photo {
 	border-radius: 50%;
-	height: 50px;
-	width: 50px;
+	height: 70px;
+	width: 70px;
 	border: 2px solid black;
 }
 
@@ -53,6 +57,7 @@ img {
   	margin-right: auto;
 }
 
+
 .popup {
 	/*position: absolute;*/
 	margin-left: auto;
@@ -63,6 +68,12 @@ img {
 /*	top: 50%;*/
 	visibility: hidden;
 
+}
+
+.corner {
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 #popup {
@@ -81,12 +92,20 @@ a {
 .profile {
 	border: 10px solid black;
 	text-align: center;
+	border-radius: 25px;
+	width: 60%;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
+/*	border: 5px solid #8B008B;
+	background: #B19CD9;*/
 }
 
 .friends_in_house {
 	display: inline-block;
 	text-align: center;
 }
+
 
 .roommates {
 	display: inline-block;
@@ -99,13 +118,13 @@ a {
 	width: 25%;
 	margin-left: auto;
 	margin-right: auto;
-	background: grey;
+	background: #66B380;
 	text-align: center;
 	padding: 10px;
 }
 
 #search_form {
-	border: 3px solid black;
+	border: 5px solid #8B008B;
 	border-radius: 25px;
 	margin: 5px;
 	margin-left: auto;
@@ -116,19 +135,43 @@ a {
 	width: 60%;
 }
 
+.registration_form {
+	border: 5px solid #8B008B;
+	border-radius: 25px;
+	margin: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	background: #B19CD9;
+	text-align: center;
+	padding: 15px;
+	width: 60%;
+}
+
+.listing_form {
+	border: 5px solid #8B008B;
+	border-radius: 25px;
+	margin: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	background: #B19CD9;
+	text-align: center;
+	padding: 15px;
+	width: 60%;
+}
 
 .message_thread {
 	display: inline-block;
 	border: 5px solid black;
-	padding: 10px;
-	border-radius: 25px;
+	padding: 25px 5px;
+	border-radius: 10px;
 	text-align: center;
 	vertical-align: top;
+	position: relative;
 }
 
 .new_message_thread {
 	display: inline-block;
-	border: 5px solid purple;
+	border: 5px solid #8B008B;
 	padding: 10px;
 	border-radius: 25px;
 	text-align: center;
@@ -136,18 +179,21 @@ a {
 }
 
 .listing_description {
+	margin: 15px;
 	border: 10px solid black;
 	text-align: center;
+	border-radius: 25px;
+	width: 60%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #results {
 	text-align: center;
 }
 
-body {
-	text-align: center;
-	color: black;
-	font: arial;
+.photo_input {
+	margin: auto;
 }
 
 .conversation {
@@ -159,24 +205,43 @@ body {
 
 .search_button {
 	border-radius: 25%;
-	border: 1px solid black;
+	border: 3px solid black;
 	background-color: #66B380;
 }
 
 .round_search_button {
 	border-radius: 50%;
-	border: 1px solid black;
+	border: 3px solid black;
 	background-color: #66B380;
 }
 
 .flashes {
-	background-color: red;
+	margin: 10px;
+	background-color: black;
+	color: white;
+	border: 2px solid black;
+	border-radius: 10px;
+	height: 30px;
 }
 
 .navbar {
 	background: #B19CD9;
 	color: black;
+	border: 5px solid #8B008B;
 }
+
+.dropdown-menu {
+	background: #B19CD9;
+	color: black;
+}
+
+.modal-footer {
+	text-align: center;
+}
+/*.dropdown {
+	background: #B19CD9;
+	color: black;
+}*/
 /*button {
 	background-color: black;
 	color: blue;

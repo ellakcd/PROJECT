@@ -3,10 +3,10 @@
 {% block content %}
 
 {% for state in users_by_state %}
-	{{ state }}: <br> 
+	<h1>{{ state }}:</h1> <br> 
 	{% for user in users_by_state[state] %}
 		<a href="/users/{{ user.user_id }}">{{ user.user_id }}<br>
-			<img src="{{ user.photo }}" class="small_photo">
+			<img src="{{ user.photo }}" class="medium_photo">
 		</a> <br> 
 	{% endfor %}
 {% endfor %}

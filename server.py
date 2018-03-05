@@ -29,6 +29,9 @@ def index():
     """Homepage"""
 
     user = None
+    users = User.query.all()
+    listings = Listing.query.all()
+    questions = Question.query.all()
     state = ""
     if "current_user" in session: 
         user = User.query.get(session["current_user"])
@@ -37,29 +40,29 @@ def index():
     neighborhoods = functions.get_neighborhoods(state)
     filters = ["price_cap", "laundry", "friends", "pets", "roommates", "neighborhoods", "start_dates", "duration"]
 
-    return render_template("homepage.html", neighborhoods=neighborhoods, user=user, filters=filters, STATES=STATES, months=MONTHS, state=state)
+    return render_template("homepage.html", neighborhoods=neighborhoods, users=users, user=user, listings=listings, questions=questions, filters=filters, STATES=STATES, months=MONTHS, state=state)
 
 
-@app.route("/register")
-def registration_page():
-    """Page to input info and friends"""
+# @app.route("/register")
+# def registration_page():
+#     """Page to input info and friends"""
 
-    users = User.query.all()
-    listings = Listing.query.all()
-    questions = Question.query.all()
-    user = None
+#     users = User.query.all()
+#     listings = Listing.query.all()
+#     questions = Question.query.all()
+#     user = None
     
-    return render_template("registration.html", users=users, STATES=STATES, user=user, listings=listings, questions=questions)
+#     return render_template("registration.html", users=users, STATES=STATES, user=user, listings=listings, questions=questions)
 
 
-@app.route("/add_listing")
-def listing_page():
-    """Page to input info about a home"""
+# @app.route("/add_listing")
+# def listing_page():
+#     """Page to input info about a home"""
 
-    users = User.query.all()
-    user = User.query.get(session["current_user"])
+#     users = User.query.all()
+#     user = User.query.get(session["current_user"])
 
-    return render_template("create_listing.html", users=users, user=user, STATES=STATES)
+#     return render_template("create_listing.html", users=users, user=user, STATES=STATES)
 
 
 @app.route("/users/<user_id>")
@@ -90,7 +93,7 @@ def user_profile(user_id):
             all_users = [user_not_partner for user_not_partner in all_users if user_not_partner.user_id not in message_dict]
             print message_dict
             print all_users
-            return render_template("my_profile.html", page_user=me, user=me, all_users=all_users, properties=properties, message_dict=message_dict)
+            return render_template("my_profile.html", page_user=me, user=me, all_users=all_users, properties=properties, message_dict=message_dict, STATES=STATES)
 
 
     return render_template("user_profile.html", page_user=user, user=me, properties=properties, common_answers=common_answers, my_page=my_page, are_friends=are_friends, mutuals=mutuals, message_dict=message_dict)
@@ -143,7 +146,8 @@ def listings_by_state():
     for state in STATES: 
         listings = Listing.query.filter(Listing.address.like('%{}%'.format(state))).all()
         listings = [listing for listing in listings if listing.active]
-        listings_by_state[state] = listings
+        if listings: 
+            listings_by_state[state] = listings
     
     return render_template("/listings_by_state.html", STATES=STATES, user=user, listings_by_state=listings_by_state)
 
@@ -159,7 +163,8 @@ def users_by_state():
     for state in STATES: 
         users = User.query.filter(User.state == state).all()
         users = [user for user in users if user.looking_for_apt]
-        users_by_state[state] = users
+        if users: 
+            users_by_state[state] = users
     
     return render_template("/users_by_state.html", STATES=STATES, user=user, users_by_state=users_by_state)
 

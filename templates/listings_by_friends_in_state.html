@@ -4,7 +4,7 @@
 
 
 {% if neighborhoods %}
-	{{ state }}: <br>
+	<h1>{{ state }}:</h1> <br>
 	<div id="main_map" data-listing-names="{{ listing_names }}"></div>
 	{% for neighborhood in neighborhoods %}
 				<h1> {{ neighborhood }} </h1>
@@ -13,9 +13,9 @@
 						<!-- <div class="listing_container" data-listing-id="{{ listing.listing_id }}">
 						<div style="display: inline-block;"> -->
 							<a href="/listings/{{ listing.listing_id }}" class="listing" data-listing-id="{{ listing.listing_id }}">
-								<img src="{{ listing.main_photo }}"><br>
+								<img src="{{ listing.main_photo }}" class="medium_photo"><br>
 							{{ listing.address }}
-		 					</a><br>
+		 					</a><br><br>
 	 					<!-- </div>
 	 					</div>  -->
 					{% endif %}

@@ -2,7 +2,9 @@
 {% block title %}Homepage{% endblock %}
 {% block content %}
 
-<h1>Welcome to Roommatch</h1> <br>
+<h1>Welcome to Roommatch</h1>
+<img src="/static/images/home.jpg">
+<br><br><br>
 
 {% if session.get("current_user") %}
 	<div id="update_state">
@@ -76,8 +78,58 @@
 
 
 {% else %}
-
-	<h1><a href="/register">Create Your Profile!</a></h1>
+<div class="registration_form">
+	Not A Member?<br>
+	Tell us a little about yourself: <br><br>
+	<form action="/make_user_profile" method="POST" enctype="multipart/form-data">
+	User Name (how others will see you listed):<br>
+		<input type="text" name="user_name" required><br><br>
+	Full Name:<br>
+		<input type="text" name="full_name" required><br><br>
+	Phone Number:<br>
+		<input type="text" name="phone" required><br><br>
+	Venmo User Name:<br>
+		<input type="text" name="venmo"><br><br>
+	State: 
+		<select name="state" required>
+		{% for state in STATES %}
+	  		<option value="{{ state }}">{{ state }}</option>
+		{% endfor %}
+		</select><br><br>
+	Are you currently looking for an apartment?<br><br>
+		<input type="radio" name="looking" value="True" checked> Yes! <br>
+		<input type="radio" name="looking" value="False"> Nope. <br>
+	Quick Bio:<br>
+		<textarea maxlength="50" name="bio">
+		</textarea><br><br>
+	Profile Photo:
+		<input type="file" name="photo" required><br><br>
+	Email: <br>
+		<input type="email" name="email" required><br><br>
+	Password: <br>
+		<input type="password" name="password" required><br><br>
+	Short Answer Qs: <br> 
+		{% for question in questions %}
+		{{ question.question }}:<br> 
+			{% for answer in question.answers %}
+				<input type="radio" name="{{ question.question_id }}" value="{{ answer.answer_id }}" required> {{ answer.answer }} 
+			{% endfor %}<br><br>
+		{% endfor %}
+	Friends:<br>
+		{% for user in users %}
+		<input type="checkbox" name="friends" value="{{ user.user_id }}"> {{user.user_id}}<br>
+		<img src="{{ user.photo }}" class="tiny_photo"><br>
+		{% endfor %}
+		<br><br>
+	Add Yourself to Listings: <br>
+		{% for listing in listings %}
+		<input type="checkbox" name="listings" value="{{ listing.listing_id }}"> {{ listing.listing_id }}<br>
+		<img src="{{ listing.main_photo }}" class="tiny_photo"><br>
+		{% endfor %}
+		<br><br>
+		<input type="submit" value="Create Profile!">	
+	</form>
+</div>
 	
 {% endif %}
 

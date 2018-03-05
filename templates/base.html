@@ -9,15 +9,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js"></script>
     <link rel="stylesheet" href="../static/css/stylesheet.css">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALsH-wBDg1jGymSzRN4cIL8rTVQo87PwM"></script>
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
     <title>{% block title %} title goes here {% endblock %}</title>
 </head>
   {% with messages = get_flashed_messages() %}
       {% if messages %}
-          <ul class=flashes>
+          <div class=flashes>
             {% for message in messages %}
-                <li>{{ message }}</li>
+                {{ message }}<br>
             {% endfor %}
-          </ul>
+          </div>
       {% endif %}
   {% endwith %}
 <body>
