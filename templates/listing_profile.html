@@ -8,23 +8,23 @@
 
 <div id="favorite_or_not">
 	{% if not favorite %}
-		<button id="favorite" data-listing-id="{{ listing.listing_id }}"> &#9825; Favorite This Listing &#9825;  </button>
+		<button id="favorite" data-listing-id="{{ listing.listing_id }}" class="pink_button btn"> &#9829; Favorite This Listing &#9829;  </button>
 	{% endif %}
 	{% if favorite %}
-		<button id="unfavorite" data-listing-id="{{ listing.listing_id }}"> Unfavorite This Listing </button>
+		<button id="unfavorite" data-listing-id="{{ listing.listing_id }}" class="pink_button btn"> Unfavorite This Listing </button>
 	{% endif %}
 </div><br><br>
 	<div id="chat_form"> 
 		<form action="/add_message" method="POST">
-			<textarea maxlength="500" name="message">
+			<textarea maxlength="500" name="message" required>
 			</textarea><br>
 			<input type="hidden" name="user_id" value="{{ listing.primary_lister }}">
-			<input type="submit" value="Send Primary Lister a Message">
+			<input type="submit" value="Send Primary Lister a Message" class="purple_button btn">
 		</form>
-	</div>
+	</div><br><br>
 
 {% if friends %}<br><br>
-	You have friends here!<br><br>
+	<h2>You have friends here!</h2>
 	{% for friend in friends %}
 	<div class="friends_in_house">
 		{{ friend.user_id }}<br>
@@ -36,7 +36,7 @@
 {% endif %}
 
 {% if mutuals and not friends %}
-	There are people here who are friends of: <br><br>
+	<h2>There are people here who are friends of:</h2>
 	{% for mutual in mutuals %}
 	<div class="friends_in_house">
 		{{ mutual.user_id }}<br>
@@ -52,27 +52,24 @@
 
 
 {% if am_primary %}
-	Change primary lister to: 
+	<div class="side_by_side">
+	Change primary lister to: <br>
 	<form action="/change_primary" method="POST">
 		<select name="new_primary" required>
 		{% for user in listing.users %}
   			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
 		{% endfor %}
-		</select><br>
+		</select>
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		<input type="submit" value="Change Primary Lister"><br><br>
-	</form><br>
+		<input type="submit" class="round_search_button btn" value="&#10039;">
+	</form>
+	</div>
 {% endif %}
 
 {% if lister %}
-	<form action="/remove_self_as_roommate" method="POST">
-		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		<input type="submit" value="Remove Yourself As A Roommate"><br><br>
-	</form>
-
+	<div class="side_by_side">
 	Add A Roommate to This Listing: <br> 
 	<form action="/add_roommate" method="POST">
-		User Name: <br>
 		<select name="roomie" required>
 		{% for user in users %}
 			{% if user not in listing.users %}
@@ -80,32 +77,38 @@
 			{% endif %}
 		{% endfor %}
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		<input type="submit" value="Add Roommate">
+		<input type="submit" class="round_search_button btn" value="&#10039;">
 		</select>
 	</form>
-
+	</div>
+	<div class="side_by_side">
 	Remove a Roommate from This Listing: <br> 
 	<form action="/remove_roommate" method="POST">
-		User Name: <br>
 		<select name="roomie" required>
 		{% for user in listing.users %}
   			<option value="{{ user.user_id }}">{{ user.user_id }}</option>
 		{% endfor %}
 		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
-		<input type="submit" value="Remove Roommate">
+		<input type="submit" class="round_search_button btn" value="&#10039;">
 		</select>
 	</form>
+	</div><br><br>
+	<form action="/remove_self_as_roommate" method="POST">
+		<input type="hidden" name="listing_id" value="{{ listing.listing_id }}">
+		<input type="submit" value="Remove Yourself As A Roommate" class="search_button btn"><br><br>
+	</form>
 {% endif %}
+
 <br><br>
 
 <div id="map" data-address="{{ listing.address }}"></div><br>
 <div class="listing_photos">
-	<img src="{{ listing.main_photo }}" class="big_photo"><br>
+	<img src="{{ listing.main_photo }}" class="big_photo profile_pic"><br>
 </div>
 
 {% for photo in listing.photos %}
 	<div class="listing_photos">
-		<img src="{{ photo.photo }}" class="big_photo"><br>
+		<img src="{{ photo.photo }}" class="big_photo profile_pic"><br>
 	</div>
 {% endfor %}<br>
 <div class="listing_description"><br>
@@ -146,7 +149,7 @@
 Roommates: 
 	{% for user in listing.users %}<br>
 		<div class="roommates">
-			<a href="/users/{{ user.user_id }}" class="user" data-user-id="{{ user.user_id }}"><br>
+			<a href="/users/{{ user.user_id }}" class="user side_by_side" data-user-id="{{ user.user_id }}"><br>
 					<img src="{{ user.photo }}" class="medium_photo"><br>
 					{{ user.user_id }}
 					{% if user.user_id == listing.primary_lister %}

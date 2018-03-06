@@ -55,7 +55,7 @@ function showUserInfo(results) {
           $(".popup").append(answer + "<br>");
       }
   } else {
-      $(".popup").append("None, alas...<br>");
+      $(".popup").append(" None, alas...<br>");
   }
   $(".popup").append("<br>Mutual Friends:")
   let friends = results["friends"]
@@ -66,7 +66,7 @@ function showUserInfo(results) {
         $(".popup").append($('<img>',{id:'friend-pic', class: "tiny_photo", src:friend[1]}))
       }
   } else {
-    $(".popup").append("None, alas...<br>");
+    $(".popup").append(" None, alas...<br>");
   }
     $(".popup").attr("id", "popup");
 }

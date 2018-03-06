@@ -2,22 +2,12 @@
 {% block title %}Homepage{% endblock %}
 {% block content %}
 
-<h1>Welcome to Roommatch</h1>
+<!-- <h1>Welcome to Roommatch</h1>
 <img src="/static/images/home.jpg">
-<br><br><br>
+<br><br><br> -->
 
 {% if session.get("current_user") %}
-	<div id="update_state">
-		<form action="/update_state" id="update_state" method="POST">
-			Update Your State:<br>
-			<select name="state" id="state" required>
-				{% for state in STATES %}
-	  				<option value="{{ state }}">{{ state }}</option>
-				{% endfor %}
-			</select>
-			<input type="submit" class="round_search_button btn" value="&#127759;">
-		</form>
-	</div><br><br><br>
+	<br><br><br>
 	<div id="search_form"><br>
 		<div id="neighborhoods_in_state">
 		{% if neighborhoods %}
@@ -72,7 +62,17 @@
 		<div id="remove_filters">
 		</div>
 	</div>
-
+	<div id="update_state">
+		<form action="/update_state" id="update_state" method="POST">
+			<h3>Update Your State:</h3>
+			<select name="state" id="state" required>
+				{% for state in STATES %}
+	  				<option value="{{ state }}">{{ state }}</option>
+				{% endfor %}
+			</select>
+			<input type="submit" class="round_search_button btn" value="&#127759;">
+		</form>
+	</div><br>
 	<br><br><div id="results"></div>
 
 
@@ -98,7 +98,7 @@
 		</select><br><br>
 	Are you currently looking for an apartment?<br><br>
 		<input type="radio" name="looking" value="True" checked> Yes! <br>
-		<input type="radio" name="looking" value="False"> Nope. <br>
+		<input type="radio" name="looking" value="False"> Nope. <br><br>
 	Quick Bio:<br>
 		<textarea maxlength="50" name="bio">
 		</textarea><br><br>
@@ -117,14 +117,16 @@
 		{% endfor %}
 	Friends:<br>
 		{% for user in users %}
-		<input type="checkbox" name="friends" value="{{ user.user_id }}"> {{user.user_id}}<br>
+		<input type="checkbox" name="friends" value="{{ user.user_id }}">
 		<img src="{{ user.photo }}" class="tiny_photo"><br>
+		{{user.user_id}}<br>
 		{% endfor %}
 		<br><br>
 	Add Yourself to Listings: <br>
 		{% for listing in listings %}
-		<input type="checkbox" name="listings" value="{{ listing.listing_id }}"> {{ listing.listing_id }}<br>
+		<input type="checkbox" name="listings" value="{{ listing.listing_id }}">
 		<img src="{{ listing.main_photo }}" class="tiny_photo"><br>
+		{{ listing.listing_id }}<br>
 		{% endfor %}
 		<br><br>
 		<input type="submit" value="Create Profile!">	

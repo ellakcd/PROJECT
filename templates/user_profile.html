@@ -8,9 +8,9 @@
 	<div id="chat_form"> <br>
 		<form action="/add_message" method="POST">
 			<textarea maxlength="500" name="message">
-			</textarea><br>
+			</textarea><br><br>
 			<input type="hidden" name="user_id" value="{{ page_user.user_id }}">
-			<input type="submit" value="Send {{ page_user.user_id }} a Message">
+			<input type="submit" value="Send {{ page_user.user_id }} a Message" class="purple_button btn">
 		</form><br>
 	</div><br><br>
 {% endif %}
@@ -28,21 +28,21 @@
 	{% endif %}
 </div>
 	<div class="profile">
-	<img src="{{ page_user.photo }}" class="big_photo">
-	<p><br> BIO: {{ page_user.bio }} </p>
-	STATE: {{ page_user.state }}<br>
-	LOOKING FOR APT?: {{ page_user.looking_for_apt }}<br>
-	{% if common_answers %}
-		<br>You both said: <br>
-				{% for answer in common_answers %}
-					{{ answer }}<br>
-				{% endfor %}
-	{% endif %}<br>
+		<img src="{{ page_user.photo }}" class="big_photo profile_pic">
+		<p><br> BIO: {{ page_user.bio }} </p>
+		STATE: {{ page_user.state }}<br>
+		LOOKING FOR APT?: {{ page_user.looking_for_apt }}<br>
+		{% if common_answers %}
+			<br>You both said: <br>
+					{% for answer in common_answers %}
+						{{ answer }}<br>
+					{% endfor %}
+		{% endif %}<br>
 
-	Answers: <br>
-	{% for answer in page_user.answers %}
-		{{  answer.question.question }}: {{ answer.answer }}<br>
-	{% endfor %}<br>
+		Answers: <br>
+		{% for answer in page_user.answers %}
+			{{  answer.question.question }}: {{ answer.answer }}<br>
+		{% endfor %}<br>
 	</div>
 
 
@@ -50,17 +50,19 @@
 {% if page_user.venmo %}
 	<a href="https://www.venmo.com/{{page_user.venmo}}">Send {{ page_user.user_id }} rent<br><img src = "../static/images/venmo.png"></a><br>
 {% endif %}
-Listings: <br> 
+<h1>Listings:</h1> <br>
 	{% for listing in page_user.listings %}
-			<a href="/listings/{{ listing.listing_id }}">
-					<img src="{{ listing.main_photo }}">
+			<a href="/listings/{{ listing.listing_id }}" class="side_by_side">
+					<img src="{{ listing.main_photo }}" class="medium_photo"><br><br>
+					{{ listing.address }}<br>
 			</a>
-	{% endfor %} <br>
+	{% endfor %} <br><br>
 {% if properties %}
-	Listings where {{ page_user.user_id }} does not live on premises:<br>
+	<h1>Listings where {{ page_user.user_id }} does not live on premises:</h1><br>
 		{% for property in properties %}
-				<a href="/listings/{{ property.listing_id }}">
-						<img src="{{ property.main_photo }}">
+				<a href="/listings/{{ property.listing_id }}" class="side_by_side">
+						<img src="{{ property.main_photo }}" class="medium_photo"><br><br>
+						{{ property.address }}<br>
 				</a>
 		{% endfor %}
 {% endif %}

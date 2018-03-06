@@ -176,15 +176,15 @@ def listings_by_friends_in_state():
 
     if "current_user" in session: 
         user = User.query.get(session["current_user"])
- 
+        state = user.state
         listings = functions.get_all_listings_by_friends_of_any_degree(user)
         listings = [listing for listing in listings if listing.active]
         listings = [listing for listing in listings if not functions.user_in_listing(listing)]
-        state = user.state
+        listings = [listing for listing in listings if state in listing.address]
+        
         neighborhoods = set()
         for listing in listings: 
-            if state in listing.address: 
-                neighborhoods.add(listing.neighborhood)
+            neighborhoods.add(listing.neighborhood)
 
         listing_names = [listing.listing_id for listing in listings]
         listing_names = "|".join(listing_names)

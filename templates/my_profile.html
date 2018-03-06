@@ -126,7 +126,6 @@
 		</div>
 
 	<div class="profile">
-		Only you can see this:<br>
 			<img src="{{ page_user.photo }}" class="big_photo" class="profile_picture"><br>
 			USER_NAME: {{ page_user.user_id }}<br>
 			EMAIL: {{ page_user.email }}<br>
@@ -147,28 +146,29 @@
 			{% endfor %}<br>
 	</div>		
 		<div id="my-favorites">
-			<br><br> &hearts; Favorites: <br> 
+			<br><br><h1>&hearts; Favorites: </h1>
 			{% for listing in page_user.favorites %}
-					<a href="/listings/{{ listing.listing_id }}">
-							<img src="{{ listing.main_photo }}" class="medium_photo"><br>
+					<a href="/listings/{{ listing.listing_id }}" class="side_by_side">
+							<img src="{{ listing.main_photo }}" class="medium_photo"><br><br>
 							{{ listing.address }}<br>
 					</a>
 			{% endfor %}
-		</div>
+		</div><br>
 
 	<div id="my-listings">
-		<br><br>Listings: <br> 
+		<br><h1>Listings: </h1> 
 			{% for listing in page_user.listings %}
-					<a href="/listings/{{ listing.listing_id }}">
-							<img src="{{ listing.main_photo }}" class="medium_photo"><br>
+					<a href="/listings/{{ listing.listing_id }}" class="side_by_side">
+							<img src="{{ listing.main_photo }}" class="medium_photo"><br><br>
 							{{ listing.address }}<br>
 							({{ listing.listing_id }})	 
 					</a>
 			{% endfor %}
 
 			{% for property in properties %}
-					<a href="/listings/{{ property.listing_id }}">
-							<img src="{{ property.main_photo }}" class="medium_photo">
+					<a href="/listings/{{ property.listing_id }}" class="side_by_side">
+							<img src="{{ property.main_photo }}" class="medium_photo"><br><br>
+							{{ property.address }}<br>
 					</a>
 			{% endfor %}
 	</div><br><br><br>

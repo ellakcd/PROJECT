@@ -2,11 +2,11 @@ function showProfile(results) {
 	console.log(results["favorite"]);
 	let listingId = results["listing_id"];
 	if (results["favorite"] === true) {
-		$("#favorite_or_not").html("<button id='unfavorite'> Unfavorite This Listing </button>");
+		$("#favorite_or_not").html("<button id='unfavorite' class='pink_button btn'> Unfavorite This Listing </button>");
 		$("#unfavorite").on("click", unfavoriteListing);
 		$("#unfavorite").data("listing-id", listingId);
 	} else {
-		$("#favorite_or_not").html("<button id='favorite'> &#9825; Favorite This Listing &#9825; </button>");
+		$("#favorite_or_not").html("<button id='favorite' class='pink_button btn'> &#9829; Favorite This Listing &#9829; </button>");
 		$("#favorite").on("click", favoriteListing);
 		$("#favorite").data("listing-id", listingId);
 	}
