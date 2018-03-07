@@ -23,7 +23,7 @@
 		</form>
 	</div><br><br>
 
-{% if friends %}<br><br>
+{% if friends %}<br>
 	<h2>You have friends here!</h2>
 	{% for friend in friends %}
 	<div class="friends_in_house">
@@ -138,7 +138,7 @@
 </div><br>
 
 {% if primary_lister %}
-	Primary Lister <br> (not living on premises):<br>
+	<h3>Primary Lister <br> (not living on premises):</h3>
 		<div class="roommates">
 			<a href="/users/{{ primary_lister.id }}"><br>
 						<img src="{{ primary_lister.photo }}" class="small_photo"><br>
@@ -146,16 +146,16 @@
 			</a>
 		</div><br><br>
 {% endif %}
-Roommates: 
-	{% for user in listing.users %}<br>
+<h3>Roommates: </h3>
+	{% for user in listing.users %}
 		<div class="roommates">
-			<a href="/users/{{ user.user_id }}" class="user side_by_side" data-user-id="{{ user.user_id }}"><br>
+			<a href="/users/{{ user.user_id }}" class="user" data-user-id="{{ user.user_id }}"><br>
 					<img src="{{ user.photo }}" class="medium_photo"><br>
 					{{ user.user_id }}
 					{% if user.user_id == listing.primary_lister %}
 					<br>(Primary Lister)
 					{% endif %}
-			</a>
+			</a><br>
 		</div>
 	{% endfor %}
 <script src="/static/js/scripts.js"></script>

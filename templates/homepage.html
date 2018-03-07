@@ -79,8 +79,8 @@
 
 {% else %}
 <div class="registration_form">
-	Not A Member?<br>
-	Tell us a little about yourself: <br><br>
+	<h2>Not A Member?</h2>
+	<h3>Tell us a little about yourself: </h3><br>
 	<form action="/make_user_profile" method="POST" enctype="multipart/form-data">
 	User Name (how others will see you listed):<br>
 		<input type="text" name="user_name" required><br><br>
@@ -129,7 +129,7 @@
 		{{ listing.listing_id }}<br>
 		{% endfor %}
 		<br><br>
-		<input type="submit" value="Create Profile!">	
+		<input type="submit" class="search_button btn" value="Create Profile!">	
 	</form>
 </div>
 	

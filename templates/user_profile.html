@@ -16,16 +16,16 @@
 {% endif %}
 <div id="friends_or_not">
 	{% if session.get("current_user") and not are_friends %}
-		<button id="friend" data-user-id="{{ page_user.user_id }}"> Add {{ page_user.user_id }} as a Friend </button><br><br>
+		<button id="friend" data-user-id="{{ page_user.user_id }}" class="search_button btn"> Add {{ page_user.user_id }} as a Friend </button><br><br>
 		{% if mutuals %}
 		Mutual Friends:<br>
 			{% for mutual in mutuals %}
 				<a href="/users/{{ mutual.user_id }}"><br>
-						<img src="{{ mutual.photo }}" class="small_photo"><br>
+						<img src="{{ mutual.photo }}" class="tiny_photo"><br>
 				</a>
 			{% endfor %}
 		{% endif %}
-	{% endif %}
+	{% endif %}<br><br>
 </div>
 	<div class="profile">
 		<img src="{{ page_user.photo }}" class="big_photo profile_pic">
@@ -39,7 +39,7 @@
 					{% endfor %}
 		{% endif %}<br>
 
-		Answers: <br>
+		<h3>Answers: </h3>
 		{% for answer in page_user.answers %}
 			{{  answer.question.question }}: {{ answer.answer }}<br>
 		{% endfor %}<br>

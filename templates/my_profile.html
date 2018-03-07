@@ -35,8 +35,7 @@
 				<input type="radio" name="duration" value="1"> ~ 1 month 
 				<input type="radio" name="duration" value="3"> ~ 3 Months 
 				<input type="radio" name="duration" value="6"> ~ 6 months 
-				<input type="radio" name="duration" value="12"> ~ A Year + <br><br>
-				~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				<input type="radio" name="duration" value="12"> ~ A Year + <br><br><br>
 			
 			Bedrooms: <br>
 				<input type="radio" name="bedrooms" value="1"> 1 
@@ -65,9 +64,8 @@
 				<input type="file" name="main_photo" required><br>
 				<input type="file" name="photo_1" required><br>
 				<input type="file" name="photo_2" required><br>
-				<input type="file" name="photo_3" required><br>
+				<input type="file" name="photo_3" required><br><br>
 		
-				~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			Will you be living there?: <br> 
 				<input type="radio" name="living_there" value="True"> Yep! 
 				<input type="radio" name="living_there" value="False"> Nope. <br>
@@ -79,7 +77,7 @@
 			</div>
       </div>
       <div class="modal-footer">
-        		<input type="submit" value="Create Listing!">	
+        		<input type="submit" class="search_button btn" value="Create Listing!">	
 			</form>
       </div>
     </div>
@@ -126,8 +124,8 @@
 		</div>
 
 	<div class="profile">
-			<img src="{{ page_user.photo }}" class="big_photo" class="profile_picture"><br>
-			USER_NAME: {{ page_user.user_id }}<br>
+			<img src="{{ page_user.photo }}" class="big_photo profile_pic"><br>
+			<h2>{{ page_user.user_id }}</h2>
 			EMAIL: {{ page_user.email }}<br>
 			BIO: {{ page_user.bio }}<br>
 			STATE: {{ page_user.state }}<br>
@@ -140,7 +138,7 @@
 					<button id="activate"> Looking Once More! </button>
 				{% endif %}
 			</div>
-			Answers: <br>
+			<h3>Answers: </h3>
 			{% for answer in page_user.answers %}
 			{{  answer.question.question }}: {{ answer.answer }}<br>
 			{% endfor %}<br>

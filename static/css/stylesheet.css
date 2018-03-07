@@ -15,6 +15,8 @@ body {
 	height: 150px;
 	width: 150px;
 	border-radius: 25px;
+	border: 5px solid black;
+	vertical-align: top;
 }
 
 .listing_photos {
@@ -26,6 +28,7 @@ body {
 	width: 100px;
 	display: inline-block;
 	border-radius: 25px;
+	border: 5px solid black;
 }
 
 .tiny_photo {
@@ -117,7 +120,6 @@ a {
 
 
 .roommates {
-	display: inline-block;
 	text-align: center;
 }
 
