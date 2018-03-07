@@ -90,6 +90,7 @@ function clear(evt) {
 
 
 
+// $(document).on("mouseenter", ".listing", getListingInfo);
 $(".listing").on("mouseenter", getListingInfo);
 $(".listing").on("mouseleave", clear);
 

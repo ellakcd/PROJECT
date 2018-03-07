@@ -17,9 +17,8 @@ User has protected password
 
 
 TODO: 
+DEBUG WHY HOVER ONLY WORKS ON FIRST LOAD
 
-FONT
-border patterns
 
 
 Fri: re-freeze requirements / get secrets down 

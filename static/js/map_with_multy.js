@@ -67,4 +67,4 @@ function getAllListingInfoForMap() {
 }
 
 
-setTimeout(getAllListingInfoForMap, 1000);
+// setTimeout(getAllListingInfoForMap, 1000);
