@@ -2,7 +2,7 @@ RoomMatch
 
 Summary
 
-	RoomMatch is a housing app based around mutual friends.  Wouldn't you feel more comfortable living with someone who was fewer degrees of separation away?  Using SQL databases, RoomMatch keeps track of user info, listing info, and connections to bring a personal dimension to the housing search.  It uses Python backend, Flask routes, Javascript for informational pop ups and real time chat, and Google Maps to locate listings in space.
+	RoomMatch is a housing app based around mutual friends.  Wouldn't you feel more comfortable living with someone who was fewer degrees of    separation away?  Using SQL databases, RoomMatch keeps track of user info, listing info, and connections to bring a personal dimension to the housing search.  It uses Python backend, Flask routes, Javascript for informational pop ups and real time chat, and Google Maps to locate listings in space.
 
 Setup
 
@@ -43,7 +43,7 @@ Test it out!
     	- create your own profile (don't worry - your password is encrypted)
     	- friend other users and see listings by friends and friends of friends
         - browse listings based on your filters - try favoriting and unfavoriting 
-        - create your own listing - try unlisting it and listing for different dates / adding and removing roommates
+        - create your own listing - try unlisting it and listing for different dates
         - message other users
         - hover over listings and user for info about them
         - click on map links to be taken to listing locations on Google Maps
@@ -56,11 +56,11 @@ Test it out!
 
         Features to try:
         - browse listings based on your filters - try favoriting and unfavoriting 
-        - create your own listing - try unlisting it and listing for different dates / adding and removing roommates
+        - create your own listing - try unlisting it and listing for different dates 
         - hover over listings and user for info about them
 
 
-    Login as two users in seperate windows (use one regular and one incognito) to play around with live chat: 
+    Login as two users in seperate windows (one regular one incognito) to play around with live chat: 
 
     	User ID: RG
     	password: password6
