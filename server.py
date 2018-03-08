@@ -43,28 +43,6 @@ def index():
     return render_template("homepage.html", neighborhoods=neighborhoods, users=users, user=user, listings=listings, questions=questions, filters=filters, STATES=STATES, months=MONTHS, state=state)
 
 
-# @app.route("/register")
-# def registration_page():
-#     """Page to input info and friends"""
-
-#     users = User.query.all()
-#     listings = Listing.query.all()
-#     questions = Question.query.all()
-#     user = None
-    
-#     return render_template("registration.html", users=users, STATES=STATES, user=user, listings=listings, questions=questions)
-
-
-# @app.route("/add_listing")
-# def listing_page():
-#     """Page to input info about a home"""
-
-#     users = User.query.all()
-#     user = User.query.get(session["current_user"])
-
-#     return render_template("create_listing.html", users=users, user=user, STATES=STATES)
-
-
 @app.route("/users/<user_id>")
 def user_profile(user_id):
     """query for user info to display"""
@@ -227,8 +205,7 @@ def make_profile():
     user_id = request.form.get("user_name")
     password = request.form.get("password").encode('utf-8')
     hashed = bcrypt.hashpw(password, bcrypt.gensalt())
-    print hashed
-    # hashed = password
+    
     venmo = request.form.get("venmo")
 
     photo = functions.save_photo("photo")
@@ -706,7 +683,6 @@ def listing_active():
             "listed": False 
         }
 
-    print info
     return jsonify(info)
 
 

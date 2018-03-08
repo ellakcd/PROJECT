@@ -16,21 +16,13 @@ User has protected password
 
 
 
-TODO: 
-DEBUG WHY HOVER ONLY WORKS ON FIRST LOAD
-
-
-
-Fri: re-freeze requirements / get secrets down 
-
-
 
 WEEKEND: 
-refactor/comments/fix variable names/different files for helper functions by theme? / get rid of extra stuff/Read-me /
-move functions to model
+refactor/comments/fix variable names/get rid of extra stuff/move functions to model
 
+THURS/FRI: 
+READ ME - make good demo example user
+COMMENTS
+TESTING
+DEBUG WHY HOVER ONLY WORKS ON FIRST LOAD
 
-
-MAKE READ ME
-COPY FACEBOOK CSS
-ADD COMMENTS
