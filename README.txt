@@ -2,7 +2,7 @@ RoomMatch
 
 Summary
 
-	RoomMatch is a housing app based around mutual friends.  Wouldn't you feel more comfortable living with someone who was fewer degrees of    separation away?  Using SQL databases, RoomMatch keeps track of user info, listing info, and connections to bring a personal dimension to the housing search.  It uses Python backend, Flask routes, Javascript for informational pop ups and real time chat, and Google Maps to locate listings in space.
+	RoomMatch is a housing app based around mutual friends.  Wouldn't you feel more comfortable living with someone who was fewer degrees of separation away?  Using SQL databases, RoomMatch keeps track of user info, listing info, and connections to bring a personal dimension to the housing search.  It uses Python backend, Flask routes, Javascript for informational pop ups and real time chat, and Google Maps to locate listings in space.
 
 Setup
 
