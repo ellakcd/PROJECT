@@ -40,7 +40,7 @@ Setup
 Test it out!
 
     Register as a new user to:
-    	- create your own profile
+    	- create your own profile (don't worry - your password is encrypted)
     	- friend other users and see listings by friends and friends of friends
         - browse listings based on your filters - try favoriting and unfavoriting 
         - create your own listing - try unlisting it and listing for different dates / adding and removing roommates
@@ -68,8 +68,6 @@ Test it out!
     	Test out chat: 
     	- view your own profile in each window
     	- send messages to eachother and have a conversation with yourself! 
-
-
 
 
 
