@@ -21,7 +21,6 @@ Setup
         $ pip install -r requirements.txt
 
 
-
     Create and seed the database
 
         $ createdb roommatch
